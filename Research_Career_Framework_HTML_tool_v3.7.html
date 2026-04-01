@@ -263,19 +263,19 @@
 
         .tab-btn:hover { background-color: #eef4fb; }
 
-        /* Per-domain active colours */
-        .tab-btn.active[data-domain="knowledge"] { background-color: #0f284e; border-color: #0f284e; color: white; }
-        .tab-btn.active[data-domain="impact"]    { background-color: #6f3076; border-color: #6f3076; color: white; }
-        .tab-btn.active[data-domain="clinical"]  { background-color: #00a7b5; border-color: #00a7b5; color: white; }
-        .tab-btn.active[data-domain="leadership"]{ background-color: #8cbd3e; border-color: #8cbd3e; color: white; }
-        .tab-btn.active[data-domain="mentorship"]{ background-color: #5696d3; border-color: #5696d3; color: white; }
+        /* Per-domain active colours - border only, dark QLD blue text for accessibility */
+        .tab-btn.active[data-domain="knowledge"] { background-color: white; border-color: #0f284e; border-width: 3px; color: #09549f; }
+        .tab-btn.active[data-domain="impact"]    { background-color: white; border-color: #6f3076; border-width: 3px; color: #09549f; }
+        .tab-btn.active[data-domain="clinical"]  { background-color: white; border-color: #00a7b5; border-width: 3px; color: #09549f; }
+        .tab-btn.active[data-domain="leadership"]{ background-color: white; border-color: #8cbd3e; border-width: 3px; color: #09549f; }
+        .tab-btn.active[data-domain="mentorship"]{ background-color: white; border-color: #5696d3; border-width: 3px; color: #09549f; }
 
-        /* Per-domain border + text colour when inactive */
-        .tab-btn[data-domain="knowledge"] { border-color: #0f284e; color: #0f284e; }
-        .tab-btn[data-domain="impact"]    { border-color: #6f3076; color: #6f3076; }
-        .tab-btn[data-domain="clinical"]  { border-color: #00a7b5; color: #00a7b5; }
-        .tab-btn[data-domain="leadership"]{ border-color: #8cbd3e; color: #8cbd3e; }
-        .tab-btn[data-domain="mentorship"]{ border-color: #5696d3; color: #5696d3; }
+        /* Per-domain border colour when inactive - dark QLD blue text for accessibility */
+        .tab-btn[data-domain="knowledge"] { border-color: #0f284e; color: #09549f; }
+        .tab-btn[data-domain="impact"]    { border-color: #6f3076; color: #09549f; }
+        .tab-btn[data-domain="clinical"]  { border-color: #00a7b5; color: #09549f; }
+        .tab-btn[data-domain="leadership"]{ border-color: #8cbd3e; color: #09549f; }
+        .tab-btn[data-domain="mentorship"]{ border-color: #5696d3; color: #09549f; }
 
         /* Per-domain hover */
         .tab-btn[data-domain="knowledge"]:hover { background-color: #eef1f5; }
@@ -337,20 +337,20 @@
         .score-input-group input[type="radio"] { display: none; }
 
         /* --- Domain Specific Color Logic for Inputs --- */
-        #tab-knowledge .score-input-group label:hover { border-color: var(--col-knowledge); color: var(--col-knowledge); background-color: #f1f5f9; }
-        #tab-knowledge .score-input-group label:has(input:checked) { background-color: var(--col-knowledge); border-color: var(--col-knowledge); color: white; transform: scale(1.1); }
-        
-        #tab-impact .score-input-group label:hover { border-color: var(--col-impact); color: var(--col-impact); background-color: #fdf4ff; }
-        #tab-impact .score-input-group label:has(input:checked) { background-color: var(--col-impact); border-color: var(--col-impact); color: white; transform: scale(1.1); }
+        #tab-knowledge .score-input-group label:hover { border-color: var(--col-knowledge); color: #09549f; background-color: #f1f5f9; }
+        #tab-knowledge .score-input-group label:has(input:checked) { background-color: white; border-color: var(--col-knowledge); border-width: 2px; color: #09549f; transform: scale(1.1); }
 
-        #tab-clinical .score-input-group label:hover { border-color: var(--col-clinical); color: var(--col-clinical); background-color: #f0fdfa; }
-        #tab-clinical .score-input-group label:has(input:checked) { background-color: var(--col-clinical); border-color: var(--col-clinical); color: white; transform: scale(1.1); }
+        #tab-impact .score-input-group label:hover { border-color: var(--col-impact); color: #09549f; background-color: #fdf4ff; }
+        #tab-impact .score-input-group label:has(input:checked) { background-color: white; border-color: var(--col-impact); border-width: 2px; color: #09549f; transform: scale(1.1); }
 
-        #tab-leadership .score-input-group label:hover { border-color: var(--col-leadership); color: var(--col-leadership); background-color: #f7fee7; }
-        #tab-leadership .score-input-group label:has(input:checked) { background-color: var(--col-leadership); border-color: var(--col-leadership); color: white; transform: scale(1.1); }
+        #tab-clinical .score-input-group label:hover { border-color: var(--col-clinical); color: #09549f; background-color: #f0fdfa; }
+        #tab-clinical .score-input-group label:has(input:checked) { background-color: white; border-color: var(--col-clinical); border-width: 2px; color: #09549f; transform: scale(1.1); }
 
-        #tab-mentorship .score-input-group label:hover { border-color: var(--col-mentorship); color: var(--col-mentorship); background-color: #eff6ff; }
-        #tab-mentorship .score-input-group label:has(input:checked) { background-color: var(--col-mentorship); border-color: var(--col-mentorship); color: white; transform: scale(1.1); }
+        #tab-leadership .score-input-group label:hover { border-color: var(--col-leadership); color: #09549f; background-color: #f7fee7; }
+        #tab-leadership .score-input-group label:has(input:checked) { background-color: white; border-color: var(--col-leadership); border-width: 2px; color: #09549f; transform: scale(1.1); }
+
+        #tab-mentorship .score-input-group label:hover { border-color: var(--col-mentorship); color: #09549f; background-color: #eff6ff; }
+        #tab-mentorship .score-input-group label:has(input:checked) { background-color: white; border-color: var(--col-mentorship); border-width: 2px; color: #09549f; transform: scale(1.1); }
 
         /* --- Buttons --- */
         .btn-container { text-align: center; margin-top: 40px; margin-bottom: 20px; }
