@@ -210,6 +210,115 @@
         .domain-leadership .mini-card { border-left-color: var(--col-leadership); background: #f7fee7; }
         .domain-mentorship .mini-card { border-left-color: var(--col-mentorship); background: #eff6ff; }
 
+        /* --- Understanding Profile & Next Steps Sections --- */
+        .profile-understanding-section,
+        .next-steps-section {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 40px;
+            margin-bottom: 30px;
+            border-left: 5px solid #09549f;
+        }
+        .profile-understanding-section h2,
+        .next-steps-section h2 {
+            color: #09549f;
+            font-size: 1.3rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .profile-understanding-section p,
+        .next-steps-section p {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        .profile-understanding-section .context-item {
+            margin-bottom: 16px;
+        }
+        .profile-understanding-section .context-item strong {
+            color: #09549f;
+        }
+        .next-steps-section .next-step-item {
+            margin-bottom: 18px;
+        }
+        .next-steps-section .next-step-item strong {
+            color: #09549f;
+        }
+        .next-steps-section .smart-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 8px 0 0 0;
+        }
+        .next-steps-section .smart-list li {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+            padding: 4px 0 4px 20px;
+            position: relative;
+        }
+        .next-steps-section .smart-list li::before {
+            content: "\2022";
+            color: #09549f;
+            font-size: 16px;
+            position: absolute;
+            left: 4px;
+            top: 4px;
+        }
+
+        /* --- Structured Report Card Subsections --- */
+        .report-card-section {
+            margin-top: 20px;
+        }
+        .report-card-section h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #09549f;
+            margin: 0 0 10px 0;
+        }
+        .report-card-section p {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.7;
+            margin: 0 0 8px 0;
+        }
+        .report-card-section ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 6px 0 0 0;
+        }
+        .report-card-section ul li {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+            padding: 4px 0 4px 20px;
+            position: relative;
+        }
+        .report-card-section ul li::before {
+            content: "\2022";
+            color: #5696d3;
+            font-weight: bold;
+            font-size: 16px;
+            position: absolute;
+            left: 4px;
+            top: 4px;
+        }
+        .domain-knowledge .report-card-section ul li::before { color: var(--col-knowledge); }
+        .domain-impact .report-card-section ul li::before { color: var(--col-impact); }
+        .domain-clinical .report-card-section ul li::before { color: var(--col-clinical); }
+        .domain-leadership .report-card-section ul li::before { color: var(--col-leadership); }
+        .domain-mentorship .report-card-section ul li::before { color: var(--col-mentorship); }
+
+        .report-card .domain-description {
+            font-size: 14px;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
         /* --- Intro / Instructions View --- */
         #intro-view { display: block; animation: fadeIn 0.5s ease-out; }
         
@@ -432,6 +541,9 @@
             .chart-container svg#spiderChart { max-width: 480px !important; }
             .qld-footer { padding: 8px 15px; font-size: 11px; }
             .qld-footer p { margin: 2px 0 !important; }
+            .profile-understanding-section, .next-steps-section { padding: 15px; margin-top: 20px; margin-bottom: 15px; page-break-inside: avoid; }
+            .profile-understanding-section h2, .next-steps-section h2 { font-size: 1.1rem; }
+            .report-card { page-break-inside: avoid; }
         }
     </style>
 </head>
@@ -597,7 +709,50 @@
         </div>
     </div>
 	
+<!-- Understanding Your Self-Assessment Profile Section -->
+<div id="understanding-profile-section" class="profile-understanding-section" style="display:none;">
+    <h2>Understanding Your Self-Assessment Profile</h2>
+    <p>This self-assessment provides a comprehensive overview of your current research capabilities. As you review your results, it is important to view your scores as a baseline for professional growth and career planning, rather than a definitive performance measure.</p>
+    <p>Before reviewing your specific domain feedback, please consider the following context regarding your results:</p>
+    <div class="context-item">
+        <p><strong>Variation across domains is expected:</strong> It is common to demonstrate different capabilities and proficiency levels across the five domains. Expertise is typically focused within specific areas of practice, and a varied capability profile is a standard reflection of an individualised and developing career.</p>
+    </div>
+    <div class="context-item">
+        <p><strong>Different roles require different capability profiles:</strong> The framework encompasses a broad spectrum of clinical and research positions. Consequently, different roles naturally require different capability and proficiency levels. Advanced skills in certain domains are simply not required for some role types. Differences in capability profiles do not imply that any particular profile or role is less capable or valuable than another.</p>
+    </div>
+    <div class="context-item">
+        <p><strong>Scores reflect opportunity alongside ability:</strong> The development of capabilities is heavily influenced by the context in which you work and the training and development opportunities available to you. A lower score often highlights a lack of previous opportunity to practice and demonstrate those specific skills within your service, rather than a reflection of your inherent aptitude or potential.</p>
+    </div>
+    <div class="context-item">
+        <p><strong>Applying your results:</strong> Your profile provides a snapshot of your existing strengths and establishes a baseline for your development journey. If your capabilities currently align well with your service needs and role requirements, this tool serves to validate your practice.</p>
+        <p>If you are looking to advance or broaden your scope, your results can be used collaboratively with your manager or mentor to identify targeted training, navigate new opportunities, and formulate a structured professional development plan.</p>
+    </div>
+</div>
+
 <div id="report-cards-container"></div>
+
+<!-- Next Steps Section -->
+<div id="next-steps-section" class="next-steps-section" style="display:none;">
+    <h2>Next Steps: Actioning Your Results</h2>
+    <p>As you reflect on your capability profile, please remember that it is not necessary or expected to achieve high proficiency across every domain. Professional development is a targeted process, and you do not need to address every area for improvement simultaneously.</p>
+    <p>To effectively translate your self-assessment into actionable growth, consider the following next steps:</p>
+    <div class="next-step-item">
+        <p><strong>Focus your efforts:</strong> Select one to three specific development areas to prioritise. Ensure these focus areas are relevant to the direction you want your career to take, your current role requirements, and the broader strategic needs of your service.</p>
+    </div>
+    <div class="next-step-item">
+        <p><strong>Set SMART goals:</strong> To create a focused and relevant professional growth plan, translate your chosen development areas into SMART goals. Ensure each goal is:</p>
+        <ul class="smart-list">
+            <li><strong>Specific:</strong> Clear and unambiguous, so you know exactly what you are working towards.</li>
+            <li><strong>Measurable:</strong> Quantifiable or observable, allowing you to track progress and know when the goal has been achieved.</li>
+            <li><strong>Achievable:</strong> Realistic and attainable within your current role, resources, and time constraints.</li>
+            <li><strong>Relevant:</strong> Aligned with your research career aspirations and the operational needs of your organisation.</li>
+            <li><strong>Time-bound:</strong> Tied to a clearly defined timeline, including specific starting and target completion dates.</li>
+        </ul>
+    </div>
+    <div class="next-step-item">
+        <p><strong>Collaborate with leadership:</strong> We strongly encourage you to discuss your self-assessment and development plan with your line manager, allied health leader, or a trusted research mentor. Collaborative planning will provide additional perspectives, help refine your strategies, and ensure you can agree on appropriate and meaningful opportunities to contribute your unique capabilities to your service.</p>
+    </div>
+</div>
 
 </div>
 
@@ -631,6 +786,8 @@
         document.getElementById('report-view').style.display = 'none';
         document.getElementById('input-view').style.display = 'none';
         document.getElementById('intro-view').style.display = 'block';
+        document.getElementById('understanding-profile-section').style.display = 'none';
+        document.getElementById('next-steps-section').style.display = 'none';
         const diagramEl = document.getElementById('framework-diagram-container');
         if (diagramEl) {
             diagramEl.className = 'framework-diagram';
@@ -864,7 +1021,11 @@
         renderChart(dataValues);
 
 		// Report Cards
-        generateReportCardsHTML(); 
+        generateReportCardsHTML();
+
+        // Show Understanding Profile and Next Steps sections
+        document.getElementById('understanding-profile-section').style.display = 'block';
+        document.getElementById('next-steps-section').style.display = 'block';
     }
 
     // --- CHART ---
@@ -999,10 +1160,85 @@
 const frameworkMapping = {
     knowledge: {
         title: "Domain 1: Research knowledge and skills",
+        description: "This domain reflects the technical knowledge and skills required to do research across all stages of the research study lifecycle, from planning to dissemination.",
         overall: [
-            { max: 2.499, text: "This domain reflects the technical knowledge and skills required to do research across the research study lifecycle. The overall domain score (no proficiency to emerging proficiency) is averaged from 13 individual domain capabilities and suggests a developing understanding of the different stages of the research lifecycle. \n\nBuilding foundational knowledge and experience in research principles and concepts is recommended to increase this understanding, through formal training in basic research skills (including tertiary courses such as a higher degree by research, graduate certificate or diploma), receiving individual or group mentoring support, engaging in basic literature synthesis or critical appraisal, and dedicating time to learn the research process through observation or participation in existing research projects. Where possible, conduct this learning within or close to the local discipline or health practice.\nSpecific activities to support development can include; joining a local journal club, attending local research events, participating in a local quality improvement project, and identifying a suitable research mentor." },
-            { max: 3.999, text: "This domain reflects the technical knowledge and skills required to do research across the research study lifecycle.\nThe overall domain score (consolidating proficiency to advanced proficiency) is averaged from 13 individual domain capabilities and suggests a good ability to independently complete research tasks while beginning to build advanced expertise as a researcher.\n\nFurther developing this expertise involves transitioning from independent task completion to leading complex research projects, larger research programs and mentoring others. Development should focus on understanding advanced research methodologies, conducting complex statistical analyses and utilising specialized qualitative frameworks, participating in formal clinical trials, and taking a leading role in projects and programs.\nSpecific activities to support development can include, leading research ethics and governance submissions, being a lead or co-Investigator on a multi-disciplinary research projects, authoring or co-authoring peer-reviewed publications for high-impact journals, taking on mentoring roles for novice researchers, applying for competitive internal or external research funding, and participating in research groups or networks." },
-            { max: 5.0, text: "This domain reflects the technical knowledge and skills required to do research across the research study lifecycle. The overall domain score (advanced proficiency to expert proficiency) is averaged from 13 individual domain capabilities and identifies a high-level research expert and acknowledged research leader.\nFurther development at this stage should focus on shaping research landscapes through strategy and policy, building research capacity in local settings and driving research agenda as part of clinical practice.\nThis involves moving beyond individual projects to the oversight of large research programs, leading the translation of evidence into local and system-level practice, and the developing a sustainable research environment.\nLeverage expertise to mentor novice and more senior researchers, and influence the local practice through stategic research projects.\nSpecific activities to support development can include leading research strategy, disseminating research at large research and orgnisational events, mentor Higher Research Degree students and mid-careers researchers, lead integration of research findings into local or national clinical guidelines, and facilitate the securing of large-scale external competitive funding to support large research programs which build local research capacity." }
+            {
+                max: 2.499,
+                whatYourScoreSuggests: "Your overall score suggests emerging proficiency in this domain. This typically reflects early\u2010stage exposure to research concepts and activities, or limited opportunities to engage across the full research lifecycle. This is common for health professionals whose primary role has focused on clinical practice, education, or leadership rather than research. At this level, your understanding of research processes is developing, and skills are often applied with guidance or support from others.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Participating in existing research, quality improvement, and service evaluation projects.",
+                        "Reviewing and critically appraising the literature.",
+                        "Contributing to data collection or research implementation activities for local research projects led by others.",
+                        "Engaging in research discussions within their clinical, discipline, or service context."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "To continue to build skills and confidence in this domain, development activities are best focused on foundational research skills and opportunities to apply learnings with support from research experts. Useful strategies may include:",
+                    items: [
+                        "Undertaking introductory training in research or evidence\u2010based practice (e.g., short courses, graduate certificates, or discipline\u2010specific workshops).",
+                        "Engaging in basic literature review or critical appraisal activities linked to your clinical area.",
+                        "Joining a local journal club or attending internal research forums.",
+                        "Observing or participating in an existing research or service evaluation project.",
+                        "Identifying a research mentor or supervisor within your service or professional discipline.",
+                        "Familiarizing yourself with local governance and ethical requirements for basic project submissions."
+                    ],
+                    focus: "Where possible, focus your development within areas closely aligned to your clinical practice or service priorities."
+                }
+            },
+            {
+                max: 3.999,
+                whatYourScoreSuggests: "Your overall score suggests a consolidating to advanced proficiency in this domain. This indicates a strong ability to independently complete research tasks across the study lifecycle while actively building advanced expertise as a researcher. At this level, you are comfortable executing standard research processes independently, though you may occasionally seek guidance for highly complex or advanced research activities.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Acting as a lead or co-investigator on multidisciplinary research projects.",
+                        "Leading and managing research ethics and governance submissions.",
+                        "Authoring or co-authoring peer-reviewed publications for scientific journals or other mediums.",
+                        "Applying for and securing competitive internal or external research funding.",
+                        "Incorporating consumer and community co-design principles into your research methodology."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "To further develop this expertise, focus on transitioning from independent task completion to leading complex research projects, managing larger programs, and mentoring others. Useful strategies may include:",
+                    items: [
+                        "Undertaking a formal Higher Degree by Research (e.g., Masters by Research or PhD), if not yet obtained.",
+                        "Pursuing training in advanced research methodologies, such as complex statistical analyses or specialized qualitative frameworks.",
+                        "Seeking targeted opportunities to participate in or coordinate formal clinical trials.",
+                        "Taking on formal or informal mentoring roles to support novice researchers.",
+                        "Actively participating in established research groups, collaborative networks, or committees.",
+                        "Developing skills to establish long-term revenue streams through industry partnerships or major competitive grants."
+                    ],
+                    focus: ""
+                }
+            },
+            {
+                max: 5.0,
+                whatYourScoreSuggests: "Your overall score identifies you as a high-level research expert and an acknowledged research leader, reflecting an expert proficiency across the research lifecycle. At this level, you possess the expertise to not only execute complex research independently but also to provide strategic oversight for large-scale programs and drive the research agenda within your clinical or organizational context.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Contributing to the broader research community through membership on Human Research Ethics Committees (HREC) or grant review panels.",
+                        "Participating in the peer-review process for high-impact international journals.",
+                        "Engaging in and leading local, national, and international research collaboratives and networks.",
+                        "Mentoring Higher Degree by Research (HDR) students and supporting the growth of mid-career researchers.",
+                        "Influencing local clinical practice through the design and execution of strategic research projects.",
+                        "Leading rigorous data governance and establishing organizational standards for research integrity."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "At this advanced stage, development focuses on \u201Cshaping the research landscape\u201D\u2014meaning you are moving beyond individual studies to influence the strategy, policy, and long-term viability of research within the health system. To continue to build a sustainable research environment, focus on:",
+                    items: [
+                        "Leading the development of research strategy and policy at a departmental, service, or state-wide level.",
+                        "Facilitating and securing large-scale, external competitive funding to support multi-year research programs.",
+                        "Driving the integration of research findings into local, state, or national clinical guidelines to ensure evidence-based practice.",
+                        "Disseminating high-level research findings at major national or international organizational events to influence system-level change.",
+                        "Building local research capacity by creating structures (such as joint appointments or dedicated research time) that allow others to engage in research."
+                    ],
+                    focus: "Where possible, focus your efforts on activities that bridge the gap between high-level research evidence and practical, sustainable implementation within the healthcare system."
+                }
+            }
         ],
         submappings: [
             {
@@ -1023,7 +1259,7 @@ const frameworkMapping = {
             },
             {
                 check: (scores) => scores['q-knowledge-11'] < 3,
-                text: "Where 1.11 is <3\n\nUnderstanding where and how to access research funding and developing grant writing skills enables higher likelihood in securing research funding and develops skill in articulating research value and impact. Engaging in research grant writing training and education, building academic or industry partnerships, and maintaining frequent visibility on relevant grant opportunities are key activcities to develop this understanding."
+                text: "Where 1.11 is <3\n\nUnderstanding where and how to access research funding and developing grant writing skills enables higher likelihood in securing research funding and develops skill in articulating research value and impact. Engaging in research grant writing training and education, building academic or industry partnerships, and maintaining frequent visibility on relevant grant opportunities are key activities to develop this understanding."
             },
             {
                 check: (scores) => scores['q-knowledge-11'] >= 3,
@@ -1033,10 +1269,89 @@ const frameworkMapping = {
     },
     impact: {
         title: "Domain 2: Research impact and translation",
+        description: "This domain focuses on competencies related to ensuring research is translated into practice and has an impact on society. This may be through evidence-based practice, knowledge translation, and embedding impact in the design and conduct of clinical research.",
         overall: [
-            { max: 2.499, text: "This domain focuses on research translation and impact; through evidence-based practice, knowledge translation, and embedding impact in the design and conduct of clinical research.\nThe overall domain score (no proficiency to emerging proficiency) is averaged from 9 individual domain capabilities and indicates a basic awareness of research translation and research impact with opportunity to develop the understanding of bridging the gap between research and impact and translating research findings from 'bench' to 'bedside. \n\nAttending local health research events, completing dedicated research translation and research impact training, and receiving direct mentoring support are steps to develop this knowledge. Training should include understanding the role and influence of different stakeholders in research translation and importance of frameworks to guide research translation projects to ensure sustainable implementation. \n\nUnderstanding current evidence that informs current local practice such as established clinical guidelines builds knowledge of the link between research and practice. Leading or participating in a local evaluation of clinical practice can further develop this understanding. Observing or participating in local service development activities develops knowledge in how research informs, influences and impacts practice, and the complexities of how research is translated into practice" },
-            { max: 3.999, text: "This domain focuses on research translation and impact through evidence-based practice, knowledge translation, and embedding impact in the design and conduct of clinical research. The overall domain score (consolidating proficiency to advanced proficiency) is averaged from 9 individual domain capabilities and indicates a strong ability to independently bridge the gap between \"bench\" and \"bedside,\" with a developing capacity to lead others in the translation process.\n\nAdvancing proficiency at this level involves moving beyond framework knowledge to active leadership in research translation. This includes strategic selection of translation models to ensure sustainable change in clinical practice, influencing the design of research activities to increase impact opportunity by considering the translation lens during planning, proactively engaging stakeholders throughout research and research translation lifecycles.\nSpecific activities to support further development can include; developing implementation plans for active research projects, leading research translation projects using implementation frameworks, facilitating co-design activities with stakeholders, participating in clinical protocol updates based on recent research evidence, mentoring novice researchers or clinicans in understanding research impact and research translation, and developing relevant metrics to track impacts of research-informed service changes." },
-            { max: 5.0, text: "This domain focuses on research translation and impact through evidence-based practice, knowledge translation, and embedding impact in the design and conduct of clinical research. The overall domain score (advanced proficiency to expert proficiency) is averaged from 9 individual domain capabilities and identifies an acknowledged research translation leader that drives large-scale clinical change through research evidence and strategic implementation\n\nFurther development of proficiency at this stage involves shaping organisational culture of evidence-based practice and leading strategies for research impact. This would require the ability to navigate complex health landscapes to ensure research findings are implemented and sustained across different service contexts and practice settings, becoming an organisational leader of translation strategy and mentoring senior clinicians and leadership groups to influence policy at local to national levels.\nSpecific activities to support development can include developing organisation level frameworks for research translation, leading or engaging with advisory committees to translate research into health policy, mentoring senior researchers and clinical leadership in system level research impact and translation, and maintaining strategic partnerships with industry, government to support ongoing translation culture and investment." }
+            {
+                max: 2.499,
+                whatYourScoreSuggests: "Your overall score suggests emerging proficiency in this domain. This typically indicates a basic awareness of research translation and impact, with significant opportunities to further develop your understanding of how to bridge the gap between research findings and clinical application (often referred to as moving from \u201Cbench\u201D to \u201Cbedside\u201D). At this level, you are likely beginning to see the link between evidence and practice but may require guidance to navigate the complexities of sustainable implementation.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Identifying and understanding the current evidence and clinical guidelines that inform local practice.",
+                        "Presenting research findings or evidence summaries to your department, local consumer groups, or other non-research audiences.",
+                        "Collaborating with local Quality Improvement (QI) teams to support service evaluation.",
+                        "Participating in local service development activities to observe how research informs and influences practice changes.",
+                        "Promoting the use of evidence-based practice within your immediate clinical setting."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "To build your skills in translating research into practice, development should focus on understanding the frameworks that guide sustainable implementation and the roles of various stakeholders. Useful strategies may include:",
+                    items: [
+                        "Undertaking dedicated training in research translation, knowledge translation (KT), or research impact.",
+                        "Leading or participating in a local evaluation of clinical practice to see the translation cycle in action.",
+                        "Attending local health research events and forums to learn how others have successfully embedded impact into their work.",
+                        "Identifying a mentor with expertise in implementation science or knowledge translation to provide direct support.",
+                        "Learning about different stakeholder groups and how their influence affects the adoption of new evidence in a clinical setting.",
+                        "Familiarizing yourself with the different types of research impact and exploring how impact is measured or reported locally."
+                    ],
+                    focus: "Focus your development on moving from a passive awareness of evidence to active participation in activities that demonstrate how that evidence changes local patient care or service delivery."
+                }
+            },
+            {
+                max: 3.999,
+                whatYourScoreSuggests: "Your overall score suggests a consolidating to advanced proficiency in this domain. This indicates a strong ability to independently bridge the gap between \u201Cbench\u201D and \u201Cbedside,\u201D with a growing capacity to lead others in the translation process. At this level, you are likely comfortable applying translation principles to your own work and are beginning to influence how evidence is integrated within your broader clinical or service context.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Leading research translation projects using established implementation frameworks.",
+                        "Facilitating co-design activities with stakeholders to ensure research remains relevant and applicable to end-users.",
+                        "Updating clinical protocols and pathways based on recent, high-quality research evidence.",
+                        "Developing and monitoring relevant metrics to track the real-world impact of research-informed service changes.",
+                        "Mentoring novice researchers or clinicians in understanding the fundamentals of research impact and translation.",
+                        "Engaging in multidisciplinary knowledge exchange to effectively communicate research findings to diverse health system stakeholders."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "To continue advancing, focus on moving beyond the application of frameworks toward active leadership and strategic planning. This involves influencing the research process from its inception to ensure maximum impact. Useful strategies may include:",
+                    items: [
+                        "Developing comprehensive implementation and sustainability plans for active or upcoming research projects.",
+                        "Strategically selecting and adapting translation models to ensure long-term, sustainable change in clinical practice.",
+                        "Proactively engaging a diverse range of stakeholders throughout the entire research and translation lifecycle.",
+                        "Refining the design of research activities by applying a \u201Ctranslation lens\u201D during the earliest planning phases to increase impact opportunities.",
+                        "Leading multidisciplinary teams through the complexities of changing established clinical behaviors based on new evidence.",
+                        "Expanding your dialogue and working relationships with higher-level stakeholders, including policymakers and industry partners."
+                    ],
+                    focus: "Focus your development on mastering the strategic side of implementation science, ensuring that research is not just conducted, but is designed for\u2014and successfully embedded into\u2014everyday practice."
+                }
+            },
+            {
+                max: 5.0,
+                whatYourScoreSuggests: "Your overall score identifies you as an acknowledged research translation leader. This score reflects advanced to expert proficiency in driving large-scale clinical change through the strategic application of research evidence. At this level, you possess the expertise to move beyond individual projects, focusing instead on shaping organizational culture and ensuring that research findings are implemented and sustained across diverse and complex healthcare settings.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Leading the development of comprehensive impact logic models to map how research activities generate real-world benefits.",
+                        "Reviewing research grants and proposals with a dedicated \u201Cimpact lens\u201D to ensure feasibility and clinical relevance.",
+                        "Delivering research protocols that have implementation built-in from the outset, such as using hybrid effectiveness-implementation designs.",
+                        "Contributing expert knowledge to the development of state or national clinical guidelines (e.g., Clinical Guidelines for Stroke Management).",
+                        "Producing diverse impact artifacts, such as policy briefs, evidence summaries, and briefing notes designed to influence decision-makers.",
+                        "Mentoring senior clinicians and leadership groups on how to align clinical priorities with research impact and translation strategies.",
+                        "Directly producing research that informs and shapes the development of high-level health policy."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "At this expert level, development focuses on becoming a system-level architect of research culture and policy. This involves navigating the broader health landscape to influence investment and long-term sustainability. Useful strategies may include:",
+                    items: [
+                        "Developing organizational-level frameworks that standardize how research translation is supported and measured across the service.",
+                        "Leading or engaging with high-level advisory committees to translate mature research findings into formal health policy.",
+                        "Pursuing advanced, formal training in Implementation Science to master the methodologies required for system-wide behavioral and organizational change.",
+                        "Establishing and maintaining strategic partnerships with industry, government, and academic bodies to foster a culture of ongoing translation and investment.",
+                        "Designing and implementing longitudinal systems to measure and report on research impact over extended periods.",
+                        "Facilitating workshops or forums for clinical leadership to bridge the gap between high-level research evidence and local policy requirements."
+                    ],
+                    focus: "Focus your development on using research as a tool for systemic influence, ensuring that evidence-based practice is not just an individual skill but an institutional standard."
+                }
+            }
         ],
         submappings: [
             {
@@ -1053,16 +1368,94 @@ const frameworkMapping = {
             },
             {
                 check: (scores) => scores['q-impact-8'] >= 3,
-                text: "Where 2.8 is >3\n\nResearch dissemination is important to celebrate achievements, identify potential for translation, develop research capacity and enable opportunities for networking or collaboration. Attending research events, identifying and maintaining opportunites to disseminate research, and mentoring others to develop their research dissemination skills are all activities that help to maintain high proficiency in research dissemination."
+                text: "Where 2.8 is >3\n\nResearch dissemination is important to celebrate achievements, identify potential for translation, develop research capacity and enable opportunities for networking or collaboration. Attending research events, identifying and maintaining opportunities to disseminate research, and mentoring others to develop their research dissemination skills are all activities that help to maintain high proficiency in research dissemination."
             }
         ]
     },
     clinical: {
         title: "Domain 3: Clinical and healthcare research context",
+        description: "This domain includes the unique competencies required to conduct research in a clinical or healthcare context, including ensuring research projects are embedded appropriately in the context.",
         overall: [
-            { max: 2.499, text: "This domain focuses on skills and experience in conducting research within a clinical or healthcare context.\nThe overall domain score (no proficiency to emerging proficiency) is averaged from 10 individual domain capabilities and demonstrates initial awareness of the value of conducting research within a clinical context, using research findings to inform practice, as well as the importance of a 'clinician-researcher'. \n\nReviewing relevant research that informs local practice is a first step to understanding the foundation of evidence-based practice concepts.\nIdentifying the role and influence of clinicians and researchers in research projects (through reviewing research publications, presentations at research events and other reporting) helps to develop learning on how research findings are considered from a scientific perspective and then contextualised for use in health practice.\nSupported by formal training and/or mentoring, identifying local clinical practice gaps in scientific, clinical or service based knowledge builds skills in developing clinically relevant research questions. Observing or leading quality improvement projects in a local setting is a relevant activity to support this. Participating in local clinical networks or forums can further support skill development in designing research focused on improving services and patient care." },
-            { max: 3.999, text: "This domain focuses on skills and experience in conducting research within a clinical or healthcare context.\nThe overall domain score (consolidating proficiency to advanced proficiency) is averaged from 10 individual domain capabilities and reflects a proven ability to independently identify clinical research needs and apply research findings to improve service delivery and patient care .\nKnowledge at this level is underpinned by the standard that research is not a separate activity but a fundamental component of ensuring safe and high-quality clinical practice.\nDeveloping further proficiency should focus on influencing research planning to embed considerations of translation and impact, transforming scientific research findings into opportunities to improve clinical services, and mentoring others to progress through the \"clinician-researcher\" pathway. \n\nActivities to support this development can include;\nformulating and refining clinically relevant research questions and designing research protocols that address local practice gaps, leading synthesis of research findings to enable implementation into local clinical practice, mentoring clinicians in developing their own research skills as well as navigating the clinician-researcher role, Leading or facilitating clinical research networks to ensure research design is focused on improving services and health outcomes, presenting clinical research findings at health or organisation forums, and contributing to peer-reviewed publications that focus on improving clinical practice." },
-            { max: 5.0, text: "This domain focuses on skills and experience in conducting research within a clinical or healthcare context.\nThe overall domain score (advanced proficiency to expert proficiency) is averaged from 10 individual domain capabilities and identifies an leader with demonstrated strategic leadership in embedding research within clinical service delivery.\n\nFurther developing expertise at this stage involves shaping the strategic direction of clinical research within the healthcare setting and building a culture of inquiry across the organisation. This requires the ability to embed research culture within health setting, demonstrating that research is a driver of health service innovation by advocating value and role of the clinician-researcher within the broader health landscape.\n\nActivities to support development can include; leading development of research strategy that aligns research outcomes with clinical priorities, formalising mentorship initiatives established clinician-researchers and higher degree research students in clinical settings, leading implementation of service level or system wide changes based on original research findings, securing significant external competitive funding and advocating for and securing the integration of research time into clinical positions, and representing the clinical profession or discipline at state or national levels to contributing or influence to the development of national clinical standards or guidelines." }
+            {
+                max: 2.499,
+                whatYourScoreSuggests: "Your overall score suggests emerging proficiency in this domain. This demonstrates an initial awareness of the value of conducting research within a clinical setting and how research findings can inform practice. At this level, you are beginning to understand the importance of the \u201Cclinician-researcher\u201D role and how research and clinical care can mutually inform one another.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Reviewing relevant research that informs local practice to build a foundation in evidence-based concepts.",
+                        "Identifying the roles of clinicians and researchers in existing projects by reviewing publications, attending research presentations, and reading project reports.",
+                        "Participating in local clinical networks, multidisciplinary team (MDT) research discussions, or discipline-specific forums.",
+                        "Engaging with a Queensland Health (QH) Librarian to learn how to effectively access clinical evidence and health service data."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "To continue building skills in conducting research within a health service, focus on identifying clinically relevant gaps and understanding how research is contextualized for patient care. Useful strategies may include:",
+                    items: [
+                        "Identifying local clinical practice gaps in scientific or service-based knowledge to practice developing research questions.",
+                        "Observing or leading a small-scale Quality Improvement (QI) project in your local setting to understand the link between data and service change.",
+                        "Seeking mentoring to learn how research findings are critically appraised for scientific merit and then adapted for use in a real-world clinical context.",
+                        "Participating in MDT research activities to observe how different clinical perspectives influence research design and implementation.",
+                        "Attending internal research forums to see how local clinicians navigate the complexities of balancing research activities with clinical workloads.",
+                        "Consulting with healthcare professionals and consumers to understand how to make research relevant to your specific healthcare setting."
+                    ],
+                    focus: "Focus your development on moving from an observer of clinical evidence to an active participant in identifying the specific research needs of your service and patient population."
+                }
+            },
+            {
+                max: 3.999,
+                whatYourScoreSuggests: "Your overall score suggests a consolidating to advanced proficiency in this domain. This reflects a proven ability to independently identify clinical research needs and apply research findings to improve service delivery and patient care. At this level, you recognize that research is not a separate activity but a fundamental component of ensuring safe and high-quality clinical practice. You are likely adept at navigating the \u201Cclinician-researcher\u201D nexus and are beginning to influence how your peer group views evidence-based practice.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Formulating and refining clinically relevant research questions that address identified local practice gaps.",
+                        "Leading the synthesis of research findings to enable direct implementation into local clinical workflows.",
+                        "Facilitating clinical research networks to ensure study designs remain focused on improving patient health outcomes.",
+                        "Presenting clinical research findings at health service or organizational forums to drive local awareness.",
+                        "Contributing to peer-reviewed publications that specifically focus on improving clinical practice and service delivery.",
+                        "Actively building relationships with the Research Governance Office (RGO) to streamline project approvals and compliance.",
+                        "Influencing patient care by effectively combining your expert clinical and research skills."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "To further develop your proficiency, focus on transforming scientific findings into systemic service improvements and mentoring others along the clinician-researcher pathway. Useful strategies may include:",
+                    items: [
+                        "Designing research protocols that embed considerations of translation and impact from the earliest planning stages.",
+                        "Mentoring early-career clinicians in developing their own research skills and navigating the balance of clinical and research roles.",
+                        "Seeking formal feedback from multidisciplinary team members on your research communication and project management skills to refine your leadership approach.",
+                        "Leading larger-scale evaluations of clinical services to demonstrate the value of research in a healthcare business context.",
+                        "Engaging in more complex stakeholder management to ensure research projects align with broader health service strategic priorities.",
+                        "Maintaining a high-level understanding of health systems at a broader local or national level to contextualize your work."
+                    ],
+                    focus: "Focus your development on mastering the strategic integration of scientific findings into systemic service improvements."
+                }
+            },
+            {
+                max: 5.0,
+                whatYourScoreSuggests: "Your overall score identifies you as a leader with demonstrated strategic leadership in embedding research within clinical service delivery. This score reflects advanced to expert proficiency in the clinical-research nexus. At this level, you are not only conducting research but are actively designing the environment in which clinical inquiry can thrive, demonstrating that research is a key driver of health service innovation.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Leading the implementation of service-level or system-wide changes based on original research findings.",
+                        "Advocating for and securing the formal integration of protected research time into clinical positions and workforce structures.",
+                        "Representing your clinical profession or discipline at state or national levels to influence the development of national clinical standards or guidelines.",
+                        "Formalising mentorship initiatives for established clinician-researchers and Higher Degree Research (HDR) students within clinical settings.",
+                        "Collaborating with health service executives to demonstrate the Return on Investment (ROI) of research-active clinical teams.",
+                        "Generating highly innovative research-related ideas and putting them into action across the entire clinical organisation."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "At this expert stage, development focuses on shaping the strategic direction of clinical research and building a sustainable culture of inquiry across the entire organization. Useful strategies may include:",
+                    items: [
+                        "Leading the development of a comprehensive research strategy that explicitly aligns research outcomes with health service clinical priorities.",
+                        "Advocating for the value and role of the clinician-researcher within the broader health landscape to influence workforce policy and funding models.",
+                        "Creating systemic pathways that allow for the seamless movement of staff between clinical, research, and academic roles.",
+                        "Negotiating multi-sector partnerships (e.g., between Hospital and Health Services and Universities) to support clinical research infrastructure.",
+                        "Driving the adoption of innovative research-led service delivery models that can be scaled across the healthcare system.",
+                        "Brokering combined clinical and research expertise at an international level to shape global healthcare contexts."
+                    ],
+                    focus: "Focus your development on high-level advocacy and systemic change, ensuring that the clinician-researcher role is recognized as an essential, sustainable component of the modern healthcare workforce."
+                }
+            }
         ],
         submappings: [
             {
@@ -1075,29 +1468,193 @@ const frameworkMapping = {
             },
             {
                 check: (scores) => scores['q-clinical-10'] < 3,
-                text: "Where 3.10 is <3\n\nOpportunites to develop the understanding of research ethics governance considerations within the interaction of healthcare and research includes participating in health-specific research education and training, attending health research events, and completing suitable health research focused ethics, governance and /or regulatory training."
+                text: "Where 3.10 is <3\n\nOpportunities to develop the understanding of research ethics governance considerations within the interaction of healthcare and research includes participating in health-specific research education and training, attending health research events, and completing suitable health research focused ethics, governance and/or regulatory training."
             },
             {
                 check: (scores) => scores['q-clinical-10'] >= 3,
-                text: "Where 3.10 is >3\n\nAttending health research events, developing and maintaining research partnerships with academic and industry members, advocating the value of clinican- researchers, and mentoring clinicians interested in becoming clinican-researchers will maintains proficiency in navigating between healthcare and research context."
+                text: "Where 3.10 is >3\n\nAttending health research events, developing and maintaining research partnerships with academic and industry members, advocating the value of clinician-researchers, and mentoring clinicians interested in becoming clinician-researchers will maintain proficiency in navigating between healthcare and research context."
             }
         ]
     },
     leadership: {
         title: "Domain 4: Research leadership and strategy",
+        description: "This domain includes those competencies required to lead research strategy, research projects, or teams, including research staff.",
         overall: [
-            { max: 2.499, text: "This domain identifies competencies to lead research strategy, research projects, or teams. The overall domain score (no proficiency to emerging proficiency) is averaged from 14 individual domain capabilities, suggesting opportunity to shift from research project participation to understanding the broader strategic and leadership requirements of research.\nTo develop proficiency in this domain, leverage service, workforce and innovation priorities from clinical and operational strategies and align with a flexible research agenda, enabling articulation of improving organisational capability through sustainable and effective research strategy.\nThis alignment supports advocacy of the value of research when communicating with relevant leadership stakeholders.\nEncourage and celebrate local clinician-researchers and research champions to empower staff to identify their capability to develop their services through research.\nProvide equitable opportunities for clinicians to develop research skills and engage in critical appraisal of local health practices, through individual mentoring and larger mentorship initiatives such as coordination of journal clubs. Foster partnerships with academic and industry to enable research collaborations and engage with local research mature groups or services for advice and support to drive research agenda and enable operationalisation of research.\nCoordinate local research events to  \ncelebrate research. Strategically embed research activities within local clinical service settings through protecting research time, research funding management support, and formalising service evaluation and improvement activities." },
-            { max: 3.999, text: "This domain identifies competencies to lead research strategy, research projects, or teams. The overall domain score (consolidating proficiency to advanced proficiency) is averaged from 14 individual domain capabilities and reflects an ability to independently translate clinical priorities into a cohesive research agenda while beginning to integrate expertise across broader organizational contexts.\n\nFurther developing proficiency in this domain involves transitioning from coordinating local research activities to strategically managing research sustainability and workforce research capacity.\nThis should focus on formalising research processes within clinical services, active negotiation of resourcing, and empower others through coordinated mentorship.\nThe development aim is to move towards embedding research activities as business-as-usual.\n\nSpecific activities to support development can include; leading development of service or departmental research plans that align health service and innovation strategies, engage executive leadership to communicate the value of research in health service settings and negotiate local research resourcing, foster and maintain formal collaboration with academic and industry partners, lead formal mentorship support,\ncoordinate large research events, participate in local research groups to advocate and drive research culture, and sustain equitable career pathways for clinician-researchers within local settings." },
-            { max: 5.0, text: "This domain identifies competencies to lead research strategy, research projects, or teams.\nThe overall domain score (advanced proficiency to expert proficiency) is averaged from 14 individual domain capabilities and identifies a strategic leader capable of driving and developing research culture and capacity at an organisational level.\n\nDeveloping further at this stage focuses on shaping the research ecosystem and driving organisational change, This involves scaling local level research capacity building strategy to the broader health system and navigating complex system-level healthcare landscapes.\nSpecific activities to support this development can include; setting the long-term directions and priorities for clinical research and innovation through organisational clinical and research committees, implementing organisational models to support the operationlisation of research within clinical operations, maintaining high-level partnerships with academic and industry leaders to maintain significant research collaborations, service as conduit clinican-researchers and executive leadership to ensure research is recognised as a driver of maintaining quality health services, mentoring senior clinicians and clinician-researchers to transition into research leadership roles, and formalising career frameworks for clinician-researchers that ensure workforce sustainability and professional development." }
+            {
+                max: 2.499,
+                whatYourScoreSuggests: "Your overall score suggests emerging proficiency in this domain. This typically reflects a transition from participating in research projects to developing an understanding of the broader strategic and leadership requirements of research. At this level, you are beginning to recognize how research can be leveraged as a tool for workforce development and service innovation, though you may still be building the skills necessary to lead these initiatives at a strategic level.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Encouraging and celebrating local research champions to empower staff to recognize the value of research in service development.",
+                        "Identifying equitable opportunities for clinicians to engage in research skills development and critical appraisal of local practices.",
+                        "Coordinating local research events, such as journal clubs or research showcases, to celebrate and promote research activity.",
+                        "Engaging with research-mature groups or established services to seek advice and support for local research initiatives.",
+                        "Communicating the value of existing research projects to relevant local leadership and stakeholders.",
+                        "Promoting and supporting good research practices and governance within your immediate team in line with relevant standards.",
+                        "Promoting a culture of equity and opportunity for all staff engaged in research at a local level."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "To continue building your proficiency, focus on aligning research activities with broader clinical and operational strategies to drive organizational capability. Useful strategies may include:",
+                    items: [
+                        "Learning to articulate a research agenda that directly aligns with service, workforce, and innovation priorities within your health service.",
+                        "Developing skills in advocating for the value of research when communicating with executive leadership or senior management.",
+                        "Exploring ways to strategically embed research within local settings, such as navigating protected research time or research funding management.",
+                        "Fostering initial partnerships with academic or industry stakeholders to enable future research collaborations.",
+                        "Seeking mentorship focused on research leadership and the operationalization of research within a complex health system.",
+                        "Formalizing service evaluation and improvement activities as a precursor to more complex research leadership roles.",
+                        "Developing a stronger understanding of the strategic landscape across research and healthcare to better anticipate future directions."
+                    ],
+                    focus: "Focus your development on moving from the management of research tasks to the strategic leadership of research culture, ensuring that research is seen as a sustainable and effective component of high-quality service delivery."
+                }
+            },
+            {
+                max: 3.999,
+                whatYourScoreSuggests: "Your overall score suggests a consolidating to advanced proficiency in this domain. This reflects a shift from individual project participation to an active role in managing the broader strategic requirements of research. At this level, you are likely capable of coordinating research efforts within your service and are beginning to articulate how research improves organizational capability through sustainable and effective strategy.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Leading the development of service or departmental research strategies and communicating that strategy to relevant stakeholders.",
+                        "Engaging with executive leadership to communicate the value of research and negotiating for local research resourcing.",
+                        "Fostering and maintaining formal collaborations with academic and industry partners to expand research opportunities.",
+                        "Coordinating large-scale research events to celebrate outcomes and build a visible research culture.",
+                        "Participating in local research groups to advocate for the professional interests of clinician-researchers.",
+                        "Leading formal mentorship support and initiatives to empower staff, creating opportunities for and promoting the research careers of others.",
+                        "Initiating, leading, and sustaining independent research projects or a distinct program of research.",
+                        "Forming research teams that are fit for purpose, appropriately navigating team dynamics, and creating a positive team culture."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "Further developing your proficiency involves transitioning from coordinating local activities to strategically managing research sustainability and workforce capacity. The aim is to embed research as \u201Cbusiness-as-usual\u201D within your service. Useful strategies may include:",
+                    items: [
+                        "Formalizing research processes and shaping local policy and procedures to ensure high-quality and sustainable research conduct.",
+                        "Developing strategies to sustain equitable career pathways for clinician-researchers within local settings, such as navigating joint appointments.",
+                        "Refining negotiation skills to secure long-term investment in research infrastructure and engaging in effective research workforce planning and budget management.",
+                        "Mentoring other emerging leaders to take on the coordination of local research champions and champions of evidence-based practice.",
+                        "Actively participating in organizational-level strategy sessions to ensure the allied health research agenda is represented in high-level decision making.",
+                        "Establishing, managing, and sustaining broader research networks and collaborations across organizations to enhance the quality of research."
+                    ],
+                    focus: "Focus your development on building the structures and workforce capacity that allow research to persist and grow independently of any single project or individual."
+                }
+            },
+            {
+                max: 5.0,
+                whatYourScoreSuggests: "Your overall score identifies you as a strategic leader capable of driving and developing research culture and capacity at an organizational level. This score reflects advanced to expert proficiency in the leadership of research staff and strategy. At this level, you possess the expertise to move beyond the management of individual teams toward shaping the research ecosystem and driving systemic organizational change.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Setting the long-term directions and priorities for clinical research and innovation through high-level organizational committees.",
+                        "Implementing robust organizational models that support the seamless operationalization of research within clinical business units.",
+                        "Serving as a strategic conduit between clinician-researchers and executive leadership to ensure research is recognized as a primary driver of high-quality health services.",
+                        "Maintaining high-level partnerships with academic and industry leaders to sustain significant, multi-sector research collaborations.",
+                        "Mentoring senior clinicians and established clinician-researchers to support their transition into formal research leadership roles.",
+                        "Establishing a firm reputation as a leader who actively drives the agenda in your research field and challenges traditional ways of thinking.",
+                        "Serving on key research committees beyond your immediate organization, such as external strategic advisory committees or major grant review panels."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "At this expert stage, development focuses on scaling local successes to the broader health system and navigating complex, system-level healthcare landscapes. Useful strategies may include:",
+                    items: [
+                        "Formalizing comprehensive career frameworks for clinician-researchers that ensure statewide workforce sustainability and professional development.",
+                        "Leading the development of research governance and ethics policies that reduce barriers to multi-site clinical innovation.",
+                        "Negotiating large-scale funding and resource allocations at a state or national level to support emerging research priorities.",
+                        "Driving cultural change by advocating for the value of research in health service performance and patient safety frameworks.",
+                        "Contributing to the design of health system policies that integrate research productivity into standard Allied Health workforce metrics.",
+                        "Leveraging your deep understanding of the strategic landscape to anticipate future directions and effectively champion highly promising, disruptive ideas."
+                    ],
+                    focus: "Focus your development on building the institutional structures and legislative or policy environments that allow a thriving research culture to become a permanent, resilient feature of the health system."
+                }
+            }
         ],
         submappings: []
     },
     mentorship: {
         title: "Domain 5: Research capacity building and mentorship",
+        description: "This domain includes competencies related to building research capacity in researchers and healthcare staff, including one-on-one mentorship, education, and contributing to the structure of research.",
         overall: [
-            { max: 2.499, text: "This domain includes competencies of research capacity building and research mentorship. Your overall score for this domain (no proficiency to emerging proficiency) has been averaged based on each score for 15 individual capabilities and indicates awareness of local setting clinical and operational priorities and opportunity to develop skills and knowledge in building research capability and becoming a research enabler within a local context.\n\nTo develop skills within this domain, first seek advice and support from local research networks or research groups, even if outside of the local service discipline of profession. Review local operational and research strategies to align of relevant research capacity building and mentorship activities. \n\nDetermine local setting opportunities to mentor junior researchers or clinicians and identify opportunities to engage with relevant university partners to leverage research expertise and mentorship to build research collaborations.\nBecome a research leader, advocate and enabler by leveraging local research support, strategy and synergy to quality improvement to enable research interest and capacity.\nLearn from other mature research leaders, groups or successful exemplars to build a reputation as a local contact and mentor to inspire clinicians to engage in research and research training, support research ethics and governance applications, and enable engagement with academic and industry partners to build research collaboration.\nDevelop a working relationship with local leadership teams to identify how to support local staff to progress research projects and operationalise research activities through protected time and alignment of projects to service evaluation and development activities." },
-            { max: 3.999, text: "This domain includes competencies of research capacity building and research mentorship. The overall domain score (consolidating proficiency to advanced proficiency) is averaged from 15 individual domain capabilities and reflects a proven ability to independently facilitate effective research capacity building.\n\nFurther advancement of this proficiency should focus on formalising mentorship initiatives, developing an active research environment in local clinical settings, and enabling research participation for clinicians and emerging clinician-researchers through structural supports within local services.\n\nSpecific activities to support this development can include;\nserving as a mentor for clinicians, novice researchers or students, establishing formal research structures within local settings (such as journal clubs, continuous service evaluation and fomalised service development), and negotiating protected research time or seed funding for staff to foster a sustainable pipeline of clinician-researchers.\nCollaborating with clinical leadership to align staff research projects with service delivery goals will ensure research is recognised as a core component of professional development and clinical practice. Becoming a key liaison between the clinical teams and university or industry partners will maintain collaborative opportunities and build a recognised research enabler profile that leverages organisational strategies into research activites for clinical staff." },
-            { max: 5.0, text: "This domain includes competencies of research capacity building and research mentorship. The overall domain score (advanced proficiency to expert proficiency) is averaged from 15 individual domain capabilities and identifies a clear leader with demonstrated strategic leadership in cultivating a sustainable research workforce.\n\nDevelopment opportunities at this stage will focus on shaping the institutional ecosystem to normalise research as a core clinical function; serving as primary advocatory and driver of research culture, consistent developing and adapting capacity-building strategies to ensure long-term sustainability and operational alignment of research.\n\nSpecific activities to support development can include; leading system level mentorship frameworks, developing and celebrating formal clinician-researcher career structures and positions including outputs and impacts, influencing system level strategy to secure research resourcing and infrastructure, establishing national and international strategic alliances between health services, universities, and industry to co-invest in research centers or groups, and share successful models of research operationalisation and capacity building with national and international groups to influence how other health services approach research integration." }
+            {
+                max: 2.499,
+                whatYourScoreSuggests: "Your overall score suggests emerging proficiency in this domain. This indicates an awareness of local clinical and operational priorities and highlights an opportunity to develop your skills as a research enabler. At this level, you are beginning to understand how to support others in their research journey and how to align capacity-building activities with the strategic needs of your local service.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Acting as a local contact and peer-mentor to inspire colleagues to engage in research or foundational research training.",
+                        "Supporting peers with the administrative aspects of research, such as navigating research ethics and governance applications.",
+                        "Coordinating with local leadership to identify staff who are ready to progress research projects or service evaluations.",
+                        "Promoting local research success stories and \u201Cchampions\u201D to build interest and momentum within the department.",
+                        "Participating in multidisciplinary research meetings to observe how diverse skill sets contribute to overall team capacity.",
+                        "Encouraging and inspiring staff in their research journey.",
+                        "Contributing to the promotion of research in the health service."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "To build your proficiency as a research enabler and mentor, focus on leveraging existing networks and formalizing your support structures. Useful strategies may include:",
+                    items: [
+                        "Seeking advice and support from established research networks or groups, even those outside of your specific discipline or profession.",
+                        "Reviewing local operational and research strategies to ensure your capacity-building activities (like journal clubs or workshops) are aligned with service priorities.",
+                        "Identifying specific opportunities to provide one-on-one mentorship to junior researchers or students within your clinical setting.",
+                        "Developing a working relationship with local management to advocate for protected research time and the operationalization of research activities.",
+                        "Engaging with university partners to explore how academic expertise can be leveraged to support local clinician-researcher development.",
+                        "Learning from \u201Cmature\u201D research leaders and successful exemplars to understand how to build a sustainable reputation as a research mentor and leader.",
+                        "Assisting staff in identifying appropriate funding schemes and developing targeted funding proposals under guidance."
+                    ],
+                    focus: "Focus your development on moving from individual participation toward creating a supportive environment that empowers your colleagues to integrate research into their clinical roles."
+                }
+            },
+            {
+                max: 3.999,
+                whatYourScoreSuggests: "Your overall score suggests consolidating to advanced proficiency in this domain. This score is averaged from 15 individual domain capabilities and reflects a proven ability to independently facilitate effective research capacity building. At this level, you have moved beyond emerging skills and are demonstrating the capacity to support others and create research-enabling environments.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Serving as a mentor and guide for clinicians, novice researchers, or students.",
+                        "Collaborating with clinical leadership to align staff research projects with service delivery goals.",
+                        "Acting as a key liaison between clinical teams and university or industry partners to maintain collaborative opportunities.",
+                        "Designing and delivering research training and development sessions and/or programs.",
+                        "Supporting and organising research learning opportunities for staff and other relevant stakeholders, such as consumers.",
+                        "Supporting staff through the research project lifecycle (e.g., literature search, data collection, data analysis)."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "To further advance this proficiency, focus on formalising mentorship initiatives, developing an active research environment in local clinical settings, and enabling research participation for clinicians and emerging clinician-researchers. Useful strategies may include:",
+                    items: [
+                        "Establishing formal research structures within local settings (such as journal clubs, continuous service evaluation, and formalised service development).",
+                        "Negotiating protected research time or seed funding for staff to foster a sustainable pipeline of clinician-researchers.",
+                        "Contributing to the broader strategy and structure of research mentoring within the organization.",
+                        "Building a recognised research enabler profile that leverages organisational strategies into research activities for clinical staff.",
+                        "Undertaking evaluation and research on your own research development activities (e.g., teaching, education strategies, supervision, mentoring).",
+                        "Seeking opportunities to engage staff in research and embed researchers into departments."
+                    ],
+                    focus: "By establishing these structural supports within local services, you will ensure research is recognised as a core component of professional development and clinical practice."
+                }
+            },
+            {
+                max: 5.0,
+                whatYourScoreSuggests: "Your overall score suggests advanced to expert proficiency in this domain. Averaged from 15 individual domain capabilities, this score identifies you as a clear leader with demonstrated strategic leadership in cultivating a sustainable research workforce.",
+                howToApply: {
+                    intro: "Allied Health professionals at this level can apply these capabilities by:",
+                    items: [
+                        "Serving as a primary advocate and driver of research culture within the organisation.",
+                        "Consistently developing and adapting capacity-building strategies to ensure long-term sustainability and operational alignment of research.",
+                        "Shaping the institutional ecosystem to normalise research as a core clinical function.",
+                        "Providing formal supervision associated with a research degree (e.g., honours, PhD).",
+                        "Contributing directly to the strategy and structure of research mentoring and supervision across the broader organization."
+                    ]
+                },
+                howToDevelop: {
+                    intro: "Development opportunities at this stage will focus on broad, system-level strategic influence and infrastructure. Specific activities to support this development can include:",
+                    items: [
+                        "Leading system-level mentorship frameworks.",
+                        "Developing and celebrating formal clinician-researcher career structures and positions, including highlighting their outputs and impacts.",
+                        "Influencing system-level strategy to secure research resourcing and infrastructure.",
+                        "Establishing national and international strategic alliances between health services, universities, and industry to co-invest in research centers or groups.",
+                        "Sharing successful models of research operationalisation and capacity building with national and international groups to influence how other health services approach research integration.",
+                        "Evaluating and adapting different research-informed development practices on a macro scale to continually refine institutional educational strategies."
+                    ],
+                    focus: ""
+                }
+            }
         ],
         submappings: []
     }
@@ -1138,29 +1695,96 @@ function generateReportCardsHTML() {
         if (avg === 0) return; // Skip if unanswered
 
         const mapping = frameworkMapping[domain];
-        let overallText = "";
-        
-        // Find matching text based on average (0-2.49, 2.5-3.99, 4-5)
-        for (const tier of mapping.overall) {
-            if (avg <= tier.max) {
-                overallText = tier.text;
+        let tier = null;
+
+        // Find matching tier based on average (0-2.49, 2.5-3.99, 4-5)
+        for (const t of mapping.overall) {
+            if (avg <= t.max) {
+                tier = t;
                 break;
             }
         }
+        if (!tier) return;
 
         const card = document.createElement('div');
         card.className = `report-card domain-${domain}`;
 
+        // Domain title with score
         const title = document.createElement('h3');
         title.innerText = `${mapping.title} (Average Score: ${avg.toFixed(1)})`;
         card.appendChild(title);
 
-        const textDiv = document.createElement('div');
-        textDiv.className = 'report-card-text';
-        textDiv.innerText = overallText;
-        card.appendChild(textDiv);
+        // Domain description
+        if (mapping.description) {
+            const descP = document.createElement('p');
+            descP.className = 'domain-description';
+            descP.innerText = mapping.description;
+            card.appendChild(descP);
+        }
 
-        // 3. Evaluate conditional Submappings
+        // "What your score suggests" section
+        const suggestsSection = document.createElement('div');
+        suggestsSection.className = 'report-card-section';
+        const suggestsH4 = document.createElement('h4');
+        suggestsH4.innerText = 'What your score suggests';
+        suggestsSection.appendChild(suggestsH4);
+        const suggestsP = document.createElement('p');
+        suggestsP.innerText = tier.whatYourScoreSuggests;
+        suggestsSection.appendChild(suggestsP);
+        card.appendChild(suggestsSection);
+
+        // "How these capabilities can currently be applied" section
+        if (tier.howToApply) {
+            const applySection = document.createElement('div');
+            applySection.className = 'report-card-section';
+            const applyH4 = document.createElement('h4');
+            applyH4.innerText = 'How these capabilities can currently be applied';
+            applySection.appendChild(applyH4);
+            const applyIntro = document.createElement('p');
+            applyIntro.innerText = tier.howToApply.intro;
+            applySection.appendChild(applyIntro);
+            if (tier.howToApply.items && tier.howToApply.items.length > 0) {
+                const applyUl = document.createElement('ul');
+                tier.howToApply.items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerText = item;
+                    applyUl.appendChild(li);
+                });
+                applySection.appendChild(applyUl);
+            }
+            card.appendChild(applySection);
+        }
+
+        // "How to strengthen or develop your capabilities" section
+        if (tier.howToDevelop) {
+            const devSection = document.createElement('div');
+            devSection.className = 'report-card-section';
+            const devH4 = document.createElement('h4');
+            devH4.innerText = 'How to strengthen or develop your capabilities';
+            devSection.appendChild(devH4);
+            const devIntro = document.createElement('p');
+            devIntro.innerText = tier.howToDevelop.intro;
+            devSection.appendChild(devIntro);
+            if (tier.howToDevelop.items && tier.howToDevelop.items.length > 0) {
+                const devUl = document.createElement('ul');
+                tier.howToDevelop.items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerText = item;
+                    devUl.appendChild(li);
+                });
+                devSection.appendChild(devUl);
+            }
+            if (tier.howToDevelop.focus) {
+                const focusP = document.createElement('p');
+                focusP.style.marginTop = '12px';
+                focusP.style.fontStyle = 'italic';
+                focusP.innerText = tier.howToDevelop.focus;
+                devSection.appendChild(focusP);
+            }
+            card.appendChild(devSection);
+        }
+
+        // 3. Evaluate conditional Submappings (mini-cards)
         mapping.submappings.forEach(sub => {
             if (sub.check(scores)) {
                 const miniCard = document.createElement('div');
