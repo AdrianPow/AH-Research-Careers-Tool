@@ -190,26 +190,6 @@
             white-space: pre-wrap;
         }
 
-        /* Submapping Mini-Cards */
-        .mini-card {
-            background: #f8fafc;
-            border-left: 4px solid #94a3b8;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 0 4px 4px 0;
-        }
-        .mini-card p {
-            margin: 0;
-            font-size: 14px;
-            color: #1e293b;
-            white-space: pre-wrap;
-        }
-        .domain-knowledge .mini-card { border-left-color: var(--col-knowledge); background: #f1f5f9; }
-        .domain-impact .mini-card { border-left-color: var(--col-impact); background: #fdf4ff; }
-        .domain-clinical .mini-card { border-left-color: var(--col-clinical); background: #f0fdfa; }
-        .domain-leadership .mini-card { border-left-color: var(--col-leadership); background: #f7fee7; }
-        .domain-mentorship .mini-card { border-left-color: var(--col-mentorship); background: #eff6ff; }
-
         /* --- Understanding Profile & Next Steps Sections --- */
         .profile-understanding-section,
         .next-steps-section {
@@ -1240,32 +1220,7 @@ const frameworkMapping = {
                 }
             }
         ],
-        submappings: [
-            {
-                check: (scores) => scores['q-knowledge-2'] < 3,
-                text: "Where 1.2 is <3 \n\nTo develop the understanding of the role of consumers in health research, participate in research co-design and consumer engagement training, and review relevant research publications that engaged consumers or employed co-design."
-            },
-            {
-                check: (scores) => scores['q-knowledge-2'] >= 3,
-                text: "Where 1.2 is >3 \n\nMaintaining visibility in strategies, initiatives and relevant literature maintains high proficiency in understanding the value of consumers in research.\nMentoring others who are still developing this understanding further develops experience in this area."
-            },
-            {
-                check: (scores) => scores['q-knowledge-5'] < 3 || scores['q-knowledge-6'] < 3,
-                text: "Where 1.5 or 1.6 are <3\n\nIncreasing knowledge in research ethics, governance and regulation includes reviewing local service and national research ethics and governance guidelines, completing relevant training (such as Good Clinical Practice), and observing ethics and research governance submissions that are led by experienced researchers."
-            },
-            {
-                check: (scores) => scores['q-knowledge-5'] >= 3 || scores['q-knowledge-6'] >= 3,
-                text: "Where 1.5 or 1.6 are >3\n\nKeeping a contemporary knowledge of changes to local or national standards and guidelines through relevant websites, forums and events will ensure adherence to appropriate research conduct, and enables opportunities to mentoring novice researchers."
-            },
-            {
-                check: (scores) => scores['q-knowledge-11'] < 3,
-                text: "Where 1.11 is <3\n\nUnderstanding where and how to access research funding and developing grant writing skills enables higher likelihood in securing research funding and develops skill in articulating research value and impact. Engaging in research grant writing training and education, building academic or industry partnerships, and maintaining frequent visibility on relevant grant opportunities are key activities to develop this understanding."
-            },
-            {
-                check: (scores) => scores['q-knowledge-11'] >= 3,
-                text: "Where 1.11 is >3\n\nMaintaining visibility on relevant grant opportunities ensures current knowledge of the research funding landscape, and mentoring others to develop their grant writing skills contributes further to building research capacity in local teams and settings."
-            }
-        ]
+        submappings: []
     },
     impact: {
         title: "Domain 2: Research impact and translation",
@@ -1353,24 +1308,7 @@ const frameworkMapping = {
                 }
             }
         ],
-        submappings: [
-            {
-                check: (scores) => scores['q-impact-4'] < 3 || scores['q-impact-5'] < 3 || scores['q-impact-6'] < 3,
-                text: "Where 2.4, 2.5, 2.6 is <3 \n\nParticipating in research impact training, attending health research events and reviewing published research that has recently informed current practice local settings developed understanding of research impact, including impact types and how to measure impact."
-            },
-            {
-                check: (scores) => scores['q-impact-4'] >= 3 || scores['q-impact-5'] >= 3 || scores['q-impact-6'] >= 3,
-                text: "Where 2.4, 2.5, 2.6 is >3 \n\nStaying up to date with current and emerging research relevant to local settings and practice, as well as mentoring others who are developing this understanding ensures impact is the focus of research activities and enables opportunities for proactive research translation."
-            },
-            {
-                check: (scores) => scores['q-impact-8'] < 3,
-                text: "Where 2.8 is <3\n\nCommunicating and disseminating research findings celebrates research achievements, provides visibility on new knowledge that can be translated into practice, and builds networking opportunities.\nParticipating in research dissemination training (including research impact and publication writing), and attending research events will develop skills in research dissemination."
-            },
-            {
-                check: (scores) => scores['q-impact-8'] >= 3,
-                text: "Where 2.8 is >3\n\nResearch dissemination is important to celebrate achievements, identify potential for translation, develop research capacity and enable opportunities for networking or collaboration. Attending research events, identifying and maintaining opportunities to disseminate research, and mentoring others to develop their research dissemination skills are all activities that help to maintain high proficiency in research dissemination."
-            }
-        ]
+        submappings: []
     },
     clinical: {
         title: "Domain 3: Clinical and healthcare research context",
@@ -1457,24 +1395,7 @@ const frameworkMapping = {
                 }
             }
         ],
-        submappings: [
-            {
-                check: (scores) => scores['q-clinical-4'] < 3,
-                text: "Where 3.4 is <3\n\nTo develop knowledge in the process of translating research into practice, engage in basic research translation / knowledge translation training, become familiar with local and national research translation initiatives, and participate in local translation activities as an observer or participant."
-            },
-            {
-                check: (scores) => scores['q-clinical-4'] >= 3,
-                text: "Where 3.4 is >3\n\nStaying up to date with with current or emerging local and national research translation initiatives, leading, participating or even being a mentor in local translation projects helps to maintain a contemporary understanding of the concepts and process of translating research into practice."
-            },
-            {
-                check: (scores) => scores['q-clinical-10'] < 3,
-                text: "Where 3.10 is <3\n\nOpportunities to develop the understanding of research ethics governance considerations within the interaction of healthcare and research includes participating in health-specific research education and training, attending health research events, and completing suitable health research focused ethics, governance and/or regulatory training."
-            },
-            {
-                check: (scores) => scores['q-clinical-10'] >= 3,
-                text: "Where 3.10 is >3\n\nAttending health research events, developing and maintaining research partnerships with academic and industry members, advocating the value of clinician-researchers, and mentoring clinicians interested in becoming clinician-researchers will maintain proficiency in navigating between healthcare and research context."
-            }
-        ]
+        submappings: []
     },
     leadership: {
         title: "Domain 4: Research leadership and strategy",
@@ -1682,7 +1603,7 @@ function generateReportCardsHTML() {
 
     // Create a section title for the report cards
     const sectionTitle = document.createElement('h2');
-    sectionTitle.innerText = "Development Statements & Resource Mapping";
+    sectionTitle.innerText = "Your Domain Feedback";
     sectionTitle.style.textAlign = "center";
     sectionTitle.style.color = "var(--primary-color)";
     sectionTitle.style.marginTop = "40px";
@@ -1783,18 +1704,6 @@ function generateReportCardsHTML() {
             }
             card.appendChild(devSection);
         }
-
-        // 3. Evaluate conditional Submappings (mini-cards)
-        mapping.submappings.forEach(sub => {
-            if (sub.check(scores)) {
-                const miniCard = document.createElement('div');
-                miniCard.className = 'mini-card';
-                const p = document.createElement('p');
-                p.innerText = sub.text;
-                miniCard.appendChild(p);
-                card.appendChild(miniCard);
-            }
-        });
 
         container.appendChild(card);
     });
