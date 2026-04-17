@@ -331,11 +331,21 @@
         .tabs {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap; 
+            flex-wrap: wrap;
             margin-bottom: 30px;
             gap: 8px;
             border-bottom: 2px solid #e2e8f0;
             padding-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            z-index: 100;
+            padding-top: 16px;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .tabs.sticky-shadow {
+            box-shadow: 0 4px 12px rgba(9,84,159,0.10);
         }
 
         .tab-btn {
@@ -352,14 +362,14 @@
 
         .tab-btn:hover { background-color: #eef4fb; }
 
-        /* Per-domain active colours - border only, dark QLD blue text for accessibility */
-        .tab-btn.active[data-domain="knowledge"] { background-color: white; border-color: #0f284e; border-width: 3px; color: #09549f; }
-        .tab-btn.active[data-domain="impact"]    { background-color: white; border-color: #6f3076; border-width: 3px; color: #09549f; }
-        .tab-btn.active[data-domain="clinical"]  { background-color: white; border-color: #00a7b5; border-width: 3px; color: #09549f; }
-        .tab-btn.active[data-domain="leadership"]{ background-color: white; border-color: #8cbd3e; border-width: 3px; color: #09549f; }
-        .tab-btn.active[data-domain="mentorship"]{ background-color: white; border-color: #5696d3; border-width: 3px; color: #09549f; }
+        /* Per-domain active colours - filled background matching hover tint */
+        .tab-btn.active[data-domain="knowledge"] { background-color: #eef1f5; border-color: #0f284e; border-width: 3px; color: #09549f; }
+        .tab-btn.active[data-domain="impact"]    { background-color: #f8f0f9; border-color: #6f3076; border-width: 3px; color: #09549f; }
+        .tab-btn.active[data-domain="clinical"]  { background-color: #e8f8fa; border-color: #00a7b5; border-width: 3px; color: #09549f; }
+        .tab-btn.active[data-domain="leadership"]{ background-color: #f4faec; border-color: #8cbd3e; border-width: 3px; color: #09549f; }
+        .tab-btn.active[data-domain="mentorship"]{ background-color: #eef4fb; border-color: #5696d3; border-width: 3px; color: #09549f; }
 
-        /* Per-domain border colour when inactive - dark QLD blue text for accessibility */
+        /* Per-domain border colour when inactive */
         .tab-btn[data-domain="knowledge"] { border-color: #0f284e; color: #09549f; }
         .tab-btn[data-domain="impact"]    { border-color: #6f3076; color: #09549f; }
         .tab-btn[data-domain="clinical"]  { border-color: #00a7b5; color: #09549f; }
@@ -664,6 +674,7 @@
         <h1 style="font-size: 1.5rem;">Self-Assessment Questions</h1>
         <p class="subtitle">Rate your proficiency (1=Low, 5=High)</p>
 
+        <div id="tabs-sentinel" style="height:0;margin:0;padding:0;"></div>
         <div class="tabs no-print" role="tablist" aria-label="Assessment domains">
             <button class="tab-btn active" data-domain="knowledge" role="tab" aria-selected="true" aria-controls="tab-knowledge" onclick="openTab('tab-knowledge')">Knowledge & Skills</button>
             <button class="tab-btn" data-domain="impact" role="tab" aria-selected="false" aria-controls="tab-impact" onclick="openTab('tab-impact')">Impact & Translation</button>
@@ -1017,6 +1028,16 @@
             });
             localStorage.setItem('ahrcf-answers', JSON.stringify(all));
         });
+
+        // Add shadow to sticky tabs when they become stuck
+        const sentinel = document.getElementById('tabs-sentinel');
+        const tabsEl = document.querySelector('.tabs');
+        if (sentinel && tabsEl) {
+            const observer = new IntersectionObserver(([entry]) => {
+                tabsEl.classList.toggle('sticky-shadow', !entry.isIntersecting);
+            }, { threshold: 0 });
+            observer.observe(sentinel);
+        }
     });
 
     // --- REPORT GENERATION ---
