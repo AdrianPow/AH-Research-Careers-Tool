@@ -74,7 +74,7 @@
         }
 
         .qld-header-agency {
-            color: #09549f;
+            color: var(--primary-color);
             font-size: 1.2rem;
             font-weight: 700;
             letter-spacing: 0.2px;
@@ -83,13 +83,28 @@
 
         .qld-header-divider {
             height: 4px;
-            background: linear-gradient(90deg, #09549f 0%, #1a6bb5 50%, #5696d3 100%);
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 50%, var(--col-mentorship) 100%);
             width: 100%;
         }
 
+        .nav-back-btn {
+            display: none;
+            background: var(--primary-color);
+            border: 1.5px solid var(--primary-color);
+            color: white;
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .nav-back-btn:hover { background: var(--primary-light); }
+
         /* --- QLD Government Footer Banner --- */
         .qld-footer {
-            background-color: #09549f;
+            background-color: var(--primary-color);
             color: white;
             text-align: center;
             padding: 18px 30px;
@@ -102,7 +117,7 @@
 
         /* --- Page Title Banner --- */
         .page-title-banner {
-            background-color: #09549f;
+            background-color: var(--primary-color);
             color: white;
             padding: 22px 30px;
             text-align: left;
@@ -145,7 +160,7 @@
             text-align: center;
             font-size: 1.8rem;
             line-height: 1.2;
-            color: #09549f;
+            color: var(--primary-color);
             margin-bottom: 20px;
             font-weight: 700;
             letter-spacing: -0.5px;
@@ -177,6 +192,31 @@
         .report-card h3 {
             margin-top: 0;
             font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+        }
+        .report-card h3::after {
+            content: '\25B2';
+            font-size: 0.7em;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 12px;
+        }
+        .report-card.collapsed h3::after {
+            transform: rotate(180deg);
+        }
+        .report-card-body {
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            max-height: 2000px;
+            opacity: 1;
+        }
+        .report-card.collapsed .report-card-body {
+            max-height: 0;
+            opacity: 0;
         }
         .domain-knowledge h3 { color: var(--col-knowledge); }
         .domain-impact h3 { color: var(--col-impact); }
@@ -198,11 +238,11 @@
             padding: 30px;
             margin-top: 40px;
             margin-bottom: 30px;
-            border-left: 5px solid #09549f;
+            border-left: 5px solid var(--primary-color);
         }
         .profile-understanding-section h2,
         .next-steps-section h2 {
-            color: #09549f;
+            color: var(--primary-color);
             font-size: 1.3rem;
             margin-top: 0;
             margin-bottom: 15px;
@@ -218,13 +258,13 @@
             margin-bottom: 16px;
         }
         .profile-understanding-section .context-item strong {
-            color: #09549f;
+            color: var(--primary-color);
         }
         .next-steps-section .next-step-item {
             margin-bottom: 18px;
         }
         .next-steps-section .next-step-item strong {
-            color: #09549f;
+            color: var(--primary-color);
         }
         .next-steps-section .smart-list {
             list-style: none;
@@ -240,7 +280,7 @@
         }
         .next-steps-section .smart-list li::before {
             content: "\2022";
-            color: #09549f;
+            color: var(--primary-color);
             font-size: 16px;
             position: absolute;
             left: 4px;
@@ -254,7 +294,7 @@
         .report-card-section h4 {
             font-size: 15px;
             font-weight: 700;
-            color: #09549f;
+            color: var(--primary-color);
             margin: 0 0 10px 0;
         }
         .report-card-section p {
@@ -310,8 +350,8 @@
             border-radius: 0 4px 4px 0;
         }
 
-        .instruction-block h2 { margin-top: 0; color: #09549f; font-size: 1.2rem; font-weight: 700; }
-        .instruction-block p { margin-bottom: 0; color: #09549f; }
+        .instruction-block h2 { margin-top: 0; color: var(--primary-color); font-size: 1.2rem; font-weight: 700; }
+        .instruction-block p { margin-bottom: 0; color: var(--primary-color); }
 
         .scale-table {
             width: 100%;
@@ -319,8 +359,8 @@
             margin: 30px 0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .scale-table th { background: #09549f; color: white; padding: 15px; text-align: left; }
-        .scale-table td { padding: 15px; border-bottom: 1px solid #c9dff2; font-size: 0.95rem; vertical-align: top; color: #09549f; }
+        .scale-table th { background: var(--primary-color); color: white; padding: 15px; text-align: left; }
+        .scale-table td { padding: 15px; border-bottom: 1px solid #c9dff2; font-size: 0.95rem; vertical-align: top; color: var(--primary-color); }
         .scale-table tr:last-child td { border-bottom: none; }
         .scale-badge {
             display: inline-block; padding: 4px 12px; border-radius: 20px; 
@@ -348,31 +388,37 @@
 
         .tab-btn {
             background: transparent;
-            border: 2px solid #09549f;
+            border: 2px solid var(--primary-color);
             padding: 10px 18px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            color: #09549f;
+            color: var(--primary-color);
             border-radius: 4px;
             transition: all 0.2s ease;
         }
 
         .tab-btn:hover { background-color: #eef4fb; }
+        .tab-label-short { display: none; }
+        @media (max-width: 600px) {
+            .tab-label-full { display: none; }
+            .tab-label-short { display: inline; }
+            .tab-btn { padding: 8px 12px; font-size: 12px; }
+        }
 
         /* Per-domain active colours - filled background matching hover tint */
-        .tab-btn.active[data-domain="knowledge"] { background-color: #eef1f5; border-color: #0f284e; border-width: 3px; color: #09549f; }
-        .tab-btn.active[data-domain="impact"]    { background-color: #f8f0f9; border-color: #6f3076; border-width: 3px; color: #09549f; }
-        .tab-btn.active[data-domain="clinical"]  { background-color: #e8f8fa; border-color: #00a7b5; border-width: 3px; color: #09549f; }
-        .tab-btn.active[data-domain="leadership"]{ background-color: #f4faec; border-color: #8cbd3e; border-width: 3px; color: #09549f; }
-        .tab-btn.active[data-domain="mentorship"]{ background-color: #eef4fb; border-color: #5696d3; border-width: 3px; color: #09549f; }
+        .tab-btn.active[data-domain="knowledge"] { background-color: #eef1f5; border-color: #0f284e; border-width: 3px; color: var(--primary-color); }
+        .tab-btn.active[data-domain="impact"]    { background-color: #f8f0f9; border-color: #6f3076; border-width: 3px; color: var(--primary-color); }
+        .tab-btn.active[data-domain="clinical"]  { background-color: #e8f8fa; border-color: #00a7b5; border-width: 3px; color: var(--primary-color); }
+        .tab-btn.active[data-domain="leadership"]{ background-color: #f4faec; border-color: #8cbd3e; border-width: 3px; color: var(--primary-color); }
+        .tab-btn.active[data-domain="mentorship"]{ background-color: #eef4fb; border-color: #5696d3; border-width: 3px; color: var(--primary-color); }
 
         /* Per-domain border colour when inactive */
-        .tab-btn[data-domain="knowledge"] { border-color: #0f284e; color: #09549f; }
-        .tab-btn[data-domain="impact"]    { border-color: #6f3076; color: #09549f; }
-        .tab-btn[data-domain="clinical"]  { border-color: #00a7b5; color: #09549f; }
-        .tab-btn[data-domain="leadership"]{ border-color: #8cbd3e; color: #09549f; }
-        .tab-btn[data-domain="mentorship"]{ border-color: #5696d3; color: #09549f; }
+        .tab-btn[data-domain="knowledge"] { border-color: #0f284e; color: var(--primary-color); }
+        .tab-btn[data-domain="impact"]    { border-color: #6f3076; color: var(--primary-color); }
+        .tab-btn[data-domain="clinical"]  { border-color: #00a7b5; color: var(--primary-color); }
+        .tab-btn[data-domain="leadership"]{ border-color: #8cbd3e; color: var(--primary-color); }
+        .tab-btn[data-domain="mentorship"]{ border-color: #5696d3; color: var(--primary-color); }
 
         /* Per-domain hover */
         .tab-btn[data-domain="knowledge"]:hover { background-color: #eef1f5; }
@@ -390,6 +436,27 @@
             margin-bottom: 25px;
             font-size: 1.5rem;
             font-weight: 700;
+            border-left: 5px solid var(--primary-color);
+        }
+        .section-header-knowledge { color: var(--col-knowledge); border-left-color: var(--col-knowledge); }
+        .section-header-impact    { color: var(--col-impact);    border-left-color: var(--col-impact); }
+        .section-header-clinical  { color: var(--col-clinical);  border-left-color: var(--col-clinical); }
+        .section-header-leadership{ color: var(--col-leadership);border-left-color: var(--col-leadership); }
+        .section-header-mentorship{ color: var(--col-mentorship);border-left-color: var(--col-mentorship); }
+
+        .btn-domain-knowledge { background-color: var(--col-knowledge); }
+        .btn-domain-impact    { background-color: var(--col-impact); }
+        .btn-domain-clinical  { background-color: var(--col-clinical); }
+        .btn-domain-leadership{ background-color: var(--col-leadership); }
+        .btn-domain-mentorship{ background-color: var(--col-mentorship); }
+
+        .unanswered-warning {
+            text-align: center;
+            color: #d97706;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+            animation: fadeIn 0.3s ease-out;
         }
 
         .question-group {
@@ -413,7 +480,7 @@
         }
 
         .question-group:hover { border-color: #cbd5e1; transform: translateY(-1px); }
-        .q-text { font-size: 15px; font-weight: 500; color: #09549f; line-height: 1.5; flex: 1; margin-right: 20px; }
+        .q-text { font-size: 15px; font-weight: 500; color: var(--primary-color); line-height: 1.5; flex: 1; margin-right: 20px; }
 
         /* --- Custom Radio Buttons --- */
         .score-input-group { 
@@ -444,32 +511,43 @@
         }
 
         /* --- Domain Specific Color Logic for Inputs --- */
-        #tab-knowledge .score-input-group label:hover { border-color: var(--col-knowledge); color: #09549f; background-color: #eef1f5; }
-        #tab-knowledge .score-input-group label:has(input:checked) { background-color: #eef1f5; border-color: var(--col-knowledge); border-width: 2px; color: #09549f; transform: scale(1.1); }
+        #tab-knowledge .score-input-group label:hover { border-color: var(--col-knowledge); color: var(--primary-color); background-color: #eef1f5; }
+        #tab-knowledge .score-input-group label:has(input:checked) { background-color: #eef1f5; border-color: var(--col-knowledge); border-width: 2px; color: var(--primary-color); transform: scale(1.1); }
 
-        #tab-impact .score-input-group label:hover { border-color: var(--col-impact); color: #09549f; background-color: #f8f0f9; }
-        #tab-impact .score-input-group label:has(input:checked) { background-color: #f8f0f9; border-color: var(--col-impact); border-width: 2px; color: #09549f; transform: scale(1.1); }
+        #tab-impact .score-input-group label:hover { border-color: var(--col-impact); color: var(--primary-color); background-color: #f8f0f9; }
+        #tab-impact .score-input-group label:has(input:checked) { background-color: #f8f0f9; border-color: var(--col-impact); border-width: 2px; color: var(--primary-color); transform: scale(1.1); }
 
-        #tab-clinical .score-input-group label:hover { border-color: var(--col-clinical); color: #09549f; background-color: #e8f8fa; }
-        #tab-clinical .score-input-group label:has(input:checked) { background-color: #e8f8fa; border-color: var(--col-clinical); border-width: 2px; color: #09549f; transform: scale(1.1); }
+        #tab-clinical .score-input-group label:hover { border-color: var(--col-clinical); color: var(--primary-color); background-color: #e8f8fa; }
+        #tab-clinical .score-input-group label:has(input:checked) { background-color: #e8f8fa; border-color: var(--col-clinical); border-width: 2px; color: var(--primary-color); transform: scale(1.1); }
 
-        #tab-leadership .score-input-group label:hover { border-color: var(--col-leadership); color: #09549f; background-color: #f4faec; }
-        #tab-leadership .score-input-group label:has(input:checked) { background-color: #f4faec; border-color: var(--col-leadership); border-width: 2px; color: #09549f; transform: scale(1.1); }
+        #tab-leadership .score-input-group label:hover { border-color: var(--col-leadership); color: var(--primary-color); background-color: #f4faec; }
+        #tab-leadership .score-input-group label:has(input:checked) { background-color: #f4faec; border-color: var(--col-leadership); border-width: 2px; color: var(--primary-color); transform: scale(1.1); }
 
-        #tab-mentorship .score-input-group label:hover { border-color: var(--col-mentorship); color: #09549f; background-color: #eef4fb; }
-        #tab-mentorship .score-input-group label:has(input:checked) { background-color: #eef4fb; border-color: var(--col-mentorship); border-width: 2px; color: #09549f; transform: scale(1.1); }
+        #tab-mentorship .score-input-group label:hover { border-color: var(--col-mentorship); color: var(--primary-color); background-color: #eef4fb; }
+        #tab-mentorship .score-input-group label:has(input:checked) { background-color: #eef4fb; border-color: var(--col-mentorship); border-width: 2px; color: var(--primary-color); transform: scale(1.1); }
 
         /* --- Buttons --- */
         .btn-container { text-align: center; margin-top: 40px; margin-bottom: 20px; }
         .btn {
-            background-color: #09549f; color: white; border: none;
+            background-color: var(--primary-color); color: white; border: none;
             padding: 14px 36px; font-size: 15px; font-weight: 700; border-radius: 4px;
             cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(9,84,159,0.2);
         }
-        .btn:hover { background-color: #1a6bb5; transform: translateY(-1px); }
-        .btn-success { background-color: #09549f; }
-        .btn-success:hover { background-color: #1a6bb5; }
-        .btn-secondary { background-color: #5696d3; }
+        .btn:hover { background-color: var(--primary-light); transform: translateY(-1px); }
+        .btn-success { background-color: var(--primary-color); }
+        .btn-success:hover { background-color: var(--primary-light); }
+        .btn-secondary { background-color: var(--col-mentorship); }
+        .btn-danger { background-color: #c0392b; }
+        .btn-danger:hover { background-color: #a93226; }
+
+        .report-actions {
+            text-align: right;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
 
         /* --- Report View --- */
         #report-view { display: none; }
@@ -479,7 +557,7 @@
             margin: 0 auto 40px auto; 
         }
 
-        .custom-table { width: 100%; border-collapse: collapse; border-top: 3px solid #09549f; }
+        .custom-table { width: 100%; border-collapse: collapse; border-top: 3px solid var(--primary-color); }
         .custom-table td { padding: 12px 15px; border-bottom: 1px solid #c9dff2; font-weight: 600; font-size: 15px; vertical-align: middle; }
         .custom-table tr:last-child td { border-bottom: none; }
 
@@ -539,7 +617,7 @@
         }
         .progress-bar-inner {
             height: 100%;
-            background: linear-gradient(90deg, #09549f, #5696d3);
+            background: linear-gradient(90deg, var(--primary-color), var(--col-mentorship));
             border-radius: 5px;
             transition: width 0.4s ease;
         }
@@ -648,7 +726,9 @@
                 margin-bottom: 0;
                 box-shadow: none;
             }
-            .report-card h3 { font-size: 1.05rem; margin-bottom: 4px; }
+            .report-card.collapsed .report-card-body { max-height: none; opacity: 1; }
+            .report-card h3 { font-size: 1.05rem; margin-bottom: 4px; cursor: default; }
+            .report-card h3::after { display: none; }
             .report-card .domain-description { font-size: 12px; margin-bottom: 8px; padding-bottom: 8px; line-height: 1.4; }
             .report-card-section { margin-top: 10px; }
             .report-card-section h4 { font-size: 13px; margin-bottom: 4px; }
@@ -683,7 +763,7 @@
         <div class="qld-header-separator"></div>
         <span class="qld-header-agency">Queensland Health</span>
     </div>
-        <button onclick="goToStart()" id="home-nav-btn" style="display:none; background: #09549f; border: 1.5px solid #09549f; color: white; font-family: 'Noto Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 8px 18px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#1a6bb5'" onmouseout="this.style.background='#09549f'">&#8592; Back to Instructions</button>
+        <button onclick="goToStart()" id="home-nav-btn" class="nav-back-btn">&#8592; Back to Instructions</button>
     </div>
 </header>
 <div class="qld-header-divider"></div>
@@ -760,11 +840,11 @@
 
         <div id="tabs-sentinel" style="height:0;margin:0;padding:0;"></div>
         <div class="tabs no-print" role="tablist" aria-label="Assessment domains">
-            <button class="tab-btn active" data-domain="knowledge" role="tab" aria-selected="true" aria-controls="tab-knowledge" onclick="openTab('tab-knowledge')">Knowledge & Skills</button>
-            <button class="tab-btn" data-domain="impact" role="tab" aria-selected="false" aria-controls="tab-impact" onclick="openTab('tab-impact')">Impact & Translation</button>
-            <button class="tab-btn" data-domain="clinical" role="tab" aria-selected="false" aria-controls="tab-clinical" onclick="openTab('tab-clinical')">Clinical Context</button>
-            <button class="tab-btn" data-domain="leadership" role="tab" aria-selected="false" aria-controls="tab-leadership" onclick="openTab('tab-leadership')">Leadership</button>
-            <button class="tab-btn" data-domain="mentorship" role="tab" aria-selected="false" aria-controls="tab-mentorship" onclick="openTab('tab-mentorship')">Capacity & Mentorship</button>
+            <button class="tab-btn active" data-domain="knowledge" data-short="Knowledge" role="tab" aria-selected="true" aria-controls="tab-knowledge" onclick="openTab('tab-knowledge')"><span class="tab-label-full">Knowledge & Skills</span><span class="tab-label-short">Knowledge</span></button>
+            <button class="tab-btn" data-domain="impact" data-short="Impact" role="tab" aria-selected="false" aria-controls="tab-impact" onclick="openTab('tab-impact')"><span class="tab-label-full">Impact & Translation</span><span class="tab-label-short">Impact</span></button>
+            <button class="tab-btn" data-domain="clinical" data-short="Clinical" role="tab" aria-selected="false" aria-controls="tab-clinical" onclick="openTab('tab-clinical')"><span class="tab-label-full">Clinical Context</span><span class="tab-label-short">Clinical</span></button>
+            <button class="tab-btn" data-domain="leadership" data-short="Leadership" role="tab" aria-selected="false" aria-controls="tab-leadership" onclick="openTab('tab-leadership')"><span class="tab-label-full">Leadership</span><span class="tab-label-short">Leadership</span></button>
+            <button class="tab-btn" data-domain="mentorship" data-short="Mentorship" role="tab" aria-selected="false" aria-controls="tab-mentorship" onclick="openTab('tab-mentorship')"><span class="tab-label-full">Capacity & Mentorship</span><span class="tab-label-short">Mentorship</span></button>
         </div>
 
         <div id="progress-bar" class="progress-container no-print">
@@ -774,39 +854,39 @@
         </div>
 
         <div id="tab-knowledge" class="section-content active" role="tabpanel" aria-labelledby="tab-btn-knowledge">
-            <h3 class="section-header" style="color: var(--col-knowledge); border-left: 5px solid var(--col-knowledge);">Knowledge & Skills</h3>
+            <h3 class="section-header section-header-knowledge">Knowledge & Skills</h3>
             <div id="q-container-knowledge"></div>
             <div class="btn-container">
-                <button class="btn" style="background-color: var(--col-knowledge);" onclick="openTab('tab-impact')">Next Section &rarr;</button>
+                <button class="btn btn-domain-knowledge" onclick="nextSection('knowledge','tab-impact')">Next Section &rarr;</button>
             </div>
         </div>
 
         <div id="tab-impact" class="section-content" role="tabpanel" aria-labelledby="tab-btn-impact">
-            <h3 class="section-header" style="color: var(--col-impact); border-left: 5px solid var(--col-impact);">Impact & Translation</h3>
+            <h3 class="section-header section-header-impact">Impact & Translation</h3>
             <div id="q-container-impact"></div>
             <div class="btn-container">
-                <button class="btn" style="background-color: var(--col-impact);" onclick="openTab('tab-clinical')">Next Section &rarr;</button>
+                <button class="btn btn-domain-impact" onclick="nextSection('impact','tab-clinical')">Next Section &rarr;</button>
             </div>
         </div>
 
         <div id="tab-clinical" class="section-content" role="tabpanel" aria-labelledby="tab-btn-clinical">
-            <h3 class="section-header" style="color: var(--col-clinical); border-left: 5px solid var(--col-clinical);">Clinical Context</h3>
+            <h3 class="section-header section-header-clinical">Clinical Context</h3>
             <div id="q-container-clinical"></div>
             <div class="btn-container">
-                <button class="btn" style="background-color: var(--col-clinical);" onclick="openTab('tab-leadership')">Next Section &rarr;</button>
+                <button class="btn btn-domain-clinical" onclick="nextSection('clinical','tab-leadership')">Next Section &rarr;</button>
             </div>
         </div>
 
         <div id="tab-leadership" class="section-content" role="tabpanel" aria-labelledby="tab-btn-leadership">
-            <h3 class="section-header" style="color: var(--col-leadership); border-left: 5px solid var(--col-leadership);">Leadership & Strategy</h3>
+            <h3 class="section-header section-header-leadership">Leadership & Strategy</h3>
             <div id="q-container-leadership"></div>
             <div class="btn-container">
-                <button class="btn" style="background-color: var(--col-leadership);" onclick="openTab('tab-mentorship')">Next Section &rarr;</button>
+                <button class="btn btn-domain-leadership" onclick="nextSection('leadership','tab-mentorship')">Next Section &rarr;</button>
             </div>
         </div>
 
         <div id="tab-mentorship" class="section-content" role="tabpanel" aria-labelledby="tab-btn-mentorship">
-            <h3 class="section-header" style="color: var(--col-mentorship); border-left: 5px solid var(--col-mentorship);">Capacity & Mentorship</h3>
+            <h3 class="section-header section-header-mentorship">Capacity & Mentorship</h3>
             <div id="q-container-mentorship"></div>
             <div class="btn-container">
                 <button class="btn btn-success" onclick="generateReport()">Generate Report</button>
@@ -815,10 +895,10 @@
     </div>
 
     <div id="report-view">
-        <div style="text-align:right; margin-bottom:20px;" class="no-print">
-            <button class="btn btn-secondary" onclick="resetTool()" style="margin-right:8px;">Edit Answers</button>
-            <button class="btn btn-secondary" onclick="goToStart()" style="margin-right:8px; background:#5696d3;">&#8592; Back to Instructions</button>
-            <button class="btn" onclick="startOver()" style="margin-right:8px; background:#c0392b;">Start Over</button>
+        <div class="report-actions no-print">
+            <button class="btn btn-secondary" onclick="resetTool()">Edit Answers</button>
+            <button class="btn btn-secondary" onclick="goToStart()">&#8592; Back to Instructions</button>
+            <button class="btn btn-danger" onclick="startOver()">Start Over</button>
             <button class="btn" onclick="window.print()">Print / Save PDF</button>
         </div>
 
@@ -896,6 +976,7 @@
     };
 
     // --- GLOBAL FUNCTIONS (Must be defined first) ---
+    let currentTabId = 'tab-knowledge';
 
     function showNavBtn(show) {
         const btn = document.getElementById('home-nav-btn');
@@ -934,7 +1015,24 @@
         goToStart();
     }
 
+    function nextSection(currentDomain, nextTabId) {
+        const total = document.querySelectorAll(`input[name^="q-${currentDomain}-"]`).length / 5;
+        const answered = document.querySelectorAll(`input[name^="q-${currentDomain}-"]:checked`).length;
+        const container = document.querySelector(`#tab-${currentDomain} .btn-container`);
+        const existing = container.querySelector('.unanswered-warning');
+        if (existing) existing.remove();
+        if (answered < total) {
+            const warn = document.createElement('p');
+            warn.className = 'unanswered-warning';
+            warn.textContent = `${total - answered} of ${total} question${total - answered === 1 ? '' : 's'} unanswered in this section`;
+            container.appendChild(warn);
+            setTimeout(() => { if (warn.parentNode) warn.remove(); }, 4000);
+        }
+        openTab(nextTabId);
+    }
+
     function openTab(tabId) {
+        currentTabId = tabId;
         document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => {
             b.classList.remove('active');
@@ -1377,9 +1475,11 @@
     function resetTool() {
         document.getElementById('report-view').style.display = 'none';
         document.getElementById('input-view').style.display = 'block';
+        document.getElementById('understanding-profile-section').style.display = 'none';
+        document.getElementById('next-steps-section').style.display = 'none';
+        openTab(currentTabId);
         showNavBtn(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-	
     }
 
 </script>
@@ -1882,18 +1982,23 @@ function generateReportCardsHTML() {
         const card = document.createElement('div');
         card.className = `report-card domain-${domain}`;
 
-        // Domain title with score and tier badge
+        // Domain title with score and tier badge (click to collapse)
         const tierInfo = getTierInfo(avg);
         const title = document.createElement('h3');
-        title.innerHTML = `${mapping.title} (Average Score: ${avg.toFixed(1)}) <span class="tier-badge ${tierInfo.cssClass}">${tierInfo.label}</span>`;
+        title.innerHTML = `<span>${mapping.title} (Average Score: ${avg.toFixed(1)}) <span class="tier-badge ${tierInfo.cssClass}">${tierInfo.label}</span></span>`;
+        title.addEventListener('click', () => card.classList.toggle('collapsed'));
         card.appendChild(title);
+
+        // Collapsible body wrapper
+        const body = document.createElement('div');
+        body.className = 'report-card-body';
 
         // Domain description
         if (mapping.description) {
             const descP = document.createElement('p');
             descP.className = 'domain-description';
             descP.innerText = mapping.description;
-            card.appendChild(descP);
+            body.appendChild(descP);
         }
 
         // "What your score suggests" section
@@ -1905,7 +2010,7 @@ function generateReportCardsHTML() {
         const suggestsP = document.createElement('p');
         suggestsP.innerText = tier.whatYourScoreSuggests;
         suggestsSection.appendChild(suggestsP);
-        card.appendChild(suggestsSection);
+        body.appendChild(suggestsSection);
 
         // "How these capabilities can currently be applied" section
         if (tier.howToApply) {
@@ -1926,10 +2031,9 @@ function generateReportCardsHTML() {
                 });
                 applySection.appendChild(applyUl);
             }
-            card.appendChild(applySection);
+            body.appendChild(applySection);
         }
 
-        // "How to strengthen or develop your capabilities" section
         if (tier.howToDevelop) {
             const devSection = document.createElement('div');
             devSection.className = 'report-card-section';
@@ -1955,9 +2059,10 @@ function generateReportCardsHTML() {
                 focusP.innerText = tier.howToDevelop.focus;
                 devSection.appendChild(focusP);
             }
-            card.appendChild(devSection);
+            body.appendChild(devSection);
         }
 
+        card.appendChild(body);
         container.appendChild(card);
     });
 }
