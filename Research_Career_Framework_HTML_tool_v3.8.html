@@ -423,7 +423,17 @@
             background-color: #fff;
         }
         
-        .score-input-group input[type="radio"] { display: none; }
+        .score-input-group input[type="radio"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
 
         /* --- Domain Specific Color Logic for Inputs --- */
         #tab-knowledge .score-input-group label:hover { border-color: var(--col-knowledge); color: #09549f; background-color: #f1f5f9; }
@@ -654,23 +664,23 @@
         <h1 style="font-size: 1.5rem;">Self-Assessment Questions</h1>
         <p class="subtitle">Rate your proficiency (1=Low, 5=High)</p>
 
-        <div class="tabs no-print">
-            <button class="tab-btn active" data-domain="knowledge" onclick="openTab('tab-knowledge')">Knowledge & Skills</button>
-            <button class="tab-btn" data-domain="impact" onclick="openTab('tab-impact')">Impact & Translation</button>
-            <button class="tab-btn" data-domain="clinical" onclick="openTab('tab-clinical')">Clinical Context</button>
-            <button class="tab-btn" data-domain="leadership" onclick="openTab('tab-leadership')">Leadership</button>
-            <button class="tab-btn" data-domain="mentorship" onclick="openTab('tab-mentorship')">Capacity & Mentorship</button>
+        <div class="tabs no-print" role="tablist" aria-label="Assessment domains">
+            <button class="tab-btn active" data-domain="knowledge" role="tab" aria-selected="true" aria-controls="tab-knowledge" onclick="openTab('tab-knowledge')">Knowledge & Skills</button>
+            <button class="tab-btn" data-domain="impact" role="tab" aria-selected="false" aria-controls="tab-impact" onclick="openTab('tab-impact')">Impact & Translation</button>
+            <button class="tab-btn" data-domain="clinical" role="tab" aria-selected="false" aria-controls="tab-clinical" onclick="openTab('tab-clinical')">Clinical Context</button>
+            <button class="tab-btn" data-domain="leadership" role="tab" aria-selected="false" aria-controls="tab-leadership" onclick="openTab('tab-leadership')">Leadership</button>
+            <button class="tab-btn" data-domain="mentorship" role="tab" aria-selected="false" aria-controls="tab-mentorship" onclick="openTab('tab-mentorship')">Capacity & Mentorship</button>
         </div>
 
-        <div id="tab-knowledge" class="section-content active">
+        <div id="tab-knowledge" class="section-content active" role="tabpanel" aria-labelledby="tab-btn-knowledge">
             <h3 class="section-header" style="color: var(--col-knowledge); border-left: 5px solid var(--col-knowledge);">Knowledge & Skills</h3>
-            <div id="q-container-knowledge"></div> 
+            <div id="q-container-knowledge"></div>
             <div class="btn-container">
                 <button class="btn" style="background-color: var(--col-knowledge);" onclick="openTab('tab-impact')">Next Section &rarr;</button>
             </div>
         </div>
 
-        <div id="tab-impact" class="section-content">
+        <div id="tab-impact" class="section-content" role="tabpanel" aria-labelledby="tab-btn-impact">
             <h3 class="section-header" style="color: var(--col-impact); border-left: 5px solid var(--col-impact);">Impact & Translation</h3>
             <div id="q-container-impact"></div>
             <div class="btn-container">
@@ -678,7 +688,7 @@
             </div>
         </div>
 
-        <div id="tab-clinical" class="section-content">
+        <div id="tab-clinical" class="section-content" role="tabpanel" aria-labelledby="tab-btn-clinical">
             <h3 class="section-header" style="color: var(--col-clinical); border-left: 5px solid var(--col-clinical);">Clinical Context</h3>
             <div id="q-container-clinical"></div>
             <div class="btn-container">
@@ -686,7 +696,7 @@
             </div>
         </div>
 
-        <div id="tab-leadership" class="section-content">
+        <div id="tab-leadership" class="section-content" role="tabpanel" aria-labelledby="tab-btn-leadership">
             <h3 class="section-header" style="color: var(--col-leadership); border-left: 5px solid var(--col-leadership);">Leadership & Strategy</h3>
             <div id="q-container-leadership"></div>
             <div class="btn-container">
@@ -694,7 +704,7 @@
             </div>
         </div>
 
-        <div id="tab-mentorship" class="section-content">
+        <div id="tab-mentorship" class="section-content" role="tabpanel" aria-labelledby="tab-btn-mentorship">
             <h3 class="section-header" style="color: var(--col-mentorship); border-left: 5px solid var(--col-mentorship);">Capacity & Mentorship</h3>
             <div id="q-container-mentorship"></div>
             <div class="btn-container">
@@ -830,14 +840,20 @@
 
     function openTab(tabId) {
         document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        
+        document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+        });
+
         document.getElementById(tabId).classList.add('active');
         const shortName = tabId.split('-')[1];
-        
+
         // Match by data-domain attribute for reliable colour-coded activation
         const btn = document.querySelector(`.tab-btn[data-domain="${shortName}"]`);
-        if(btn) btn.classList.add('active');
+        if(btn) {
+            btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
+        }
 
         // Update pentagon diagram: fade all, highlight active domain
         const diagramEl = document.getElementById('framework-diagram-container');
@@ -1004,7 +1020,7 @@
         });
 
         if(missingAnswers > 0) {
-            const proceed = confirm(`You have ${missingAnswers} unanswered questions. The report will assume a score of 0 for these. Do you want to proceed?`);
+            const proceed = confirm(`You have ${missingAnswers} unanswered question${missingAnswers === 1 ? '' : 's'}. Unanswered questions will be excluded from your average. Do you want to proceed?`);
             if(!proceed) return;
         }
 
@@ -1175,7 +1191,7 @@
 </script>
 <!-- QLD Government Footer -->
 <footer class="qld-footer">
-    <p style="margin:0 0 6px 0; font-weight: 600;">Queensland Health &nbsp;|&nbsp; <a href="https://www.health.qld.gov.au/ahwac">Office of the Chief Allied Health Officer</p>
+    <p style="margin:0 0 6px 0; font-weight: 600;">Queensland Health &nbsp;|&nbsp; <a href="https://www.health.qld.gov.au/ahwac">Office of the Chief Allied Health Officer</a></p>
     <p style="margin:0; font-size:12px; opacity:0.85;">© The State of Queensland (Queensland Health) 2026 &nbsp;|&nbsp; <a href="https://www.health.qld.gov.au">health.qld.gov.au</a> &nbsp;|&nbsp; <a href="health.qld.gov.au/global/copyright-statement">Copyright</a> &nbsp;|&nbsp; <a href="https://www.health.qld.gov.au/global/disclaimer">Disclaimer</a> &nbsp;|&nbsp; <a href="https://www.health.qld.gov.au/global/privacy">Privacy</a></p>
 </footer>
 <script>
