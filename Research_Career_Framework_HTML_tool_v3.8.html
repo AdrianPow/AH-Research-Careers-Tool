@@ -506,6 +506,38 @@
             animation: fadeIn 0.3s ease-out;
         }
 
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .toast.visible { opacity: 1; }
+        .toast-warn {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+        .save-indicator {
+            display: inline-block;
+            font-size: 11px;
+            color: #16a34a;
+            font-weight: 600;
+            margin-left: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .save-indicator.visible { opacity: 1; }
+
         .question-group {
             margin-bottom: 15px;
             padding: 20px;
@@ -688,6 +720,11 @@
             border: 1.5px solid #e2e8f0;
             color: var(--text-muted);
             transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .progress-domain-chip:hover {
+            border-color: var(--primary-color);
+            background: #f0f5fb;
         }
         .progress-domain-chip.active-domain {
             border-color: var(--primary-color);
@@ -899,10 +936,11 @@
         </div>
 
         <div id="progress-bar" class="progress-container no-print">
-            <div class="progress-text"><span id="progress-count">0</span> of <span id="progress-total">61</span> questions answered</div>
+            <div class="progress-text"><span id="progress-count">0</span> of <span id="progress-total">61</span> questions answered<span id="save-indicator" class="save-indicator">Progress saved</span></div>
             <div class="progress-bar-outer"><div id="progress-fill" class="progress-bar-inner" style="width:0%"></div></div>
             <div class="progress-domains" id="progress-domains"></div>
         </div>
+        <div id="toast" class="toast toast-warn"></div>
 
         <div id="tab-knowledge" class="section-content active" role="tabpanel" aria-labelledby="tab-btn-knowledge">
             <h3 class="section-header section-header-knowledge">Knowledge & Skills</h3>
@@ -1069,18 +1107,28 @@
         goToStart();
     }
 
+    function showToast(message, duration) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('visible');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => toast.classList.remove('visible'), duration || 3500);
+    }
+
+    function flashSaveIndicator() {
+        const el = document.getElementById('save-indicator');
+        if (!el) return;
+        el.classList.add('visible');
+        clearTimeout(el._timer);
+        el._timer = setTimeout(() => el.classList.remove('visible'), 2000);
+    }
+
     function nextSection(currentDomain, nextTabId) {
         const total = document.querySelectorAll(`input[name^="q-${currentDomain}-"]`).length / 5;
         const answered = document.querySelectorAll(`input[name^="q-${currentDomain}-"]:checked`).length;
-        const container = document.querySelector(`#tab-${currentDomain} .btn-container`);
-        const existing = container.querySelector('.unanswered-warning');
-        if (existing) existing.remove();
         if (answered < total) {
-            const warn = document.createElement('p');
-            warn.className = 'unanswered-warning';
-            warn.textContent = `${total - answered} of ${total} question${total - answered === 1 ? '' : 's'} unanswered in this section`;
-            container.appendChild(warn);
-            setTimeout(() => { if (warn.parentNode) warn.remove(); }, 4000);
+            const unanswered = total - answered;
+            showToast(`${unanswered} of ${total} question${unanswered === 1 ? '' : 's'} unanswered in ${currentDomain.charAt(0).toUpperCase() + currentDomain.slice(1)}`);
         }
         openTab(nextTabId);
     }
@@ -1270,6 +1318,8 @@
                 chip.className = 'progress-domain-chip';
                 chip.id = `progress-chip-${d.id}`;
                 chip.textContent = `${domainLabels[d.id]}: 0/${d.questions.length}`;
+                chip.addEventListener('click', () => openTab(`tab-${d.id}`));
+                chip.title = `Go to ${domainLabels[d.id]}`;
                 progressDomainsEl.appendChild(chip);
             });
         }
@@ -1290,6 +1340,7 @@
             });
             localStorage.setItem('ahrcf-answers', JSON.stringify(all));
             updateProgress();
+            flashSaveIndicator();
         });
 
         // Add shadow to sticky tabs when they become stuck
