@@ -446,20 +446,20 @@
         }
 
         /* --- Domain Specific Color Logic for Inputs --- */
-        #tab-knowledge .score-input-group label:hover { border-color: var(--col-knowledge); color: #09549f; background-color: #f1f5f9; }
-        #tab-knowledge .score-input-group label:has(input:checked) { background-color: white; border-color: var(--col-knowledge); border-width: 2px; color: #09549f; transform: scale(1.1); }
+        #tab-knowledge .score-input-group label:hover { border-color: var(--col-knowledge); color: #09549f; background-color: #eef1f5; }
+        #tab-knowledge .score-input-group label:has(input:checked) { background-color: #eef1f5; border-color: var(--col-knowledge); border-width: 2px; color: #09549f; transform: scale(1.1); }
 
-        #tab-impact .score-input-group label:hover { border-color: var(--col-impact); color: #09549f; background-color: #fdf4ff; }
-        #tab-impact .score-input-group label:has(input:checked) { background-color: white; border-color: var(--col-impact); border-width: 2px; color: #09549f; transform: scale(1.1); }
+        #tab-impact .score-input-group label:hover { border-color: var(--col-impact); color: #09549f; background-color: #f8f0f9; }
+        #tab-impact .score-input-group label:has(input:checked) { background-color: #f8f0f9; border-color: var(--col-impact); border-width: 2px; color: #09549f; transform: scale(1.1); }
 
-        #tab-clinical .score-input-group label:hover { border-color: var(--col-clinical); color: #09549f; background-color: #f0fdfa; }
-        #tab-clinical .score-input-group label:has(input:checked) { background-color: white; border-color: var(--col-clinical); border-width: 2px; color: #09549f; transform: scale(1.1); }
+        #tab-clinical .score-input-group label:hover { border-color: var(--col-clinical); color: #09549f; background-color: #e8f8fa; }
+        #tab-clinical .score-input-group label:has(input:checked) { background-color: #e8f8fa; border-color: var(--col-clinical); border-width: 2px; color: #09549f; transform: scale(1.1); }
 
-        #tab-leadership .score-input-group label:hover { border-color: var(--col-leadership); color: #09549f; background-color: #f7fee7; }
-        #tab-leadership .score-input-group label:has(input:checked) { background-color: white; border-color: var(--col-leadership); border-width: 2px; color: #09549f; transform: scale(1.1); }
+        #tab-leadership .score-input-group label:hover { border-color: var(--col-leadership); color: #09549f; background-color: #f4faec; }
+        #tab-leadership .score-input-group label:has(input:checked) { background-color: #f4faec; border-color: var(--col-leadership); border-width: 2px; color: #09549f; transform: scale(1.1); }
 
-        #tab-mentorship .score-input-group label:hover { border-color: var(--col-mentorship); color: #09549f; background-color: #eff6ff; }
-        #tab-mentorship .score-input-group label:has(input:checked) { background-color: white; border-color: var(--col-mentorship); border-width: 2px; color: #09549f; transform: scale(1.1); }
+        #tab-mentorship .score-input-group label:hover { border-color: var(--col-mentorship); color: #09549f; background-color: #eef4fb; }
+        #tab-mentorship .score-input-group label:has(input:checked) { background-color: #eef4fb; border-color: var(--col-mentorship); border-width: 2px; color: #09549f; transform: scale(1.1); }
 
         /* --- Buttons --- */
         .btn-container { text-align: center; margin-top: 40px; margin-bottom: 20px; }
@@ -493,6 +493,78 @@
         .row-mentorship { color: var(--col-mentorship); }
 
         .score-cell { text-align: right; color: #000; font-size: 18px; }
+
+        .score-dots {
+            display: inline-flex;
+            gap: 5px;
+            vertical-align: middle;
+        }
+        .score-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #c9dff2;
+            display: inline-block;
+        }
+        .score-dot.filled { border-color: currentColor; background-color: currentColor; }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        .tier-emerging { background-color: #d97706; }
+        .tier-consolidating { background-color: #2563eb; }
+        .tier-expert { background-color: #16a34a; }
+
+        /* --- Progress Bar --- */
+        .progress-container {
+            margin-bottom: 8px;
+            padding: 12px 0;
+        }
+        .progress-bar-outer {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #09549f, #5696d3);
+            border-radius: 5px;
+            transition: width 0.4s ease;
+        }
+        .progress-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .progress-domains {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .progress-domain-chip {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: 1.5px solid #e2e8f0;
+            color: var(--text-muted);
+        }
+        .progress-domain-chip.complete {
+            border-color: #16a34a;
+            color: #16a34a;
+            background: #f0fdf4;
+        }
         
         .chart-container { 
             position: relative; 
@@ -535,7 +607,9 @@
             .custom-table { width: 100% !important; table-layout: fixed; }
             .custom-table th { padding: 6px 10px; font-size: 14px; }
             .custom-table td { padding: 6px 10px; font-size: 13px; }
-            .custom-table td.score-cell { width: 50px; text-align: center; font-size: 15px; }
+            .custom-table td.score-cell { width: 160px; text-align: center; font-size: 13px; }
+            .score-dot { width: 12px; height: 12px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .tier-badge { font-size: 10px; padding: 2px 7px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .chart-container { margin-top: 5px !important; }
             .chart-container img#radarBgImg { max-width: 480px !important; }
             .chart-container svg#spiderChart { max-width: 480px !important; }
@@ -681,6 +755,12 @@
             <button class="tab-btn" data-domain="clinical" role="tab" aria-selected="false" aria-controls="tab-clinical" onclick="openTab('tab-clinical')">Clinical Context</button>
             <button class="tab-btn" data-domain="leadership" role="tab" aria-selected="false" aria-controls="tab-leadership" onclick="openTab('tab-leadership')">Leadership</button>
             <button class="tab-btn" data-domain="mentorship" role="tab" aria-selected="false" aria-controls="tab-mentorship" onclick="openTab('tab-mentorship')">Capacity & Mentorship</button>
+        </div>
+
+        <div id="progress-bar" class="progress-container no-print">
+            <div class="progress-text"><span id="progress-count">0</span> of <span id="progress-total">61</span> questions answered</div>
+            <div class="progress-bar-outer"><div id="progress-fill" class="progress-bar-inner" style="width:0%"></div></div>
+            <div class="progress-domains" id="progress-domains"></div>
         </div>
 
         <div id="tab-knowledge" class="section-content active" role="tabpanel" aria-labelledby="tab-btn-knowledge">
@@ -1019,6 +1099,22 @@
             } catch(e) { localStorage.removeItem('ahrcf-answers'); }
         }
 
+        // Render progress bar domain chips
+        const progressDomainsEl = document.getElementById('progress-domains');
+        if (progressDomainsEl) {
+            const domainLabels = { knowledge: 'Knowledge', impact: 'Impact', clinical: 'Clinical', leadership: 'Leadership', mentorship: 'Mentorship' };
+            domains.forEach(d => {
+                const chip = document.createElement('span');
+                chip.className = 'progress-domain-chip';
+                chip.id = `progress-chip-${d.id}`;
+                chip.textContent = `${domainLabels[d.id]}: 0/${d.questions.length}`;
+                progressDomainsEl.appendChild(chip);
+            });
+        }
+
+        // Update progress and save on every radio change
+        updateProgress();
+
         // Save answers to localStorage whenever a radio button is selected
         document.addEventListener('change', (e) => {
             if (e.target.type !== 'radio' || !e.target.name.startsWith('q-')) return;
@@ -1027,6 +1123,7 @@
                 all[r.name] = r.value;
             });
             localStorage.setItem('ahrcf-answers', JSON.stringify(all));
+            updateProgress();
         });
 
         // Add shadow to sticky tabs when they become stuck
@@ -1039,6 +1136,38 @@
             observer.observe(sentinel);
         }
     });
+
+    // --- PROGRESS BAR ---
+    function updateProgress() {
+        const domainLabels = { knowledge: 'Knowledge', impact: 'Impact', clinical: 'Clinical', leadership: 'Leadership', mentorship: 'Mentorship' };
+        let totalAnswered = 0;
+        let totalQuestions = 0;
+        domains.forEach(d => {
+            const answered = document.querySelectorAll(`input[name^="q-${d.id}-"]:checked`).length;
+            const total = d.questions.length;
+            totalAnswered += answered;
+            totalQuestions += total;
+            const chip = document.getElementById(`progress-chip-${d.id}`);
+            if (chip) {
+                chip.textContent = `${domainLabels[d.id]}: ${answered}/${total}`;
+                chip.classList.toggle('complete', answered === total);
+            }
+        });
+        const pct = totalQuestions > 0 ? Math.round((totalAnswered / totalQuestions) * 100) : 0;
+        const countEl = document.getElementById('progress-count');
+        const totalEl = document.getElementById('progress-total');
+        const fillEl = document.getElementById('progress-fill');
+        if (countEl) countEl.textContent = totalAnswered;
+        if (totalEl) totalEl.textContent = totalQuestions;
+        if (fillEl) fillEl.style.width = pct + '%';
+    }
+
+    // --- TIER HELPER ---
+    function getTierInfo(avg) {
+        if (avg <= 2.499) return { label: 'Emerging', cssClass: 'tier-emerging' };
+        if (avg <= 3.999) return { label: 'Consolidating', cssClass: 'tier-consolidating' };
+        return { label: 'Expert', cssClass: 'tier-expert' };
+    }
 
     // --- REPORT GENERATION ---
     function generateReport() {
@@ -1074,16 +1203,23 @@
         tableBody.innerHTML = '';
 
         domains.forEach(d => {
-            let avg = 0; 
+            let avg = 0;
             if(counts[d.title] > 0) avg = scores[d.title] / counts[d.title];
             const roundedAvg = Math.round(avg);
-            
+
             dataValues.push(roundedAvg);
+
+            const tier = counts[d.title] > 0 ? getTierInfo(avg) : null;
+            let dots = '';
+            for (let s = 1; s <= 5; s++) {
+                dots += `<span class="score-dot${s <= roundedAvg ? ' filled' : ''}" style="color:${d.color};"></span>`;
+            }
+            const tierHtml = tier ? `<span class="tier-badge ${tier.cssClass}">${tier.label}</span>` : '';
 
             const row = `
                 <tr>
-                    <td class="${d.class}">${d.title}</td>
-                    <td class="score-cell">${roundedAvg}</td>
+                    <td class="${d.class}">${d.title}${tierHtml}</td>
+                    <td class="score-cell"><span class="score-dots">${dots}</span> ${avg > 0 ? avg.toFixed(1) : '—'}</td>
                 </tr>
             `;
             tableBody.innerHTML += row;
@@ -1731,9 +1867,10 @@ function generateReportCardsHTML() {
         const card = document.createElement('div');
         card.className = `report-card domain-${domain}`;
 
-        // Domain title with score
+        // Domain title with score and tier badge
+        const tierInfo = getTierInfo(avg);
         const title = document.createElement('h3');
-        title.innerText = `${mapping.title} (Average Score: ${avg.toFixed(1)})`;
+        title.innerHTML = `${mapping.title} (Average Score: ${avg.toFixed(1)}) <span class="tier-badge ${tierInfo.cssClass}">${tierInfo.label}</span>`;
         card.appendChild(title);
 
         // Domain description
