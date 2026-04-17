@@ -332,10 +332,8 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 30px;
             gap: 8px;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 20px;
+            padding-bottom: 12px;
             position: sticky;
             top: 0;
             background: var(--card-bg);
@@ -481,10 +479,9 @@
             margin: 0 auto 40px auto; 
         }
 
-        .custom-table { width: 100%; border-collapse: collapse; }
-        .custom-table th { text-align: left; padding: 12px 15px; font-size: 18px; font-weight: 700; color: #09549f; border-bottom: 3px solid #09549f; }
-        .custom-table td { padding: 12px 15px; border: 1px solid #c9dff2; font-weight: 600; font-size: 15px; }
-        .custom-table tr:first-child td { border-top: none; }
+        .custom-table { width: 100%; border-collapse: collapse; border-top: 3px solid #09549f; }
+        .custom-table td { padding: 12px 15px; border-bottom: 1px solid #c9dff2; font-weight: 600; font-size: 15px; vertical-align: middle; }
+        .custom-table tr:last-child td { border-bottom: none; }
 
         .row-knowledge { color: var(--col-knowledge); }
         .row-impact { color: var(--col-impact); }
@@ -492,7 +489,8 @@
         .row-leadership { color: var(--col-leadership); }
         .row-mentorship { color: var(--col-mentorship); }
 
-        .score-cell { text-align: right; color: #000; font-size: 18px; }
+        .score-cell { text-align: right; color: #000; font-size: 15px; white-space: nowrap; }
+        .tier-cell { text-align: center; width: 120px; }
 
         .score-dots {
             display: inline-flex;
@@ -524,8 +522,13 @@
 
         /* --- Progress Bar --- */
         .progress-container {
-            margin-bottom: 8px;
-            padding: 12px 0;
+            position: sticky;
+            top: 58px;
+            background: var(--card-bg);
+            z-index: 99;
+            padding: 10px 0 12px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
         }
         .progress-bar-outer {
             width: 100%;
@@ -559,6 +562,13 @@
             font-weight: 600;
             border: 1.5px solid #e2e8f0;
             color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+        .progress-domain-chip.active-domain {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: #eef4fb;
+            font-weight: 700;
         }
         .progress-domain-chip.complete {
             border-color: #16a34a;
@@ -604,10 +614,10 @@
             .qld-header-agency { font-size: 1rem; }
             #report-view h1 { font-size: 1.3rem; margin-bottom: 10px !important; }
             .results-table-container { margin: 0 auto 10px auto !important; width: 100% !important; }
-            .custom-table { width: 100% !important; table-layout: fixed; }
-            .custom-table th { padding: 6px 10px; font-size: 14px; }
+            .custom-table { width: 100% !important; }
             .custom-table td { padding: 6px 10px; font-size: 13px; }
-            .custom-table td.score-cell { width: 160px; text-align: center; font-size: 13px; }
+            .custom-table td.score-cell { width: 140px; text-align: center; font-size: 12px; }
+            .custom-table td.tier-cell { width: 90px; }
             .score-dot { width: 12px; height: 12px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .tier-badge { font-size: 10px; padding: 2px 7px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .chart-container { margin-top: 5px !important; }
@@ -816,11 +826,6 @@
 
         <div class="results-table-container">
             <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th colspan="2">My Scores</th>
-                    </tr>
-                </thead>
                 <tbody id="results-body">
                     </tbody>
             </table>
@@ -946,6 +951,11 @@
             btn.setAttribute('aria-selected', 'true');
         }
 
+        // Highlight active domain chip in the progress bar
+        document.querySelectorAll('.progress-domain-chip').forEach(chip => chip.classList.remove('active-domain'));
+        const activeChip = document.getElementById(`progress-chip-${shortName}`);
+        if (activeChip) activeChip.classList.add('active-domain');
+
         // Update pentagon diagram: fade all, highlight active domain
         const diagramEl = document.getElementById('framework-diagram-container');
         if (diagramEl) {
@@ -953,7 +963,7 @@
             const imgEl = document.getElementById('framework-img');
             if (imgEl) imgEl.src = frameworkImgs[shortName] || frameworkImgs['full'];
         }
-        
+
         document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -1112,6 +1122,10 @@
             });
         }
 
+        // Set initial active chip (Knowledge is the default active tab)
+        const initialChip = document.getElementById('progress-chip-knowledge');
+        if (initialChip) initialChip.classList.add('active-domain');
+
         // Update progress and save on every radio change
         updateProgress();
 
@@ -1218,8 +1232,9 @@
 
             const row = `
                 <tr>
-                    <td class="${d.class}">${d.title}${tierHtml}</td>
+                    <td class="${d.class}">${d.title}</td>
                     <td class="score-cell"><span class="score-dots">${dots}</span> ${avg > 0 ? avg.toFixed(1) : '—'}</td>
+                    <td class="tier-cell">${tierHtml}</td>
                 </tr>
             `;
             tableBody.innerHTML += row;
