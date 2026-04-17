@@ -833,8 +833,8 @@
 
     function startOver() {
         if (!confirm('Are you sure you want to start over? All your answers will be cleared.')) return;
-        // Clear all radio buttons
         document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+        localStorage.removeItem('ahrcf-answers');
         goToStart();
     }
 
@@ -994,6 +994,28 @@
             });
             
             if(container) container.innerHTML = html;
+        });
+
+        // Restore any previously saved answers from localStorage
+        const saved = localStorage.getItem('ahrcf-answers');
+        if (saved) {
+            try {
+                const answers = JSON.parse(saved);
+                Object.entries(answers).forEach(([name, value]) => {
+                    const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                    if (radio) radio.checked = true;
+                });
+            } catch(e) { localStorage.removeItem('ahrcf-answers'); }
+        }
+
+        // Save answers to localStorage whenever a radio button is selected
+        document.addEventListener('change', (e) => {
+            if (e.target.type !== 'radio' || !e.target.name.startsWith('q-')) return;
+            const all = {};
+            document.querySelectorAll('input[type="radio"][name^="q-"]:checked').forEach(r => {
+                all[r.name] = r.value;
+            });
+            localStorage.setItem('ahrcf-answers', JSON.stringify(all));
         });
     });
 
