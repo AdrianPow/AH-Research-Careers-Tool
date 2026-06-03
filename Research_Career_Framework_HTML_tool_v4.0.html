@@ -714,6 +714,30 @@
             margin-top: 8px;
             flex-wrap: wrap;
         }
+        .scale-legend {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .scale-legend-item {
+            font-size: 10px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #64748b;
+        }
+        .scale-legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .scale-legend-dot.amber { background-color: #d97706; }
+        .scale-legend-dot.blue { background-color: #2563eb; }
+        .scale-legend-dot.green { background-color: #16a34a; }
         .progress-domain-chip {
             font-size: 11px;
             padding: 2px 8px;
@@ -941,6 +965,13 @@
             <div class="progress-text"><span id="progress-count">0</span> of <span id="progress-total">61</span> questions answered<span id="save-indicator" class="save-indicator">Progress saved</span></div>
             <div class="progress-bar-outer"><div id="progress-fill" class="progress-bar-inner" style="width:0%"></div></div>
             <div class="progress-domains" id="progress-domains"></div>
+            <div class="scale-legend">
+                <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>1 No prof.</span>
+                <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>2 Emerging</span>
+                <span class="scale-legend-item"><span class="scale-legend-dot blue"></span>3 Consolidating</span>
+                <span class="scale-legend-item"><span class="scale-legend-dot green"></span>4 Advanced</span>
+                <span class="scale-legend-item"><span class="scale-legend-dot green"></span>5 Expert</span>
+            </div>
         </div>
         <div id="toast" class="toast toast-warn"></div>
 
@@ -1287,11 +1318,11 @@
                 <div class="question-group">
                     <span class="q-text">${qNum}. ${qText}</span>
                     <div class="score-input-group">
-                        <label><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="1">1</label>
-                        <label><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="2">2</label>
-                        <label><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="3">3</label>
-                        <label><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="4">4</label>
-                        <label><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="5">5</label>
+                        <label title="No proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="1">1</label>
+                        <label title="Emerging proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="2">2</label>
+                        <label title="Consolidating proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="3">3</label>
+                        <label title="Advanced proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="4">4</label>
+                        <label title="Expert proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="5">5</label>
                     </div>
                 </div>`;
             });
