@@ -2174,7 +2174,7 @@ function generateReportCardsHTML() {
                 const focusP = document.createElement('p');
                 focusP.style.marginTop = '12px';
                 focusP.style.fontStyle = 'italic';
-                focusP.innerText = tier.howToDevelop.focus;
+                focusP.innerHTML = tier.howToDevelop.focus.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
                 devSection.appendChild(focusP);
             }
             body.appendChild(devSection);
