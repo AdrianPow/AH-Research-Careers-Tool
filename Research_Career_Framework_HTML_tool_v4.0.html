@@ -673,8 +673,10 @@
             margin-left: 10px;
             vertical-align: middle;
         }
+        .tier-no-proficiency { background-color: #d97706; }
         .tier-emerging { background-color: #d97706; }
         .tier-consolidating { background-color: #2563eb; }
+        .tier-advanced { background-color: #16a34a; }
         .tier-expert { background-color: #16a34a; }
 
         /* --- Progress Bar --- */
@@ -1381,8 +1383,10 @@
 
     // --- TIER HELPER ---
     function getTierInfo(avg) {
-        if (avg <= 2.499) return { label: 'Emerging', cssClass: 'tier-emerging' };
-        if (avg <= 3.999) return { label: 'Consolidating', cssClass: 'tier-consolidating' };
+        if (avg < 1.5) return { label: 'No proficiency', cssClass: 'tier-no-proficiency' };
+        if (avg < 2.5) return { label: 'Emerging', cssClass: 'tier-emerging' };
+        if (avg < 3.5) return { label: 'Consolidating', cssClass: 'tier-consolidating' };
+        if (avg < 4.5) return { label: 'Advanced', cssClass: 'tier-advanced' };
         return { label: 'Expert', cssClass: 'tier-expert' };
     }
 
