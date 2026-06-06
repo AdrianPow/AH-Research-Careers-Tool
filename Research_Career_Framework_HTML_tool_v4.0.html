@@ -736,6 +736,36 @@
             align-items: center;
             gap: 2px;
             color: #64748b;
+            position: relative;
+            cursor: help;
+        }
+        .scale-legend-item .legend-tip {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 6px;
+            width: 220px;
+            background: #1e293b;
+            color: #f1f5f9;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.5;
+            padding: 10px 12px;
+            border-radius: 8px;
+            z-index: 1000;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            pointer-events: none;
+        }
+        .scale-legend-item .legend-tip strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: #fff;
+        }
+        .scale-legend-item:hover .legend-tip {
+            display: block;
         }
         .scale-legend-dot {
             width: 8px;
@@ -1316,11 +1346,11 @@
         domains.forEach(d => {
             const container = document.getElementById(`q-container-${d.id}`);
             let html = `<div class="scale-legend"><div class="scale-legend-labels">
-                <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>No prof.</span>
-                <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>Emerging</span>
-                <span class="scale-legend-item"><span class="scale-legend-dot blue"></span>Consol.</span>
-                <span class="scale-legend-item"><span class="scale-legend-dot green"></span>Advanced</span>
-                <span class="scale-legend-item"><span class="scale-legend-dot green"></span>Expert</span>
+                <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>No prof.<span class="legend-tip"><strong>1 – No proficiency</strong>May have some awareness of the area but no experience or skill in the area and no ability to demonstrate capability.</span></span>
+                <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>Emerging<span class="legend-tip"><strong>2 – Emerging proficiency</strong>Gaining experience in the described knowledge and skills and starting to apply that knowledge to research activities and tasks. Requires support or mentoring to achieve outcomes.</span></span>
+                <span class="scale-legend-item"><span class="scale-legend-dot blue"></span>Consol.<span class="legend-tip"><strong>3 – Consolidating proficiency</strong>Furthering skills and knowledge and can complete research activities or tasks independently. Requires guidance to deliver complex or advanced levels of activity or tasks.</span></span>
+                <span class="scale-legend-item"><span class="scale-legend-dot green"></span>Advanced<span class="legend-tip"><strong>4 – Advanced proficiency</strong>Becoming an expert in skill and knowledge required to demonstrate behaviour or activity. Able to apply skills and knowledge across a range of contexts and integrate expertise across domains. Able to support others in learning and applying knowledge, skills, and behaviour.</span></span>
+                <span class="scale-legend-item"><span class="scale-legend-dot green"></span>Expert<span class="legend-tip"><strong>5 – Expert proficiency</strong>Acknowledged leader with in-depth knowledge and demonstrated strategic leadership in the area of knowledge, skill, or behaviour. Integrates, evaluates, and adapts knowledge, skills, or behaviour at an advanced level.</span></span>
             </div></div>`;
 
             d.questions.forEach((qText, index) => {
