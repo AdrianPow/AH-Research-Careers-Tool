@@ -716,17 +716,25 @@
         }
         .scale-legend {
             display: flex;
-            gap: 10px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
+            justify-content: flex-end;
+            padding-right: 21px;
+            margin-bottom: 4px;
+        }
+        .scale-legend-labels {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
         }
         .scale-legend-item {
-            font-size: 10px;
-            font-weight: 600;
-            display: inline-flex;
+            width: 38px;
+            text-align: center;
+            font-size: 8px;
+            font-weight: 700;
+            line-height: 1.2;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
             color: #64748b;
         }
         .scale-legend-dot {
@@ -738,6 +746,9 @@
         .scale-legend-dot.amber { background-color: #d97706; }
         .scale-legend-dot.blue { background-color: #2563eb; }
         .scale-legend-dot.green { background-color: #16a34a; }
+        @media (max-width: 767px) {
+            .scale-legend { display: none; }
+        }
         .progress-domain-chip {
             font-size: 11px;
             padding: 2px 8px;
@@ -965,13 +976,6 @@
             <div class="progress-text"><span id="progress-count">0</span> of <span id="progress-total">61</span> questions answered<span id="save-indicator" class="save-indicator">Progress saved</span></div>
             <div class="progress-bar-outer"><div id="progress-fill" class="progress-bar-inner" style="width:0%"></div></div>
             <div class="progress-domains" id="progress-domains"></div>
-            <div class="scale-legend">
-                <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>1 No prof.</span>
-                <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>2 Emerging</span>
-                <span class="scale-legend-item"><span class="scale-legend-dot blue"></span>3 Consolidating</span>
-                <span class="scale-legend-item"><span class="scale-legend-dot green"></span>4 Advanced</span>
-                <span class="scale-legend-item"><span class="scale-legend-dot green"></span>5 Expert</span>
-            </div>
         </div>
         <div id="toast" class="toast toast-warn"></div>
 
@@ -1311,8 +1315,14 @@
         // Render Questions dynamically
         domains.forEach(d => {
             const container = document.getElementById(`q-container-${d.id}`);
-            let html = '';
-            
+            let html = `<div class="scale-legend"><div class="scale-legend-labels">
+                <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>No prof.</span>
+                <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>Emerging</span>
+                <span class="scale-legend-item"><span class="scale-legend-dot blue"></span>Consol.</span>
+                <span class="scale-legend-item"><span class="scale-legend-dot green"></span>Advanced</span>
+                <span class="scale-legend-item"><span class="scale-legend-dot green"></span>Expert</span>
+            </div></div>`;
+
             d.questions.forEach((qText, index) => {
                 const qNum = index + 1;
                 html += `
