@@ -834,8 +834,9 @@
         .framework-diagram img { transition: opacity 0.3s; }
 
         @media print {
-            .no-print { display: none !important; }
-            .qld-header, .qld-footer, .page-title-banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print, .nav-back-btn, .report-actions { display: none !important; }
+            .qld-footer { display: none !important; }
+            .qld-header, .page-title-banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .container { box-shadow: none; border: none; border-top: none; width: 100%; max-width: 100%; padding: 10px 15px; margin: 0; }
             .page-title-banner { padding: 10px 15px; }
             .page-title-banner h1 { font-size: 1.1rem; }
@@ -854,8 +855,6 @@
             .chart-container { margin-top: 5px !important; }
             .chart-container img#radarBgImg { max-width: 480px !important; }
             .chart-container svg#spiderChart { max-width: 480px !important; }
-            .qld-footer { padding: 8px 15px; font-size: 11px; }
-            .qld-footer p { margin: 2px 0 !important; }
 
             /* --- Force each report section onto its own page --- */
             #understanding-profile-section {
@@ -903,6 +902,25 @@
             #next-steps-section .smart-list li::before { font-size: 14px; top: 2px; }
 
             .profile-understanding-section, .next-steps-section { page-break-inside: avoid; }
+
+            /* Show URL after named links (not bare-URL links) so readers know the destination */
+            #next-steps-section a[href]:not([href^="https://www.health.qld.gov.au/hpresearch"])::after {
+                content: " (" attr(href) ")";
+                font-size: 10px;
+                color: #555;
+                word-break: break-all;
+            }
+
+            /* Print-only footer on last page */
+            .print-footer {
+                display: block !important;
+                text-align: center;
+                font-size: 11px;
+                color: #555;
+                padding: 20px 0 10px 0;
+                border-top: 1px solid #ddd;
+                margin-top: 30px;
+            }
         }
     </style>
 </head>
@@ -1120,6 +1138,10 @@
     </div>
 </div>
 
+    <div class="print-footer" style="display:none;">
+        <p><strong>Queensland Health</strong> &nbsp;|&nbsp; Office of the Chief Allied Health Officer</p>
+        <p>&copy; The State of Queensland (Queensland Health) 2026 &nbsp;|&nbsp; health.qld.gov.au</p>
+    </div>
 </div>
 
 
