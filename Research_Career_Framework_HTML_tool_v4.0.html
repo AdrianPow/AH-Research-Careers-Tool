@@ -478,25 +478,6 @@
         .section-content { display: none; animation: fadeIn 0.4s ease-out; }
         .section-content.active { display: block; }
 
-        .section-sticky-header {
-            position: sticky;
-            top: 144px;
-            z-index: 98;
-            background: var(--bg-color);
-            padding-bottom: 8px;
-        }
-        .section-header {
-            padding-left: 15px;
-            margin-bottom: 10px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            border-left: 5px solid var(--primary-color);
-        }
-        .section-header-knowledge { color: var(--col-knowledge); border-left-color: var(--col-knowledge); }
-        .section-header-impact    { color: var(--col-impact);    border-left-color: var(--col-impact); }
-        .section-header-clinical  { color: var(--col-clinical);  border-left-color: var(--col-clinical); }
-        .section-header-leadership{ color: var(--col-leadership);border-left-color: var(--col-leadership); }
-        .section-header-mentorship{ color: var(--col-mentorship);border-left-color: var(--col-mentorship); }
 
         .btn-domain-knowledge { background-color: var(--col-knowledge); }
         .btn-domain-impact    { background-color: var(--col-impact); }
@@ -724,8 +705,8 @@
         .scale-legend {
             display: flex;
             justify-content: flex-end;
-            padding-right: 21px;
-            margin-bottom: 4px;
+            align-items: center;
+            margin-top: 8px;
         }
         .scale-legend-labels {
             display: flex;
@@ -1027,14 +1008,11 @@
             <div class="progress-text"><span id="progress-count">0</span> of <span id="progress-total">61</span> questions answered<span id="save-indicator" class="save-indicator">Progress saved</span></div>
             <div class="progress-bar-outer"><div id="progress-fill" class="progress-bar-inner" style="width:0%"></div></div>
             <div class="progress-domains" id="progress-domains"></div>
+            <div id="scale-legend-container"></div>
         </div>
         <div id="toast" class="toast toast-warn"></div>
 
         <div id="tab-knowledge" class="section-content active" role="tabpanel" aria-labelledby="tab-btn-knowledge">
-            <div class="section-sticky-header">
-                <h3 class="section-header section-header-knowledge">Knowledge & Skills</h3>
-                <div id="legend-container-knowledge"></div>
-            </div>
             <div id="q-container-knowledge"></div>
             <div class="btn-container">
                 <button class="btn btn-domain-knowledge" onclick="nextSection('knowledge','tab-impact')">Next Section &rarr;</button>
@@ -1042,10 +1020,6 @@
         </div>
 
         <div id="tab-impact" class="section-content" role="tabpanel" aria-labelledby="tab-btn-impact">
-            <div class="section-sticky-header">
-                <h3 class="section-header section-header-impact">Impact & Translation</h3>
-                <div id="legend-container-impact"></div>
-            </div>
             <div id="q-container-impact"></div>
             <div class="btn-container">
                 <button class="btn btn-domain-impact" onclick="nextSection('impact','tab-clinical')">Next Section &rarr;</button>
@@ -1053,10 +1027,6 @@
         </div>
 
         <div id="tab-clinical" class="section-content" role="tabpanel" aria-labelledby="tab-btn-clinical">
-            <div class="section-sticky-header">
-                <h3 class="section-header section-header-clinical">Clinical Context</h3>
-                <div id="legend-container-clinical"></div>
-            </div>
             <div id="q-container-clinical"></div>
             <div class="btn-container">
                 <button class="btn btn-domain-clinical" onclick="nextSection('clinical','tab-leadership')">Next Section &rarr;</button>
@@ -1064,10 +1034,6 @@
         </div>
 
         <div id="tab-leadership" class="section-content" role="tabpanel" aria-labelledby="tab-btn-leadership">
-            <div class="section-sticky-header">
-                <h3 class="section-header section-header-leadership">Leadership & Strategy</h3>
-                <div id="legend-container-leadership"></div>
-            </div>
             <div id="q-container-leadership"></div>
             <div class="btn-container">
                 <button class="btn btn-domain-leadership" onclick="nextSection('leadership','tab-mentorship')">Next Section &rarr;</button>
@@ -1075,10 +1041,6 @@
         </div>
 
         <div id="tab-mentorship" class="section-content" role="tabpanel" aria-labelledby="tab-btn-mentorship">
-            <div class="section-sticky-header">
-                <h3 class="section-header section-header-mentorship">Capacity & Mentorship</h3>
-                <div id="legend-container-mentorship"></div>
-            </div>
             <div id="q-container-mentorship"></div>
             <div class="btn-container">
                 <button class="btn btn-success" onclick="generateReport()">Generate Report</button>
@@ -1379,7 +1341,7 @@
     // --- INITIALIZATION ---
     document.addEventListener('DOMContentLoaded', () => {
         // Render Questions dynamically
-        const legendHTML = `<div class="scale-legend">
+        document.getElementById('scale-legend-container').innerHTML = `<div class="scale-legend">
             <span class="scale-legend-hint">Hover for definitions</span>
             <div class="scale-legend-labels">
                 <span class="scale-legend-item"><span class="scale-legend-dot amber"></span>No prof.<span class="legend-tip"><strong>1 – No proficiency</strong>May have some awareness of the area but no experience or skill in the area and no ability to demonstrate capability.</span></span>
@@ -1390,9 +1352,6 @@
             </div></div>`;
 
         domains.forEach(d => {
-            const legendContainer = document.getElementById(`legend-container-${d.id}`);
-            if (legendContainer) legendContainer.innerHTML = legendHTML;
-
             const container = document.getElementById(`q-container-${d.id}`);
             let html = '';
 
