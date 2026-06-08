@@ -827,6 +827,16 @@
             align-items: center;
             margin: 0 auto 30px auto;
         }
+        .framework-diagram.compact {
+            max-height: 200px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .framework-diagram.compact img {
+            max-height: 200px;
+            width: auto;
+            object-fit: contain;
+        }
 
 
 
@@ -1166,6 +1176,8 @@
     function startAssessment() {
         document.getElementById('intro-view').style.display = 'none';
         document.getElementById('input-view').style.display = 'block';
+        const diagramEl = document.getElementById('framework-diagram-container');
+        if (diagramEl) diagramEl.classList.add('compact');
         openTab('tab-knowledge');
         showNavBtn(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1247,7 +1259,8 @@
         // Update pentagon diagram: fade all, highlight active domain
         const diagramEl = document.getElementById('framework-diagram-container');
         if (diagramEl) {
-            diagramEl.className = 'framework-diagram';
+            const isCompact = diagramEl.classList.contains('compact');
+            diagramEl.className = 'framework-diagram' + (isCompact ? ' compact' : '');
             const imgEl = document.getElementById('framework-img');
             if (imgEl) imgEl.src = frameworkImgs[shortName] || frameworkImgs['full'];
         }
@@ -1682,6 +1695,8 @@
         document.getElementById('input-view').style.display = 'block';
         document.getElementById('understanding-profile-section').style.display = 'none';
         document.getElementById('next-steps-section').style.display = 'none';
+        const diagramEl = document.getElementById('framework-diagram-container');
+        if (diagramEl) { diagramEl.style.display = ''; diagramEl.classList.add('compact'); }
         openTab(currentTabId);
         showNavBtn(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
