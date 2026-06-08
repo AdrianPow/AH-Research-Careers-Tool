@@ -1107,7 +1107,8 @@
             <button class="btn btn-primary-action" onclick="window.print()">Print / Save PDF</button>
         </div>
 
-        <h1 style="margin-bottom: 40px;">My Capability Profile</h1>
+        <h1 style="margin-bottom: 6px;">My Capability Profile</h1>
+        <p id="report-date" style="text-align:center; color:#666; font-size:14px; margin-bottom:30px;"></p>
 
         <div class="results-table-container">
             <table class="custom-table">
@@ -1583,6 +1584,8 @@
         // Switch Views
         document.getElementById('input-view').style.display = 'none';
         document.getElementById('report-view').style.display = 'block';
+        const now = new Date();
+        document.getElementById('report-date').textContent = 'Assessment completed: ' + now.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
         // Hide pentagon on report page
         const diagramEl = document.getElementById('framework-diagram-container');
         if (diagramEl) diagramEl.style.display = 'none';
