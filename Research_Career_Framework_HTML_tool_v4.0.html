@@ -550,10 +550,11 @@
         .q-text { font-size: 15px; font-weight: 500; color: var(--primary-color); line-height: 1.5; flex: 1; margin-right: 20px; }
 
         /* --- Custom Radio Buttons --- */
-        .score-input-group { 
-            display: flex; 
-            gap: 5px; 
-            flex-shrink: 0; 
+        .score-input-group {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+            justify-content: center;
         }
         
         .score-input-group label {
@@ -800,8 +801,17 @@
         .scale-legend-dot.amber { background-color: #d97706; }
         .scale-legend-dot.blue { background-color: #2563eb; }
         .scale-legend-dot.green { background-color: #16a34a; }
+        .mobile-scale-label {
+            display: none;
+            font-size: 11px;
+            color: #888;
+            text-align: center;
+            gap: 0;
+        }
+        .mobile-scale-label span { flex: 1; }
         @media (max-width: 767px) {
             .scale-legend { display: none; }
+            .mobile-scale-label { display: flex; }
         }
         .progress-domain-chip {
             font-size: 11px;
@@ -1419,12 +1429,15 @@
                 html += `
                 <div class="question-group">
                     <span class="q-text">${qNum}. ${qText}</span>
-                    <div class="score-input-group">
-                        <label title="No proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="1">1</label>
-                        <label title="Emerging proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="2">2</label>
-                        <label title="Consolidating proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="3">3</label>
-                        <label title="Advanced proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="4">4</label>
-                        <label title="Expert proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="5">5</label>
+                    <div>
+                        <div class="mobile-scale-label"><span>No prof.</span><span>Emerging</span><span>Consol.</span><span>Advanced</span><span>Expert</span></div>
+                        <div class="score-input-group">
+                            <label title="No proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="1">1</label>
+                            <label title="Emerging proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="2">2</label>
+                            <label title="Consolidating proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="3">3</label>
+                            <label title="Advanced proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="4">4</label>
+                            <label title="Expert proficiency"><input type="radio" name="q-${d.id}-${qNum}" data-category="${d.title}" value="5">5</label>
+                        </div>
                     </div>
                 </div>`;
             });
