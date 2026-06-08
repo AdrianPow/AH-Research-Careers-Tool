@@ -603,18 +603,40 @@
         .btn:hover { background-color: var(--primary-light); transform: translateY(-1px); }
         .btn-success { background-color: var(--primary-color); }
         .btn-success:hover { background-color: var(--primary-light); }
-        .btn-secondary { background-color: var(--col-mentorship); }
-        .btn-danger { background-color: #c0392b; }
-        .btn-danger:hover { background-color: #a93226; }
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1.5px solid var(--primary-color);
+            box-shadow: none;
+            padding: 10px 20px;
+            font-size: 13px;
+        }
+        .btn-secondary:hover { background-color: rgba(9,84,159,0.08); transform: none; }
+        .btn-danger {
+            background: none;
+            color: #888;
+            border: none;
+            box-shadow: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 12px;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        .btn-danger:hover { color: #c0392b; background: none; transform: none; }
+        .btn-primary-action {
+            padding: 14px 40px;
+            font-size: 15px;
+        }
 
         .report-actions {
-            text-align: right;
             margin-bottom: 20px;
             display: flex;
-            justify-content: flex-end;
+            align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
+        .report-actions-spacer { flex: 1; }
 
         /* --- Report View --- */
         #report-view { display: none; }
@@ -1078,10 +1100,11 @@
 
     <div id="report-view">
         <div class="report-actions no-print">
-            <button class="btn btn-secondary" onclick="resetTool()">Edit Answers</button>
-            <button class="btn btn-secondary" onclick="goToStart()">&#8592; Back to Instructions</button>
             <button class="btn btn-danger" onclick="startOver()">Start Over</button>
-            <button class="btn" onclick="window.print()">Print / Save PDF</button>
+            <div class="report-actions-spacer"></div>
+            <button class="btn btn-secondary" onclick="goToStart()">&#8592; Back to Instructions</button>
+            <button class="btn btn-secondary" onclick="resetTool()">Edit Answers</button>
+            <button class="btn btn-primary-action" onclick="window.print()">Print / Save PDF</button>
         </div>
 
         <h1 style="margin-bottom: 40px;">My Capability Profile</h1>
