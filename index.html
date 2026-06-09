@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Allied Health Research Careers Development Framework — Self-Assessment Tool</title>
+<meta name="description" content="Interactive self-assessment tool for the Queensland Health Allied Health Research Careers Development Framework.">
+<style>
+/* ============================================================
+   1. DESIGN TOKENS
+   ============================================================ */
+:root {
+  --qld-blue:       #09549f;
+  --qld-blue-mid:   #1a6bb5;
+  --qld-blue-light: #8cd3ff;
+  --ink:            #1c2b3a;
+  --ink-soft:       #44586c;
+  --bg:             #f4f7fb;
+  --card:           #ffffff;
+  --line:           #d9e2ec;
+  --focus:          #ffb800;
+
+  /* Domain colours (from the published framework diagram) */
+  --d-knowledge:  #0f284e;
+  --d-impact:     #6f3076;
+  --d-clinical:   #00a7b5;
+  --d-leadership: #7da832;
+  --d-mentorship: #5696d3;
+
+  --radius: 8px;
+  --shadow: 0 2px 10px rgba(9, 84, 159, 0.10);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+h1, h2, h3, h4 { color: var(--qld-blue); line-height: 1.3; }
+
+button { font-family: inherit; }
+
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+[hidden] { display: none !important; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip: rect(0 0 0 0); overflow: hidden; white-space: nowrap;
+}
+
+/* ============================================================
+   2. HEADER / BANNER
+   ============================================================ */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.site-header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.gov-mark {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.gov-mark svg { display: block; }
+.gov-divider {
+  width: 2px;
+  height: 40px;
+  background: var(--qld-blue-light);
+  flex-shrink: 0;
+}
+.gov-agency {
+  color: var(--qld-blue);
+  font-size: 1.15rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.header-spacer { flex: 1; }
+.banner-stripe {
+  height: 5px;
+  background: linear-gradient(90deg,
+    var(--d-knowledge), var(--d-impact), var(--d-clinical),
+    var(--d-leadership), var(--d-mentorship));
+}
+.title-banner {
+  background: var(--qld-blue);
+  color: #fff;
+}
+.title-banner-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 22px 24px;
+}
+.title-banner h1 {
+  color: #fff;
+  font-size: clamp(1.15rem, 2.6vw, 1.6rem);
+  margin: 0;
+  font-weight: 700;
+}
+.title-banner p {
+  margin: 6px 0 0;
+  color: #cfe4f7;
+  font-size: 0.95rem;
+}
+
+/* ============================================================
+   3. LAYOUT
+   ============================================================ */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 24px 80px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 26px 28px;
+  margin-bottom: 24px;
+}
+.card > h2:first-child, .card > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   4. BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--qld-blue);
+  color: #fff;
+  transition: filter .15s, transform .05s;
+}
+.btn:hover { filter: brightness(1.12); }
+.btn:active { transform: translateY(1px); }
+.btn-secondary { background: #fff; color: var(--qld-blue); border: 2px solid var(--qld-blue); }
+.btn-quiet { background: transparent; color: var(--qld-blue); border: 1px solid var(--line); font-weight: 500; }
+.btn-danger { background: #fff; color: #a02020; border: 2px solid #a02020; }
+.btn-lg { padding: 15px 34px; font-size: 1.08rem; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+/* ============================================================
+   5. INTRO VIEW
+   ============================================================ */
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 820px) { .intro-grid { grid-template-columns: 1fr; } }
+
+.framework-figure {
+  text-align: center;
+  margin: 0;
+}
+.framework-figure svg { max-width: 430px; width: 100%; height: auto; }
+.framework-figure figcaption {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-top: 6px;
+}
+
+.scale-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.scale-table th, .scale-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.scale-table th { background: var(--qld-blue); color: #fff; }
+.scale-badge {
+  display: inline-block;
+  font-weight: 700;
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.cta-row { text-align: center; margin: 34px 0 10px; }
+.cta-row p { color: var(--ink-soft); font-size: 0.9rem; margin-top: 10px; }
+.resume-note {
+  background: #eaf4ea;
+  border: 1px solid #b7d8b7;
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin: 18px auto 0;
+  max-width: 560px;
+  font-size: 0.92rem;
+  color: #205020;
+  display: none;
+}
+
+/* ============================================================
+   6. ASSESSMENT VIEW
+   ============================================================ */
+.domain-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 0;
+}
+.domain-tab {
+  flex: 1 1 0;
+  min-width: 110px;
+  border: none;
+  border-bottom: 5px solid transparent;
+  border-radius: 6px 6px 0 0;
+  background: #e4ebf3;
+  color: var(--ink-soft);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 12px 8px 9px;
+  cursor: pointer;
+  text-align: center;
+}
+.domain-tab .tab-count { display: block; font-size: 0.75rem; font-weight: 500; margin-top: 2px; }
+.domain-tab[aria-selected="true"] {
+  background: #fff;
+  color: var(--ink);
+  border-bottom-color: var(--tab-color, var(--qld-blue));
+  box-shadow: var(--shadow);
+}
+.domain-tab.complete .tab-count::after { content: " ✓"; color: #2e7d32; font-weight: 700; }
+
+.progress-wrap {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 14px 20px;
+  margin-bottom: 22px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  box-shadow: var(--shadow);
+}
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.save-flash { color: #2e7d32; font-weight: 600; opacity: 0; transition: opacity .4s; }
+.save-flash.show { opacity: 1; }
+.progress-track {
+  background: #e4ebf3;
+  border-radius: 99px;
+  height: 10px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--qld-blue), var(--qld-blue-mid));
+  transition: width .3s;
+}
+
+.domain-intro {
+  border-left: 6px solid var(--domain-color, var(--qld-blue));
+  padding: 14px 18px;
+  background: #fff;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+.domain-intro h2 { margin: 0 0 4px; font-size: 1.25rem; color: var(--domain-color, var(--qld-blue)); }
+.domain-intro p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
+
+/* Question rows */
+.q-item {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 26px;
+  align-items: center;
+}
+.q-item.answered { border-left: 5px solid var(--domain-color, var(--qld-blue)); }
+.q-text { font-size: 0.97rem; }
+.q-num { color: var(--ink-soft); font-weight: 700; margin-right: 6px; }
+
+.rating-group { border: 0; margin: 0; padding: 0; }
+.rating-scale { display: flex; gap: 4px; }
+.rating-opt { position: relative; }
+.rating-opt input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.rating-opt label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  padding: 7px 0 5px;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  background: #fafcfe;
+  transition: background .12s, border-color .12s;
+}
+.rating-opt label small {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  margin-top: 1px;
+  color: inherit;
+}
+.rating-opt input:hover + label { border-color: var(--qld-blue-mid); }
+.rating-opt input:checked + label {
+  background: var(--domain-color, var(--qld-blue));
+  border-color: var(--domain-color, var(--qld-blue));
+  color: #fff;
+}
+.rating-opt input:focus-visible + label { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+@media (max-width: 760px) {
+  .q-item { grid-template-columns: 1fr; }
+  .rating-scale { justify-content: space-between; }
+  .rating-opt label { width: 100%; min-width: 50px; }
+  .rating-opt { flex: 1; }
+}
+
+.assess-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-size: 0.93rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s, transform .3s;
+  z-index: 99;
+  max-width: 90vw;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ============================================================
+   7. REPORT VIEW
+   ============================================================ */
+.report-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.report-toolbar .spacer { flex: 1; }
+
+.report-date { text-align: center; color: var(--ink-soft); font-size: 0.93rem; margin: -8px 0 22px; }
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.96rem;
+}
+.results-table th, .results-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+.results-table th { background: var(--qld-blue); color: #fff; }
+.results-table td.num { font-variant-numeric: tabular-nums; font-weight: 700; }
+.domain-dot {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  margin-right: 9px;
+  vertical-align: baseline;
+}
+.tier-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+.tier-emerging  { background: #c47f17; }
+.tier-mid       { background: var(--qld-blue-mid); }
+.tier-high      { background: #2e7d32; }
+.tier-none      { background: #9aa7b4; }
+
+.chart-card { text-align: center; }
+.chart-card svg { max-width: 560px; width: 100%; height: auto; }
+
+.feedback-card { border-top: 6px solid var(--domain-color, var(--qld-blue)); }
+.feedback-card h3 {
+  color: var(--domain-color, var(--qld-blue));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 0;
+}
+.feedback-card .score-chip {
+  font-size: 0.85rem;
+  background: var(--domain-color, var(--qld-blue));
+  color: #fff;
+  padding: 3px 12px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.feedback-card h4 { margin-bottom: 6px; }
+.feedback-card ul { margin: 6px 0 14px; padding-left: 22px; }
+.feedback-card li { margin-bottom: 5px; font-size: 0.95rem; }
+.feedback-card .lead { color: var(--ink-soft); font-size: 0.96rem; }
+.framework-link { font-size: 0.9rem; }
+.context-list p { margin: 8px 0; }
+.smart-list li { margin-bottom: 4px; }
+
+.report-footer {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.83rem;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 36px;
+}
+
+/* ============================================================
+   8. VIEW SWITCHING & PRINT
+   ============================================================ */
+.view { display: none; }
+.view.active { display: block; }
+
+@media print {
+  body { background: #fff; font-size: 12px; }
+  .site-header, .banner-stripe, .no-print, .toast, .report-toolbar { display: none !important; }
+  .title-banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .container { padding: 0; max-width: none; }
+  .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; padding: 16px 18px; }
+  .feedback-card { break-inside: auto; }
+  .results-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .tier-badge, .score-chip, .domain-dot, .scale-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .chart-card svg { max-width: 420px; }
+  a { color: inherit; text-decoration: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header">
+  <div class="site-header-inner">
+    <div class="gov-mark" aria-label="Queensland Government — Queensland Health">
+      <!-- Stylised Queensland Government coat-of-arms placeholder (inline SVG keeps the file self-contained) -->
+      <svg width="48" height="48" viewBox="0 0 48 48" role="img" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" fill="#09549f"/>
+        <path d="M24 8l4.2 8.6 9.4 1.3-6.8 6.7 1.6 9.4L24 29.5 15.6 34l1.6-9.4-6.8-6.7 9.4-1.3z" fill="#fff"/>
+      </svg>
+      <span class="gov-agency" style="font-size:1rem;">Queensland<br>Government</span>
+      <div class="gov-divider"></div>
+      <span class="gov-agency">Queensland Health</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button type="button" id="btn-home" class="btn btn-quiet no-print" hidden>&#8592; Back to instructions</button>
+  </div>
+</header>
+<div class="banner-stripe"></div>
+
+<div class="title-banner">
+  <div class="title-banner-inner">
+    <h1>Allied Health Research Careers Development Framework — Self-Assessment Tool</h1>
+    <p>Office of the Chief Allied Health Officer</p>
+  </div>
+</div>
+
+<main class="container">
+
+  <!-- ===================== INTRO VIEW ===================== -->
+  <section id="view-intro" class="view" aria-label="Introduction and instructions">
+
+    <div class="card">
+      <div class="intro-grid">
+        <div>
+          <h2>Purpose of the tool</h2>
+          <p>This tool helps allied health professionals identify their current level of research
+            skills and experience against the five domains of the
+            <a href="https://www.health.qld.gov.au/hpresearch/html/careers-development-framework"
+               target="_blank" rel="noopener">Allied Health Research Careers Development Framework</a>.
+            It is designed to be used independently or in collaboration with your leader or mentor
+            to support career planning and professional development.</p>
+          <h2>How to use it</h2>
+          <p>The assessment contains <strong id="intro-total-questions">61</strong> competency statements
+            grouped into five domains. For each statement, choose the rating that best reflects your
+            current level of research capability and experience. When you have finished, a personalised
+            capability profile and development report is generated, which you can print or save as a PDF.</p>
+          <p>Your responses are saved automatically in this browser only — nothing is sent anywhere.
+            You can close the page and return later to continue.</p>
+        </div>
+        <figure class="framework-figure">
+          <svg id="framework-diagram-intro" viewBox="0 0 460 440" role="img"
+               aria-label="Framework diagram: five domains arranged around a pentagon — Research knowledge and skills, Research impact and translation, Clinical and healthcare research context, Research leadership and strategy, and Research capacity building and mentorship."></svg>
+          <figcaption>The five domains of the Research Careers Development Framework</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Rating scale</h3>
+      <table class="scale-table">
+        <thead>
+          <tr><th style="width:220px">Level</th><th>Description</th></tr>
+        </thead>
+        <tbody id="scale-table-body"></tbody>
+      </table>
+    </div>
+
+    <div class="cta-row">
+      <button type="button" class="btn btn-lg" id="btn-start">Start self-assessment &rarr;</button>
+      <p><span id="intro-total-questions-2">61</span> statements across 5 domains &middot; approximately 10&ndash;15 minutes</p>
+      <div class="resume-note" id="resume-note">
+        You have saved progress (<span id="resume-count"></span> answered).
+        Starting will continue where you left off.
+        <button type="button" class="btn btn-quiet" id="btn-clear-saved" style="margin-left:8px;padding:4px 12px;font-size:0.85rem;">Discard &amp; restart</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ASSESSMENT VIEW ===================== -->
+  <section id="view-assess" class="view" aria-label="Self-assessment questions">
+
+    <div class="domain-tabs" role="tablist" aria-label="Assessment domains" id="domain-tabs"></div>
+
+    <div class="progress-wrap no-print">
+      <div class="progress-meta">
+        <span><strong id="progress-count">0</strong> of <span id="progress-total">61</span> statements answered</span>
+        <span class="save-flash" id="save-flash" role="status">Progress saved ✓</span>
+      </div>
+      <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+           aria-valuenow="0" aria-label="Overall progress" id="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="domain-panels"></div>
+  </section>
+
+  <!-- ===================== REPORT VIEW ===================== -->
+  <section id="view-report" class="view" aria-label="Your capability profile report">
+
+    <div class="report-toolbar no-print">
+      <button type="button" class="btn btn-danger" id="btn-start-over">Start over</button>
+      <div class="spacer"></div>
+      <button type="button" class="btn btn-secondary" id="btn-edit-answers">&#8592; Edit answers</button>
+      <button type="button" class="btn" id="btn-print">Print / Save PDF</button>
+    </div>
+
+    <h2 style="text-align:center;font-size:1.5rem;margin:6px 0 4px;">My Capability Profile</h2>
+    <p class="report-date" id="report-date"></p>
+
+    <div class="card">
+      <table class="results-table" aria-label="Domain average scores">
+        <thead>
+          <tr><th>Domain</th><th style="width:130px">Average score</th><th style="width:200px">Proficiency band</th></tr>
+        </thead>
+        <tbody id="results-body"></tbody>
+      </table>
+    </div>
+
+    <div class="card chart-card">
+      <h3>Capability profile</h3>
+      <svg id="radar-chart" viewBox="0 0 560 500" role="img"
+           aria-label="Radar chart of your average scores across the five domains"></svg>
+    </div>
+
+    <div class="card">
+      <h3>Understanding your self-assessment profile</h3>
+      <p>This self-assessment provides an overview of your current research capabilities. As you
+        review your results, it is important to consider your scores as a baseline for professional
+        development and career planning, rather than a definitive performance assessment.</p>
+      <p>Before reviewing your specific domain feedback, please consider the following context:</p>
+      <div class="context-list">
+        <p><strong>Variation across domains is expected:</strong> It is common to demonstrate different
+          capabilities and proficiency levels across the five domains. Research skills develop over time
+          and are shaped by your role, interests, and opportunities.</p>
+        <p><strong>Different roles require different capability profiles:</strong> The framework covers a
+          wide range of clinical, research, and leadership roles. Not all roles require advanced skills in
+          every domain. Having a different profile does not make one role more or less valuable.</p>
+        <p><strong>Scores reflect opportunity as well as capability:</strong> The development of capabilities
+          is influenced by the context of your workplace and the training and development opportunities
+          available to you. A lower score often reflects less opportunity to practise and demonstrate those
+          specific skills — not a lack of ability or potential.</p>
+        <p><strong>Applying your results:</strong> Your profile provides a snapshot of your existing strengths
+          and establishes a baseline for your development journey. If your capabilities currently align well
+          with your service needs and role requirements, this tool aims to provide you with ideas for continuing
+          to apply your skills and/or communicating your capabilities to others. If you are looking to advance
+          or broaden your research capabilities for current or future roles, your results can support
+          conversations with your manager or mentor to identify targeted training, new opportunities, and a
+          structured professional development plan.</p>
+      </div>
+    </div>
+
+    <div id="feedback-cards"></div>
+
+    <div class="card">
+      <h3>Next steps: actioning your results</h3>
+      <p>As you reflect on your capability profile, remember that it is not necessary or expected to
+        achieve high proficiency across every domain. Professional development is a targeted process, and
+        you do not need to address every area for improvement simultaneously.</p>
+      <p><strong>Focus your efforts:</strong> Select one to three specific development areas to prioritise.
+        Ensure these focus areas are relevant to the direction you want your career to take, your current
+        role requirements, and the broader strategic needs of your service.</p>
+      <p><strong>Set SMART goals:</strong> Translate your chosen development areas into goals that are:</p>
+      <ul class="smart-list">
+        <li><strong>Specific</strong> — clear and unambiguous, so you know exactly what you are working towards.</li>
+        <li><strong>Measurable</strong> — quantifiable or observable, allowing you to track progress and know when the goal has been achieved.</li>
+        <li><strong>Achievable</strong> — realistic and attainable within your current role, resources, and time constraints.</li>
+        <li><strong>Relevant</strong> — aligned with your research career aspirations and the operational needs of your organisation.</li>
+        <li><strong>Time-bound</strong> — tied to a clearly defined timeline, including specific starting and target completion dates.</li>
+      </ul>
+      <p><strong>Collaborate with leadership:</strong> Discuss your self-assessment and development plan with
+        your line manager, allied health leader, or a trusted research mentor. Collaborative planning will
+        provide additional perspectives, help refine your strategies, and ensure you can agree on appropriate
+        and meaningful opportunities to contribute your unique capabilities to your service.</p>
+      <p class="framework-link">Further development ideas are available on the
+        <a href="https://www.health.qld.gov.au/hpresearch/html/careers-development-framework"
+           target="_blank" rel="noopener">Allied Health Research Careers Development Framework website</a>.</p>
+    </div>
+
+    <div class="report-footer">
+      <p><strong>Queensland Health</strong> &nbsp;|&nbsp; Office of the Chief Allied Health Officer</p>
+      <p>Based on the Allied Health Research Careers Development Framework &mdash; health.qld.gov.au</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+/* ================================================================
+   DATA — rating scale, domains, competency statements, and the
+   banded feedback content from the framework assessment pack.
+   ================================================================ */
+
+const SCALE = [
+  { value: 1, label: 'No proficiency', short: 'None',
+    desc: 'May have some awareness of the area but no experience or skill in the area and no ability to demonstrate capability.',
+    color: '#9aa7b4' },
+  { value: 2, label: 'Emerging proficiency', short: 'Emerging',
+    desc: 'Gaining experience in the described knowledge and skills and starting to apply that knowledge to research activities and tasks. Requires support or mentoring to achieve outcomes.',
+    color: '#c47f17' },
+  { value: 3, label: 'Consolidating proficiency', short: 'Consol.',
+    desc: 'Furthering skills and knowledge and can complete research activities or tasks independently. Requires guidance to deliver complex or advanced levels of activity or tasks.',
+    color: '#1a6bb5' },
+  { value: 4, label: 'Advanced proficiency', short: 'Advanced',
+    desc: 'Becoming an expert in skill and knowledge required to demonstrate behaviour or activity. Able to apply skills and knowledge across a range of contexts and integrate expertise across domains. Able to support others in learning and applying knowledge, skills, and behaviour.',
+    color: '#2e7d32' },
+  { value: 5, label: 'Expert proficiency', short: 'Expert',
+    desc: 'Acknowledged leader with in-depth knowledge and demonstrated strategic leadership in the area of knowledge, skill, or behaviour. Integrates, evaluates, and adapts knowledge, skills, or behaviour at an advanced level.',
+    color: '#1b5e20' }
+];
+
+/*
+ * Feedback bands (per the framework assessment statements document):
+ *   low  : average score below 2.5
+ *   mid  : average score 2.5 to 4.0 (inclusive)
+ *   high : average score above 4.0
+ * Each band: { label, suggests, nowIntro?, now[], devIntro?, dev[], devOutro? }
+ */
+const DOMAINS = [
+{
+  id: 'knowledge',
+  num: 1,
+  title: 'Research knowledge and skills',
+  shortTitle: 'Knowledge & Skills',
+  color: '#0f284e',
+  description: 'The technical knowledge and skills required to do research across all stages of the research study lifecycle, from planning to dissemination.',
+  questions: [
+    'Understands general scientific principles, the research cycle and recognises different types of research methodologies and study types and designs',
+    'Understands the value of consumer/community involvement including co-design of research with consumers and applies to appropriate research studies',
+    'Conducts literature searches and critically evaluates the literature to inform own research',
+    'Develops and implements research protocols, including articulating clear research questions/aims, and selecting appropriate research methods and outcome measures',
+    'Understands and applies key concepts relating to research ethics and completing ethics applications',
+    'Understands and complies with local/international governance and regulatory requirements',
+    'Undertakes participant screening, recruitment and consent procedures in an ethical manner according to the protocol',
+    'Accurately and safely collects, manages, stores and disposes of research data',
+    'Plans, selects and conducts appropriate data analysis and critically interprets results',
+    'Applies project management skills to coordinate study activities',
+    'Understands research funding landscape (including knowledge of a variety of funding sources), writes and applies for grants',
+    'Establishes revenue streams to support research through competitive grant funding or industry partnerships',
+    'Effectively disseminates research findings to scientific and non-scientific communities through presentations, publications and other mediums'
+  ],
+  feedback: {
+    low: {
+      suggests: 'Your overall score suggests emerging proficiency in this domain. This typically reflects early-stage exposure to research concepts and activities, or limited opportunities to engage across the full research lifecycle. This is common for health professionals whose primary role has focused on clinical practice, education, or leadership rather than research. At this level, your understanding of research processes is developing, and you are likely to need guidance or support from others.',
+      now: [
+        'Take part in existing research, quality improvement, and service evaluation projects led by others.',
+        'Read, review and critically appraise the literature, including thinking about how it relates to your clinical work.',
+        'Contribute to data collection or research implementation activities for local research projects led by others.',
+        'Engage in research discussions within your clinical, discipline, or service context.'
+      ],
+      devIntro: 'Development activities are best focused on foundational research skills and opportunities to apply learnings with support from research experts.',
+      dev: [
+        'Undertake introductory training in research or evidence-based practice (e.g. webinars/seminars, short courses, formal coursework/graduate certificate).',
+        'Engage in literature review or critical appraisal activities linked to your clinical area with help from a librarian or research expert.',
+        'Join a journal club that relates to your clinical area and/or interests.',
+        'Attend local or discipline-specific research forums.',
+        'Assist with existing research or service evaluation projects — for example, supporting recruitment activities, as a research participant or co-investigator.',
+        'Find a research mentor or supervisor within your service or professional discipline to discuss ideas for practice improvement or research.',
+        'Undertake "Good Clinical Practice" for conducting research training.',
+        'Familiarise yourself with local ethics and governance processes.'
+      ],
+      devOutro: 'Where possible, focus your development within areas closely aligned to your clinical practice or service priorities.'
+    },
+    mid: {
+      suggests: 'Your overall score suggests a consolidating to advanced proficiency in this domain. This indicates an ability to independently complete research tasks across the study lifecycle while actively building expertise as a researcher. At this level, you are comfortable implementing standard research processes independently, and are expanding the breadth of your research skills.',
+      now: [
+        'Act as a lead or co-investigator on multidisciplinary research projects, with mentoring or supports as needed.',
+        'Lead and manage research ethics and governance submissions.',
+        'Author or co-author peer-reviewed publications for journals or other dissemination paths.',
+        'Apply for and secure competitive internal or external research funding.',
+        'Incorporate consumer and community co-design principles into your research methodology.'
+      ],
+      devIntro: 'To further develop this expertise, focus on transitioning from independent task completion to leading complex research projects, managing larger programs, and mentoring others.',
+      dev: [
+        'Undertake a formal Higher Degree by Research (e.g. Masters by Research or PhD), if not yet obtained.',
+        'Pursue training in advanced research methodologies, such as complex statistical analyses or specialised qualitative frameworks.',
+        'Seek targeted opportunities to coordinate or co-lead formal clinical trials.',
+        'Take on formal or informal mentoring roles to support novice researchers.',
+        'Actively participate in established research groups, collaborative networks, or committees.',
+        'Develop skills to establish long-term revenue streams through industry partnerships or major competitive grants.',
+        'Seek opportunities to participate in peer review, for example on grants committees or reviewing journal articles.'
+      ]
+    },
+    high: {
+      suggests: 'Your overall score identifies you as a high-level researcher with advanced to expert proficiency in applying skills across the research lifecycle.',
+      now: [
+        'Contribute to the broader research community through membership on Human Research Ethics Committees (HREC) or grant review panels.',
+        'Participate in the peer-review process for high-impact international journals.',
+        'Engage in and lead local, national, and international research collaboratives and networks.',
+        'Mentor Higher Degree by Research (HDR) students and support the growth of mid-career researchers.',
+        'Influence local clinical practice through the design and execution of strategic research projects that align with organisational priorities.',
+        'Be a leader in rigorous data governance and research integrity within your organisation.'
+      ],
+      devIntro: 'At this advanced stage, development focuses on "shaping the research landscape" — moving beyond individual studies to influence the strategy, policy, and long-term viability of research within the health system.',
+      dev: [
+        'Facilitate and secure large-scale, external competitive funding to support multi-year research programs.',
+        'Drive the integration of research findings into local, state, or national clinical guidelines to ensure evidence-based practice.',
+        'Disseminate high-level research findings at major national or international organisational events to influence system-level change.',
+        'Lead the development of research strategy and policy at a departmental, service, or state-wide level.',
+        'Build local research capacity by creating structures (such as joint appointments or dedicated research time) that allow others to engage in research.'
+      ],
+      devOutro: 'Where possible, focus your efforts on activities that bridge the gap between high-level research evidence and practical, sustainable implementation within the healthcare system.'
+    }
+  }
+},
+{
+  id: 'impact',
+  num: 2,
+  title: 'Research impact and translation',
+  shortTitle: 'Impact & Translation',
+  color: '#6f3076',
+  description: 'Competencies related to ensuring research is translated into practice and has an impact on society — through evidence-based practice, knowledge translation, and embedding impact in the design and conduct of clinical research.',
+  questions: [
+    'Uses and promotes evidence-based practice in own setting',
+    'Promotes translation of research findings by engaging relevant stakeholders, including consumers, in the project lifecycle',
+    'Engages in dialogue and understands working with stakeholders including policy makers, professional organisations, consumer representatives, industry partners and government representatives',
+    'Understands different types of research impact and how research impact can be measured or reported',
+    'Engages in multidisciplinary knowledge exchange to enhance research impact',
+    'Engages in research that is close to practice with potential for translation',
+    'Understands and applies knowledge translation methodology',
+    'Communicates research findings in an accessible way to diverse health system stakeholders',
+    'Produces research which informs the development of health policy'
+  ],
+  feedback: {
+    low: {
+      suggests: 'Your overall score suggests emerging proficiency in this domain. You are beginning to understand how research informs practice. You may use evidence in your work but are still learning how research leads to lasting change.',
+      now: [
+        'Use and promote current evidence and clinical guidelines to inform your practice.',
+        'Present research findings or evidence summaries to your department, local consumer groups, or other non-research audiences.',
+        'Participate in local service development activities to observe how research informs and influences practice changes.'
+      ],
+      devIntro: 'Development should focus on building knowledge of evidence-based frameworks that guide translation of research into practice, and the roles of various stakeholders.',
+      dev: [
+        'Undertake dedicated training in research translation, knowledge translation (KT), implementation science, or research impact.',
+        'Support or co-lead a local translation of research into practice project.',
+        'Learn about the different types of research impact and explore how research impact is measured or reported locally.',
+        'Attend local health research events and forums to learn how others have successfully embedded impact into their work.',
+        'Identify a mentor with expertise in implementation science or knowledge translation to provide direct support.',
+        'Learn about different stakeholder groups and how their influence affects the adoption of new evidence in a clinical setting.'
+      ]
+    },
+    mid: {
+      suggests: 'Your overall score suggests a consolidating to established proficiency in this domain. You can actively apply research to practice and are starting to influence how evidence is used beyond your own role.',
+      now: [
+        'Lead research translation projects using established implementation science frameworks.',
+        'Facilitate co-design activities with stakeholders to ensure research remains relevant and applicable to end-users.',
+        'Update clinical protocols and pathways based on recent, high-quality research evidence.',
+        'Mentor novice researchers or clinicians in understanding the fundamentals of research impact and translation.',
+        'Engage in multidisciplinary knowledge exchange to effectively communicate research findings to diverse health system stakeholders.'
+      ],
+      devIntro: 'Focus on moving beyond the application of frameworks retrospectively, to influencing the research process from design to delivery to ensure maximum impact.',
+      dev: [
+        'Develop comprehensive implementation and sustainability plans for active or upcoming research projects.',
+        'Strategically select and adapt translation models to ensure long-term, sustainable change in clinical practice.',
+        'Proactively engage a diverse range of stakeholders throughout the entire research and translation lifecycle.',
+        'Refine the design of research activities by applying a "translation lens" during the earliest planning phases to increase impact opportunities.',
+        'Lead multidisciplinary teams through translation of research into practice processes in response to new and relevant evidence.',
+        'Seek and foster working relationships with higher-level stakeholders, including policy makers and industry partners, to influence health service policy.'
+      ],
+      devOutro: 'Focus your development on mastering the strategic side of implementation science, ensuring that research is not just conducted, but is designed for, and successfully embedded into everyday practice.'
+    },
+    high: {
+      suggests: 'Your overall score identifies you as an acknowledged research translation leader. This score reflects advanced to expert proficiency in driving clinical change through the application of research evidence.',
+      now: [
+        'Lead the development of comprehensive impact logic models to map how research activities generate real-world benefits.',
+        'Develop and monitor relevant metrics to track the real-world impact of research-informed service changes.',
+        'Review research grants and proposals with a dedicated "impact lens" to ensure feasibility, clinical relevance and sustainability.',
+        'Deliver research protocols that have implementation built in from the outset, such as using hybrid effectiveness-implementation designs.',
+        'Contribute expert knowledge to the development of state or national clinical guidelines.',
+        'Produce diverse impact artefacts, such as policy briefs, evidence summaries, and briefing notes designed to influence decision-makers.',
+        'Mentor clinicians and leadership groups on how to align clinical priorities with research impact and translation strategies.',
+        'Directly produce research that informs and shapes the development of high-level health policy.',
+        'Develop organisational-level frameworks that standardise how research translation is supported and measured across the service.'
+      ],
+      devIntro: 'At this level, development focuses on becoming a system-level influencer of health and research culture and policy.',
+      dev: [
+        'Lead or engage with high-level advisory committees to translate research findings into formal health policy.',
+        'Pursue advanced, formal training in implementation science to master the methodologies required for system-wide change.',
+        'Establish and maintain strategic partnerships with industry, government, and academic bodies to foster a culture of ongoing translation and investment.',
+        'Facilitate workshops or forums for clinical leadership to bridge the gap between high-level research evidence and local policy requirements.'
+      ],
+      devOutro: 'Focus your development on using research as a tool for systemic influence.'
+    }
+  }
+},
+{
+  id: 'clinical',
+  num: 3,
+  title: 'Clinical and healthcare research context',
+  shortTitle: 'Clinical Context',
+  color: '#00a7b5',
+  description: 'The unique competencies required to conduct research in a clinical or healthcare context, including ensuring research projects are embedded appropriately in the context.',
+  questions: [
+    'Maintains up-to-date knowledge on research and practice in their clinical area',
+    'Conducts research in area of specialty practice',
+    'Applies healthcare and clinical knowledge to designing and conducting research, including developing practice-relevant research questions',
+    'Understands and interfaces research with other health service improvement processes (e.g. quality improvement, healthcare innovation, evaluation, service and workforce development)',
+    'Maintains high level understanding of health systems at a local, national and/or international level',
+    'Brokers clinical and research expertise at a local, statewide, national and/or international level',
+    'Influences patient care by combining expert clinical and research skills',
+    'Generates innovative research-related ideas and puts them into action within clinical/healthcare area or organisation',
+    'Consults and collaborates with health-care professionals, consumers and other relevant health service staff to develop and conduct practice-relevant research appropriate to healthcare setting',
+    'Navigates the interaction between healthcare and research roles including ethical complexities and governance requirements'
+  ],
+  feedback: {
+    low: {
+      suggests: 'Your overall score suggests emerging proficiency in this domain. This demonstrates an initial awareness of the value of conducting research within a clinical setting and how research findings can inform practice.',
+      now: [
+        'Read and discuss research relevant to your clinical area.',
+        'Identify the roles of clinicians and researchers in existing projects by reviewing publications, attending research presentations, and reading project reports.',
+        'Participate in local clinical networks, multidisciplinary team (MDT) research discussions, or discipline-specific forums.',
+        'Engage with a Queensland Health Librarian to learn how to effectively access clinical evidence.'
+      ],
+      devIntro: 'Continue to focus on identifying clinically relevant gaps in existing evidence to identify practice-relevant research questions:',
+      dev: [
+        'Participate in, or lead, a small-scale quality improvement (QI) project in your local setting to understand the link between evidence, current practices, and service change.',
+        'Seek mentoring to learn how research findings are critically appraised for scientific merit and then adapted for use in a real-world clinical context.',
+        'Participate in MDT research activities to observe how different clinical perspectives influence research design and implementation.',
+        'Attend health service led research forums to see how local clinicians establish practice-relevant research projects and programs.',
+        'Consult with colleagues and consumers to understand how to make research relevant to your specific healthcare setting.',
+        'Familiarise yourself with local strategic documents (e.g. Allied Health strategic plan; Health Service strategic plan) to understand local health service priority areas, and where research could be used to improve the healthcare context.'
+      ],
+      devOutro: 'Focus your development on moving from an observer of clinical evidence to an active participant in identifying the specific research and translation needs of your service and patient population.'
+    },
+    mid: {
+      suggests: 'Your overall score suggests a consolidating to established proficiency in this domain. You can independently apply research to improve care and understand how research and clinical practice interact. At this level, you recognise that research is not a separate activity but a fundamental component of ensuring safe and high-quality clinical practice.',
+      now: [
+        'Develop and refine clinically relevant research questions that address identified local practice gaps.',
+        'Lead the review and synthesis of research findings to inform improvements to local services.',
+        'Present research findings at health service or organisational forums to drive local awareness and improve uptake.',
+        'Contribute to peer-reviewed publications that specifically focus on improving clinical practice and service delivery.',
+        'Influence patient care by effectively combining your expert clinical and research skills.'
+      ],
+      devIntro: 'To further develop your proficiency, focus on using research and evidence to drive systemic service redesign and improvement.',
+      dev: [
+        'Design research with translation and impact in mind.',
+        'Mentor early-career clinicians in developing their own research skills and balancing clinical and research roles.',
+        'Seek formal feedback from multidisciplinary team members on your research communication and project management skills to refine your leadership approach.',
+        'Lead larger-scale evaluations of clinical services to demonstrate the value of research in a healthcare business context.',
+        'Understand how clinical and research roles intersect, and be able to navigate ethical issues associated with clinical research.',
+        'Engage in more complex stakeholder management to ensure research projects align with broader health service strategic priorities.',
+        'Develop a high-level understanding of health systems, including business models and health funding, to improve the feasibility of translation.'
+      ],
+      devOutro: 'Focus your development on mastering the strategic integration of research into systemic service improvements.'
+    },
+    high: {
+      suggests: 'Your overall score identifies you as a leader in embedding research into clinical systems and influencing care at a broader level.',
+      now: [
+        'Lead the implementation of service-level or system-wide changes based on original research findings.',
+        'Advocate for and secure protected research time for clinical positions.',
+        'Represent your clinical profession or discipline at state or national levels to influence the development of national clinical standards or guidelines.',
+        'Collaborate with health service executives to demonstrate the return on investment (ROI) of research-active clinical teams.',
+        'Generate highly innovative research ideas and put them into action across the system.'
+      ],
+      devIntro: 'At this stage, development focuses on shaping long-term research strategy aligned to care delivery.',
+      dev: [
+        'Lead the development of a comprehensive research strategy that aligns research outcomes with health service clinical priorities.',
+        'Advocate for the value and role of embedded researchers within the broader health landscape to influence workforce policy and funding models.',
+        'Establish and manage multi-sector partnerships (e.g. between Hospital and Health Services and universities).',
+        'Drive the adoption of innovative research-led service delivery models that can be scaled across the healthcare system.'
+      ],
+      devOutro: 'Focus your development on high-level advocacy and systemic change, ensuring that embedded health researchers are recognised as an essential, sustainable component of the modern healthcare workforce.'
+    }
+  }
+},
+{
+  id: 'leadership',
+  num: 4,
+  title: 'Research leadership and strategy',
+  shortTitle: 'Leadership & Strategy',
+  color: '#7da832',
+  description: 'Competencies required to lead research strategy, research projects, or teams, including research staff.',
+  questions: [
+    'Challenges traditional ways of thinking within area of research and/or clinical expertise',
+    'Understands the strategic landscape across research and healthcare, and anticipates future directions and promising ideas',
+    'Contributes to or leads the development of research strategies and communicates strategy to the relevant stakeholders',
+    'Shapes and contributes to local policy and procedures',
+    'Promotes and supports good research practices and governance in line with relevant standards and legislation',
+    'Creates opportunities for, and promotes the skills and research careers of others',
+    'Initiates, leads, and sustains research projects and/or a program of research',
+    'Establishes a reputation as a leader and drives agenda in research field',
+    'Serves on key research committees within their organisation and beyond',
+    'Promotes a culture of equity and opportunity for all staff engaged in research',
+    'Forms research teams that are fit for purpose (including consumers as appropriate), appropriately navigates team dynamics and creates a positive team culture',
+    'Establishes partnerships that enable the development of a clinical-research workforce',
+    'Engages in effective research workforce planning and research budget management',
+    'Establishes, manages and sustains research networks and collaborations across organisations to enhance the quality of research'
+  ],
+  feedback: {
+    low: {
+      suggests: 'Your overall score suggests emerging proficiency in this domain. You are starting to see how leadership supports research but are still developing confidence in research leadership.',
+      now: [
+        'Encourage and recognise research efforts in your team.',
+        'Share information about research development opportunities across the workforce.',
+        'Help establish and/or coordinate local research events, such as journal clubs or research showcases, to celebrate and promote research activity.',
+        'Seek advice from research-mature groups or established research program leads in establishing and growing local research initiatives.',
+        'Communicate the value of existing research projects to relevant local leadership and stakeholders.',
+        'Promote and support good research practices and governance within your immediate team in line with relevant standards.'
+      ],
+      devIntro: 'To continue building your skills, focus on aligning research activities with broader clinical and operational strategies and priorities.',
+      dev: [
+        'Practise how to communicate the value of research.',
+        'Seek mentorship focused on research leadership and the operationalisation of research within a complex health system.',
+        'Develop your ability to lead service evaluation and quality improvement activities and projects as a pipeline to more complex research leadership roles.',
+        'Familiarise yourself with local facility research strategic plans (where available).',
+        'Familiarise yourself with the local research leadership structure — e.g. what research support roles exist, whether there is a facility Research Committee (or similar), or a dedicated Director of Research (or similar).',
+        'Seek out opportunities to collaborate with universities or other partners (e.g. student projects, participating in events, committee membership).'
+      ]
+    },
+    mid: {
+      suggests: 'Your overall score suggests a consolidating to established proficiency in this domain. You are actively shaping local research activity and starting to lead strategy, people, and resources. At this level, you are likely capable of coordinating research within your service and are beginning to communicate the value of research in health services.',
+      now: [
+        'Lead or contribute to the development of service or departmental research strategies and communicate that strategy to relevant stakeholders.',
+        'Engage with leadership to communicate the value of research.',
+        'Advocate for local research resourcing.',
+        'Foster and maintain collaborations with academic and industry partners.',
+        'Contribute to formal mentoring and support structures to enable the research careers of others.',
+        'Lead independent research projects or a program of research.',
+        'Establish research teams that are fit for purpose and create a positive team culture.'
+      ],
+      devIntro: 'Further developing your proficiency involves transitioning from coordinating local activities to strategically embedding research as "business-as-usual" within your service. Useful strategies may include:',
+      dev: [
+        'Contribute to the development and review of local research policy and procedures.',
+        'Develop more established ways of working with collaborative partners (e.g. Memoranda of Understanding, collaborative research meetings, co-run events).',
+        'Lead large partnerships and collaborations, including workforce development opportunities.',
+        'Engage in research workforce planning and budget management.',
+        'Contribute to organisational-level research committees and strategic forums.'
+      ],
+      devOutro: 'Focus your development on building the structures and workforce capacity that promote the sustainability of research within the organisation beyond a single project or individual.'
+    },
+    high: {
+      suggests: 'Your overall score identifies you as a strategic leader capable of driving and developing research culture and capacity at an organisational level. At this level, you possess the expertise to move beyond the management of individual teams toward shaping the research ecosystem and driving systemic organisational change.',
+      now: [
+        'Contribute to organisational-level research committees and strategic forums.',
+        'Confidently communicate the value of research to executive leadership and other high-level stakeholders.',
+        'Maintain high-level partnerships with academic and industry leaders to sustain significant, multi-sector research collaborations.',
+        'Mentor established clinician-researchers to support their transition into formal research leadership roles.',
+        'Serve on key research committees beyond your immediate organisation, such as external strategic advisory committees or major grant review panels.'
+      ],
+      devIntro: 'At this stage, development focuses on navigating complex, system-level healthcare landscapes.',
+      dev: [
+        'Lead the development of research governance and ethics policies that reduce barriers to large-scale clinical innovations.',
+        'Negotiate large-scale funding and resource allocations at a state or national level to support emerging research priorities.',
+        'Drive cultural change by advocating for the value of research in health service performance and patient safety frameworks.',
+        'Leverage your deep understanding of the strategic landscape to anticipate future directions and champion highly promising research ideas.'
+      ]
+    }
+  }
+},
+{
+  id: 'mentorship',
+  num: 5,
+  title: 'Research capacity building and mentorship',
+  shortTitle: 'Capacity & Mentorship',
+  color: '#5696d3',
+  description: 'Competencies related to building research capacity in researchers and healthcare staff, including one-on-one mentorship, education, and contributing to the structure of research.',
+  questions: [
+    'Engages less experienced researchers with potential mentors and collaborators',
+    'Mentors and guides less experienced researchers',
+    'Seeks opportunities to engage staff in research and embed researchers into departments',
+    'Assists staff to identify appropriate funding schemes and develop/write targeted funding proposals',
+    'Supports staff through the research project lifecycle (e.g. literature search, data collection, data analysis)',
+    'Encourages and inspires staff in their research journey',
+    'Provides formal supervision associated with a research degree (e.g. honours, PhD)',
+    'Supports staff to develop their research careers and track record',
+    'Understands research training requirements and needs of the organisation',
+    'Supports and organises research learning opportunities for staff and other relevant stakeholders such as consumers',
+    'Designs and delivers research training and development sessions and/or programs',
+    'Contributes to the strategy and structure of research mentoring/supervision in the organisation',
+    'Knows and uses different research informed research development practices (e.g. teaching, education strategies, supervision, mentoring)',
+    'Undertakes evaluation and research on own research development activities (e.g. teaching, education strategies, supervision, mentoring)',
+    'Contributes to the promotion of research in the health service'
+  ],
+  feedback: {
+    low: {
+      suggests: 'Your overall score suggests emerging proficiency in this domain. You are becoming aware of how to support others in research but are still developing confidence and experience.',
+      now: [
+        'Advocate for research as "core business".',
+        'Encourage colleagues to get involved in research and celebrate their successes.',
+        'Help promote local research success stories and "champions" to build interest and momentum within the department.',
+        'Participate in multidisciplinary research meetings to observe how diverse skill sets contribute to overall team capacity.',
+        'Contribute to the promotion of research in the health service.'
+      ],
+      devIntro: 'To build your proficiency as a research enabler and mentor, focus on developing experience and confidence in your own research capacity building skills.',
+      dev: [
+        'Seek advice and support in implementing research capacity building activities from established research networks or groups, even those outside your specific discipline or profession.',
+        'Align your capacity-building activities (like journal clubs or workshops) with service priorities.',
+        'Assist staff in identifying appropriate funding schemes and developing targeted funding proposals under guidance.',
+        'Build an understanding of the research opportunities and support available, to be able to help others navigate the research ecosystem.'
+      ],
+      devOutro: 'Focus your development on moving from individual participation toward creating a supportive environment that empowers your colleagues to integrate research into their clinical roles.'
+    },
+    mid: {
+      suggests: 'Your overall score suggests consolidating to established proficiency in this domain. At this level, you are demonstrating the capacity to support others and create research-enabling environments.',
+      now: [
+        'Mentor novice clinician researchers, or students, while continuing to access your own mentorship.',
+        'Navigate others to appropriate opportunities and supports (e.g. training, funding schemes, support staff).',
+        'Collaborate with clinical leadership to align staff research projects with service delivery goals.',
+        'Link clinical teams with university or industry partners.',
+        'Design and deliver research training and development sessions and/or programs for staff and other relevant stakeholders, such as consumers.'
+      ],
+      devIntro: 'To further advance this proficiency, focus on formalising mentorship initiatives, developing an active research environment in local clinical settings, and enabling research participation for clinicians.',
+      dev: [
+        'Embed research structures and supports into local settings (such as journal clubs, continuous service evaluation, and formalised service development).',
+        'Contribute to the broader strategy and structure of research mentoring within the organisation.',
+        'Undertake evaluation and research on your own research development activities (e.g. teaching, education strategies, supervision, mentoring).'
+      ]
+    },
+    high: {
+      suggests: 'Your overall score suggests advanced to expert proficiency in this domain. You are a leader in building and sustaining research capacity across services or systems.',
+      now: [
+        'Consistently advocate for and drive research culture within the organisation.',
+        'Shape and adapt capacity-building strategies in response to organisational maturity and to ensure long-term sustainability.',
+        'Promote research as "core business".',
+        'Supervise research students (e.g. honours, PhD).',
+        'Contribute directly to the strategy and structure of research mentoring and supervision across the broader organisation.'
+      ],
+      devIntro: 'Development opportunities at this stage focus on broad, system-level strategic influence and infrastructure.',
+      dev: [
+        'Lead development and implementation of system-level mentorship frameworks.',
+        'Shape workforce strategy and development for research roles and career structures.',
+        'Evaluate and adapt research-informed development practices on a macro scale to continually refine institutional educational strategies.',
+        'Share successful models of research operationalisation and capacity building with national and international groups.'
+      ]
+    }
+  }
+},
+];
+
+const FRAMEWORK_URL = 'https://www.health.qld.gov.au/hpresearch/html/careers-development-framework';
+const STORAGE_KEY = 'ahrcf-tool-v5';
+const TOTAL_QUESTIONS = DOMAINS.reduce((n, d) => n + d.questions.length, 0);
+
+/* ================================================================
+   STATE
+   ================================================================ */
+const state = {
+  answers: {},          // "domainId-index" -> 1..5
+  view: 'intro',        // intro | assess | report
+  activeDomain: DOMAINS[0].id
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (saved && typeof saved.answers === 'object') {
+      for (const [key, val] of Object.entries(saved.answers)) {
+        const v = Number(val);
+        if (v >= 1 && v <= 5) state.answers[key] = v;
+      }
+    }
+  } catch (e) { /* corrupted storage — start fresh */ }
+}
+
+let saveTimer = null;
+function persistState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ answers: state.answers, savedAt: new Date().toISOString() }));
+    const flash = document.getElementById('save-flash');
+    flash.classList.add('show');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => flash.classList.remove('show'), 1600);
+  } catch (e) { /* storage unavailable (private mode etc.) — tool still works for the session */ }
+}
+
+function clearSaved() {
+  state.answers = {};
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+const answeredCount = (domain) =>
+  domain
+    ? domain.questions.reduce((n, _, i) => n + (state.answers[`${domain.id}-${i}`] ? 1 : 0), 0)
+    : Object.keys(state.answers).length;
+
+function domainAverage(domain) {
+  let sum = 0, n = 0;
+  domain.questions.forEach((_, i) => {
+    const v = state.answers[`${domain.id}-${i}`];
+    if (v) { sum += v; n++; }
+  });
+  return n ? sum / n : null;
+}
+
+function bandFor(avg) {
+  if (avg === null) return { key: null, label: 'Not assessed', css: 'tier-none' };
+  if (avg < 2.5)   return { key: 'low',  label: 'Emerging',                css: 'tier-emerging' };
+  if (avg <= 4.0)  return { key: 'mid',  label: 'Consolidating–Advanced',  css: 'tier-mid' };
+  return             { key: 'high', label: 'Advanced–Expert',              css: 'tier-high' };
+}
+
+/* ================================================================
+   VIEW ROUTING
+   ================================================================ */
+function show(view) {
+  state.view = view;
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.getElementById('btn-home').hidden = (view === 'intro');
+  window.scrollTo({ top: 0, behavior: 'auto' });
+  if (view === 'intro') renderResumeNote();
+}
+
+/* ================================================================
+   RENDER: INTRO
+   ================================================================ */
+function renderScaleTable() {
+  document.getElementById('scale-table-body').innerHTML = SCALE.map(s => `
+    <tr>
+      <td><span class="scale-badge" style="background:${s.color}">${s.value} — ${s.label}</span></td>
+      <td>${s.desc}</td>
+    </tr>`).join('');
+}
+
+function renderResumeNote() {
+  const n = answeredCount();
+  const note = document.getElementById('resume-note');
+  note.style.display = n > 0 ? 'block' : 'none';
+  if (n > 0) document.getElementById('resume-count').textContent = `${n} of ${TOTAL_QUESTIONS} statements`;
+}
+
+/* Pentagon framework diagram, drawn programmatically. */
+function renderFrameworkDiagram(svgId, opts = {}) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  const cx = 230, cy = 215, rOuter = 178, rInner = 64;
+  const n = DOMAINS.length;
+  const pt = (r, i, offset = 0) => {
+    const a = -Math.PI / 2 + (i + offset) * 2 * Math.PI / n;
+    return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  };
+  let parts = [];
+  // Wedges: each domain occupies the sector between vertex i-0.5 and i+0.5
+  for (let i = 0; i < n; i++) {
+    const [x1, y1] = pt(rOuter, i, -0.5);
+    const [x2, y2] = pt(rOuter, i, 0.5);
+    const [ix1, iy1] = pt(rInner, i, -0.5);
+    const [ix2, iy2] = pt(rInner, i, 0.5);
+    parts.push(`<path d="M${ix1},${iy1} L${x1},${y1} L${x2},${y2} L${ix2},${iy2} Z"
+      fill="${DOMAINS[i].color}" stroke="#fff" stroke-width="3"/>`);
+  }
+  // Centre pentagon
+  const centre = Array.from({ length: n }, (_, i) => pt(rInner, i, -0.5).join(',')).join(' ');
+  parts.push(`<polygon points="${centre}" fill="#fff" stroke="#d9e2ec" stroke-width="2"/>`);
+  parts.push(`<text x="${cx}" y="${cy - 8}" text-anchor="middle" font-size="13" font-weight="700" fill="#09549f">Research</text>`);
+  parts.push(`<text x="${cx}" y="${cy + 9}" text-anchor="middle" font-size="13" font-weight="700" fill="#09549f">Careers</text>`);
+  parts.push(`<text x="${cx}" y="${cy + 26}" text-anchor="middle" font-size="13" font-weight="700" fill="#09549f">Framework</text>`);
+  // Wedge labels (wrapped)
+  const labels = [
+    ['Research', 'knowledge', '& skills'],
+    ['Research impact', '& translation'],
+    ['Clinical &', 'healthcare', 'research context'],
+    ['Research', 'leadership', '& strategy'],
+    ['Capacity building', '& mentorship']
+  ];
+  for (let i = 0; i < n; i++) {
+    const [lx, ly] = pt((rOuter + rInner) / 2 + 4, i);
+    const lines = labels[i];
+    const lh = 13;
+    const startY = ly - ((lines.length - 1) * lh) / 2;
+    lines.forEach((line, j) => {
+      parts.push(`<text x="${lx}" y="${startY + j * lh}" text-anchor="middle"
+        font-size="11.5" font-weight="600" fill="#fff">${line}</text>`);
+    });
+  }
+  svg.innerHTML = parts.join('');
+}
+
+/* ================================================================
+   RENDER: ASSESSMENT
+   ================================================================ */
+function renderAssessment() {
+  const tabs = document.getElementById('domain-tabs');
+  tabs.innerHTML = DOMAINS.map(d => `
+    <button type="button" class="domain-tab" role="tab" id="tab-${d.id}"
+            aria-selected="false" aria-controls="panel-${d.id}"
+            style="--tab-color:${d.color}" data-domain="${d.id}">
+      ${d.shortTitle}
+      <span class="tab-count" id="tab-count-${d.id}">0/${d.questions.length}</span>
+    </button>`).join('');
+
+  const panels = document.getElementById('domain-panels');
+  panels.innerHTML = DOMAINS.map((d, di) => {
+    const items = d.questions.map((q, i) => {
+      const name = `${d.id}-${i}`;
+      const opts = SCALE.map(s => `
+        <span class="rating-opt">
+          <input type="radio" id="r-${name}-${s.value}" name="${name}" value="${s.value}"
+                 ${state.answers[name] === s.value ? 'checked' : ''}>
+          <label for="r-${name}-${s.value}" title="${s.value} — ${s.label}: ${s.desc.replace(/"/g, '&quot;')}">
+            ${s.value}<small>${s.short}</small>
+          </label>
+        </span>`).join('');
+      return `
+        <div class="q-item ${state.answers[name] ? 'answered' : ''}" style="--domain-color:${d.color}" id="qi-${name}">
+          <div class="q-text"><span class="q-num">${i + 1}.</span>${q}</div>
+          <fieldset class="rating-group">
+            <legend class="visually-hidden">Rating for: ${q}</legend>
+            <div class="rating-scale">${opts}</div>
+          </fieldset>
+        </div>`;
+    }).join('');
+
+    const isLast = di === DOMAINS.length - 1;
+    const prev = di > 0 ? DOMAINS[di - 1] : null;
+    const next = !isLast ? DOMAINS[di + 1] : null;
+    return `
+      <div class="domain-panel" id="panel-${d.id}" role="tabpanel" aria-labelledby="tab-${d.id}"
+           style="--domain-color:${d.color}" hidden>
+        <div class="domain-intro">
+          <h2>Domain ${d.num}: ${d.title}</h2>
+          <p>${d.description}</p>
+        </div>
+        ${items}
+        <div class="assess-nav">
+          ${prev
+            ? `<button type="button" class="btn btn-secondary" data-goto="${prev.id}">&larr; ${prev.shortTitle}</button>`
+            : `<span></span>`}
+          ${next
+            ? `<button type="button" class="btn" data-goto="${next.id}" style="background:${d.color}">Next: ${next.shortTitle} &rarr;</button>`
+            : `<button type="button" class="btn" id="btn-generate" style="background:#2e7d32">Generate my report &rarr;</button>`}
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('progress-total').textContent = TOTAL_QUESTIONS;
+
+  // Event delegation
+  tabs.addEventListener('click', e => {
+    const btn = e.target.closest('.domain-tab');
+    if (btn) openDomain(btn.dataset.domain);
+  });
+  panels.addEventListener('change', e => {
+    if (e.target.matches('input[type="radio"]')) {
+      state.answers[e.target.name] = Number(e.target.value);
+      document.getElementById('qi-' + e.target.name).classList.add('answered');
+      persistState();
+      updateProgress();
+    }
+  });
+  panels.addEventListener('click', e => {
+    const nav = e.target.closest('[data-goto]');
+    if (nav) { openDomain(nav.dataset.goto); return; }
+    if (e.target.closest('#btn-generate')) generateReport();
+  });
+
+  updateProgress();
+}
+
+function openDomain(id) {
+  state.activeDomain = id;
+  DOMAINS.forEach(d => {
+    document.getElementById('panel-' + d.id).hidden = (d.id !== id);
+    document.getElementById('tab-' + d.id).setAttribute('aria-selected', String(d.id === id));
+  });
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+function updateProgress() {
+  let total = 0;
+  DOMAINS.forEach(d => {
+    const n = answeredCount(d);
+    total += n;
+    const countEl = document.getElementById('tab-count-' + d.id);
+    countEl.textContent = `${n}/${d.questions.length}`;
+    document.getElementById('tab-' + d.id).classList.toggle('complete', n === d.questions.length);
+  });
+  document.getElementById('progress-count').textContent = total;
+  const pct = Math.round((total / TOTAL_QUESTIONS) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-bar').setAttribute('aria-valuenow', pct);
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+/* ================================================================
+   RENDER: REPORT
+   ================================================================ */
+function generateReport() {
+  const missing = TOTAL_QUESTIONS - answeredCount();
+  if (missing === TOTAL_QUESTIONS) {
+    toast('Please answer at least one statement before generating a report.');
+    return;
+  }
+  if (missing > 0) {
+    const ok = confirm(`You have ${missing} unanswered statement${missing === 1 ? '' : 's'}. ` +
+      'Unanswered statements are excluded from your domain averages. Generate the report anyway?');
+    if (!ok) return;
+  }
+  renderReport();
+  show('report');
+}
+
+function renderReport() {
+  document.getElementById('report-date').textContent =
+    'Assessment completed ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  // Results table
+  document.getElementById('results-body').innerHTML = DOMAINS.map(d => {
+    const avg = domainAverage(d);
+    const band = bandFor(avg);
+    const answered = answeredCount(d);
+    const note = answered < d.questions.length && answered > 0
+      ? ` <small style="color:var(--ink-soft)">(${answered}/${d.questions.length} answered)</small>` : '';
+    return `<tr>
+      <td><span class="domain-dot" style="background:${d.color}"></span>${d.title}${note}</td>
+      <td class="num">${avg === null ? '—' : avg.toFixed(1) + ' / 5'}</td>
+      <td><span class="tier-badge ${band.css}">${band.label}</span></td>
+    </tr>`;
+  }).join('');
+
+  renderRadar();
+
+  // Domain feedback cards
+  document.getElementById('feedback-cards').innerHTML = DOMAINS.map(d => {
+    const avg = domainAverage(d);
+    const band = bandFor(avg);
+    if (!band.key) {
+      return `<div class="card feedback-card" style="--domain-color:${d.color}">
+        <h3>Domain ${d.num}: ${d.title}</h3>
+        <p class="lead">No statements were answered in this domain, so no feedback can be provided.</p>
+      </div>`;
+    }
+    const fb = d.feedback[band.key];
+    const list = items => items.map(x => `<li>${x}</li>`).join('');
+    return `<div class="card feedback-card" style="--domain-color:${d.color}">
+      <h3>Domain ${d.num}: ${d.title}
+        <span class="score-chip">Average ${avg.toFixed(1)} / 5 — ${band.label}</span></h3>
+      <p class="lead">${d.description}</p>
+      <h4>What your score suggests</h4>
+      <p>${fb.suggests}</p>
+      <h4>What you can do with these skills now</h4>
+      <ul>${list(fb.now)}</ul>
+      <h4>How to strengthen or develop your capabilities</h4>
+      ${fb.devIntro ? `<p>${fb.devIntro}</p>` : ''}
+      <ul>${list(fb.dev)}</ul>
+      ${fb.devOutro ? `<p>${fb.devOutro}</p>` : ''}
+      <p class="framework-link">Additional ideas are available at the
+        <a href="${FRAMEWORK_URL}" target="_blank" rel="noopener">framework website</a>.</p>
+    </div>`;
+  }).join('');
+}
+
+/* Radar (spider) chart of domain averages, pure SVG. */
+function renderRadar() {
+  const svg = document.getElementById('radar-chart');
+  const cx = 280, cy = 252, rMax = 185;
+  const n = DOMAINS.length;
+  const pt = (r, i) => {
+    const a = -Math.PI / 2 + i * 2 * Math.PI / n;
+    return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  };
+  const ring = r => Array.from({ length: n }, (_, i) => pt(r, i).join(',')).join(' ');
+
+  let parts = [];
+  // Grid rings 1..5 with value labels
+  for (let v = 1; v <= 5; v++) {
+    const r = rMax * v / 5;
+    parts.push(`<polygon points="${ring(r)}" fill="${v === 5 ? '#f4f7fb' : 'none'}"
+      stroke="#c7d4e2" stroke-width="1"/>`);
+    parts.push(`<text x="${cx + 6}" y="${cy - r + 13}" font-size="11" fill="#8094a8">${v}</text>`);
+  }
+  // Reorder so ring 5 (filled) is painted first
+  parts.reverse();
+  // Spokes + axis labels
+  const axisLabels = [
+    ['Knowledge', '& skills'],
+    ['Impact &', 'translation'],
+    ['Clinical', 'context'],
+    ['Leadership', '& strategy'],
+    ['Capacity &', 'mentorship']
+  ];
+  for (let i = 0; i < n; i++) {
+    const [x, y] = pt(rMax, i);
+    parts.push(`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#c7d4e2" stroke-width="1"/>`);
+    const [lx, ly] = pt(rMax + 30, i);
+    const lines = axisLabels[i];
+    lines.forEach((line, j) => {
+      parts.push(`<text x="${lx}" y="${ly - 6 + j * 14}" text-anchor="middle"
+        font-size="12.5" font-weight="700" fill="${DOMAINS[i].color}">${line}</text>`);
+    });
+  }
+  // Data polygon (unanswered domains plot at 0)
+  const dataPts = DOMAINS.map((d, i) => {
+    const avg = domainAverage(d) || 0;
+    return pt(rMax * avg / 5, i);
+  });
+  parts.push(`<polygon points="${dataPts.map(p => p.join(',')).join(' ')}"
+    fill="rgba(9,84,159,0.22)" stroke="#09549f" stroke-width="2.5" stroke-linejoin="round"/>`);
+  DOMAINS.forEach((d, i) => {
+    const avg = domainAverage(d);
+    if (avg === null) return;
+    const [x, y] = dataPts[i];
+    parts.push(`<circle cx="${x}" cy="${y}" r="5" fill="${d.color}" stroke="#fff" stroke-width="2"/>`);
+  });
+  svg.innerHTML = parts.join('');
+}
+
+/* ================================================================
+   WIRE-UP
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  renderScaleTable();
+  renderFrameworkDiagram('framework-diagram-intro');
+  renderAssessment();
+  renderResumeNote();
+  document.getElementById('intro-total-questions').textContent = TOTAL_QUESTIONS;
+  document.getElementById('intro-total-questions-2').textContent = TOTAL_QUESTIONS;
+  show('intro');
+
+  document.getElementById('btn-start').addEventListener('click', () => {
+    openDomain(DOMAINS[0].id);
+    show('assess');
+  });
+  document.getElementById('btn-home').addEventListener('click', () => show('intro'));
+  document.getElementById('btn-edit-answers').addEventListener('click', () => show('assess'));
+  document.getElementById('btn-print').addEventListener('click', () => window.print());
+  document.getElementById('btn-clear-saved').addEventListener('click', () => {
+    if (confirm('Discard all saved answers and start fresh?')) {
+      clearSaved();
+      renderAssessment();
+      renderResumeNote();
+    }
+  });
+  document.getElementById('btn-start-over').addEventListener('click', () => {
+    if (confirm('This will permanently delete all of your answers. Start over?')) {
+      clearSaved();
+      renderAssessment();
+      show('intro');
+    }
+  });
+});
+</script>
+</body>
+</html>
