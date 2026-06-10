@@ -529,13 +529,15 @@
         .question-group {
             margin-bottom: 15px;
             padding: 20px;
+            padding-left: 18px;
             background: #fff;
             border: 1px solid #e2e8f0;
+            border-left: 4px solid #e2e8f0;
             border-radius: 8px;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            transition: transform 0.1s;
+            transition: border-color 0.3s, transform 0.1s;
         }
 
         @media (min-width: 768px) {
@@ -547,6 +549,13 @@
         }
 
         .question-group:hover { border-color: #cbd5e1; transform: translateY(-1px); }
+
+        #tab-knowledge .question-group:has(input:checked) { border-left-color: var(--col-knowledge); }
+        #tab-impact .question-group:has(input:checked) { border-left-color: var(--col-impact); }
+        #tab-clinical .question-group:has(input:checked) { border-left-color: var(--col-clinical); }
+        #tab-leadership .question-group:has(input:checked) { border-left-color: var(--col-leadership); }
+        #tab-mentorship .question-group:has(input:checked) { border-left-color: var(--col-mentorship); }
+
         .q-text { font-size: 15px; font-weight: 500; color: var(--primary-color); line-height: 1.5; flex: 1; margin-right: 20px; }
 
         /* --- Custom Radio Buttons --- */
