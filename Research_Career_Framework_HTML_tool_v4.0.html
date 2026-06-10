@@ -556,6 +556,26 @@
         #tab-leadership .question-group:has(input:checked) { border-left-color: var(--col-leadership); }
         #tab-mentorship .question-group:has(input:checked) { border-left-color: var(--col-mentorship); }
 
+        .domain-header {
+            padding: 20px;
+            padding-left: 18px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            background: #f8fafc;
+        }
+        .domain-header h3 {
+            font-size: 1.1rem;
+            margin: 0 0 6px 0;
+            color: var(--primary-color);
+        }
+        .domain-header p {
+            font-size: 13.5px;
+            color: #555;
+            margin: 0;
+            line-height: 1.5;
+        }
+
         .q-text { font-size: 15px; font-weight: 500; color: var(--primary-color); line-height: 1.5; flex: 1; margin-right: 20px; }
 
         /* --- Custom Radio Buttons --- */
@@ -1316,6 +1336,7 @@
         {
             id: 'knowledge',
             title: 'Research knowledge and skills',
+            description: 'The technical knowledge and skills required to do research across all stages of the research study lifecycle, from planning to dissemination.',
             color: '#0f284e',
             class: 'row-knowledge',
             questions: [
@@ -1337,6 +1358,7 @@
         {
             id: 'impact',
             title: 'Research impact and translation',
+            description: 'Competencies related to ensuring research is translated into practice and has an impact on society — through evidence-based practice, knowledge translation, and embedding impact in the design and conduct of clinical research.',
             color: '#6f3076',
             class: 'row-impact',
             questions: [
@@ -1354,6 +1376,7 @@
         {
             id: 'clinical',
             title: 'Clinical and healthcare research context',
+            description: 'The unique competencies required to conduct research in a clinical or healthcare context, including ensuring research projects are embedded appropriately in the context.',
             color: '#00a7b5',
             class: 'row-clinical',
             questions: [
@@ -1372,6 +1395,7 @@
         {
             id: 'leadership',
             title: 'Research leadership and strategy',
+            description: 'Competencies required to lead research strategy, research projects, or teams, including research staff.',
             color: '#8cbd3e',
             class: 'row-leadership',
             questions: [
@@ -1394,6 +1418,7 @@
         {
             id: 'mentorship',
             title: 'Research capacity building and mentorship',
+            description: 'Competencies related to building research capacity in researchers and healthcare staff, including one-on-one mentorship, education, and contributing to the structure of research.',
             color: '#5696d3',
             class: 'row-mentorship',
             questions: [
@@ -1431,7 +1456,10 @@
 
         domains.forEach(d => {
             const container = document.getElementById(`q-container-${d.id}`);
-            let html = '';
+            let html = `<div class="domain-header" style="border-left-color: ${d.color};">
+                <h3>Domain ${domains.indexOf(d) + 1}: ${d.title}</h3>
+                <p>${d.description}</p>
+            </div>`;
 
             d.questions.forEach((qText, index) => {
                 const qNum = index + 1;
