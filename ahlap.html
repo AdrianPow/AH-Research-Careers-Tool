@@ -51,9 +51,13 @@ body {
   color: var(--ink);
   line-height: 1.6;
   font-size: 16px;
-  /* FIX R17: prefer normal word boundaries; break an overlong URL/token rather than overflow. */
+  /* FIX R17: prefer normal word boundaries; break an overlong URL/token rather than overflow.
+     FIX R20: `break-word`, not `anywhere`. Both break an overlong token that would
+     overflow, but `anywhere` also lets min-content shrink to a single character, so any
+     element with a narrow declared width splits ordinary words ("Rating" -> "Ratin/g" in
+     the 70px rating column). Containers that genuinely need `anywhere` to shrink inside a
+     grid or flex track still set it individually below. */
   overflow-wrap: break-word;
-  overflow-wrap: anywhere;
   word-break: normal;
 }
 
@@ -387,12 +391,16 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   min-width: 0;
   max-width: 100%;
 }
-/* FIX R17: wrap long action labels and badges without shrinking controls or clipping text. */
-.btn, .note-toggle, .domain-tab, .stage-card, .tier-badge {
+/* FIX R17: wrap long action labels without shrinking controls or clipping text. */
+.btn, .note-toggle, .domain-tab, .stage-card {
   max-width: 100%;
   white-space: normal;
   overflow-wrap: anywhere;
 }
+/* FIX R20: a band pill is a single short word, so it must not wrap inside itself
+   ("Progres/sing"). Keeping it nowrap also makes its width the column's min-content,
+   so the Band column claims the space it needs and the Domain column wraps instead. */
+.tier-badge { max-width: 100%; white-space: nowrap; }
 .scale input, .q-num, .legend-swatch, .tab-count { flex-shrink: 0; }
 .scale-key summary { flex-wrap: wrap; }
 /* FIX R17: preserve explicit user line breaks and contain long pasted strings in plan fields. */
