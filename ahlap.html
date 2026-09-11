@@ -32,6 +32,8 @@
   --radius: 8px;
   --shadow: 0 2px 10px rgba(5, 17, 128, 0.10);
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  /* FIX R16: fluid gutters let widescreen layouts use the available viewport width. */
+  --page-gutter: clamp(24px, 3vw, 96px);
 }
 
 * { box-sizing: border-box; }
@@ -39,7 +41,7 @@ html { scroll-behavior: smooth; }
 /* FIX P3: honour the OS reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .progress-fill, .save-flash, .toast { transition: none; }
+  /* FIX R07: component transition overrides live after the component declarations. */
 }
 
 body {
@@ -49,6 +51,10 @@ body {
   color: var(--ink);
   line-height: 1.6;
   font-size: 16px;
+  /* FIX R17: prefer normal word boundaries; break an overlong URL/token rather than overflow. */
+  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 h1, h2, h3, h4 { color: var(--navy); line-height: 1.3; }
@@ -70,19 +76,22 @@ button { font-family: inherit; }
    ============================================================ */
 .site-header { background: #fff; border-bottom: 1px solid var(--line); }
 .site-header-inner {
-  max-width: 1100px; margin: 0 auto; padding: 14px 24px;
+  /* FIX R16: align branding with the fluid banner and content instead of a 1100px cap. */
+  max-width: none; margin: 0 auto; padding: 14px var(--page-gutter);
   display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
 }
 .gov-mark { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; min-width: 0; }
+/* FIX R14: restore the supplied government logo with the original responsive sizing. */
 .gov-logo { height: 52px; width: auto; }
 .gov-divider { width: 2px; height: 40px; background: var(--navy-light); flex-shrink: 0; }
-.gov-agency { color: var(--navy); font-size: 1.15rem; font-weight: 700; white-space: nowrap; }
+/* FIX R17: allow organisation text to wrap at high zoom as well as on mobile. */
+.gov-agency { color: var(--navy); font-size: 1.15rem; font-weight: 700; white-space: normal; }
 .header-spacer { flex: 1; }
 
 @media (max-width: 560px) {
   .site-header-inner { padding: 12px 16px; gap: 12px; }
   .gov-mark { gap: 12px; }
-  .gov-logo { height: 38px; }
+  .gov-logo { height: 38px; } /* FIX R14: retain the compact mobile logo. */
   .gov-divider { display: none; }
   .gov-agency { font-size: 1rem; white-space: normal; }
 }
@@ -94,19 +103,24 @@ button { font-family: inherit; }
     var(--d-clinical), var(--d-person), var(--d-governance));
 }
 .title-banner { background: var(--navy); color: #fff; }
-.title-banner-inner { max-width: 1100px; margin: 0 auto; padding: 22px 24px; }
+/* FIX R16: use the same responsive gutters as the header and main content. */
+.title-banner-inner { max-width: none; margin: 0 auto; padding: 22px var(--page-gutter); }
 .title-banner h1 {
   color: #fff; font-size: clamp(1.15rem, 2.6vw, 1.6rem); margin: 0; font-weight: 700;
 }
 .title-banner p { margin: 6px 0 0; color: #c9d0f2; font-size: 0.95rem; }
+/* FIX R15: keep the organisation link legible on the navy banner and in print. */
+.title-banner p a { color: inherit; text-decoration: underline; }
 
 /* ============================================================
    3. LAYOUT
    ============================================================ */
-main { max-width: 1100px; margin: 0 auto; padding: 28px 24px 80px; }
+/* FIX R16: fill the screen width while retaining gutters and the existing mobile overrides. */
+main { max-width: none; margin: 0 auto; padding: 28px var(--page-gutter) 80px; }
 @media (max-width: 560px) {
   main { padding: 20px 16px 60px; }
-  .card { padding: 18px 16px; }
+  /* FIX R07: match the card rule specificity without losing to its later declaration. */
+  main .card { padding: 18px 16px; }
   .title-banner-inner { padding: 18px 16px; }
 }
 .card {
@@ -223,7 +237,8 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 .q-num { color: var(--domain-ink); font-weight: 700; flex-shrink: 0; } /* FIX A4: no brightness filter */
 
 /* FIX U1: tiles carry only the number and short label; the full descriptors live once in the rating guide */
-.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+/* FIX R17: rating labels must be allowed to shrink and wrap inside their grid tracks. */
+.scale { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
 .scale label {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: 9px 4px 8px; border: 1px solid var(--line); border-radius: var(--radius);
@@ -320,8 +335,21 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 }
 .wilp-table td { vertical-align: top; }
 .print-text { display: none; } /* FIX X5: print-only mirror of each plan field */
-@media (max-width: 640px) { textarea { font-size: 16px; } } /* FIX X2: stop iOS focus-zoom */
-.wilp-done { display: grid; place-items: center; }
+/* FIX R07: these selectors must override the component textarea font sizes. */
+@media screen and (max-width: 640px) {
+  .note-box textarea, .wilp-table textarea { font-size: 16px; }
+  .stage-grid { grid-template-columns: minmax(0, 1fr); }
+}
+/* FIX R07: keep plan fields usable on narrow screens; the wrapper scrolls. */
+@media screen { .wilp-table { min-width: 720px; } }
+/* FIX R08: a td must retain table-cell layout for aligned borders and row heights. */
+.wilp-done { text-align: center; }
+/* FIX R12: retain note line breaks and wrap long unbroken text. */
+.note-summary-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+/* FIX R04: save failures remain visible until saving succeeds. */
+.storage-warning { border: 1px solid #b3261e; background: #fdecea; color: #81201b; padding: 12px 16px; }
+/* FIX R07: long feedback messages must remain within a narrow viewport. */
+.toast { width: max-content; max-width: calc(100% - 32px); overflow-wrap: anywhere; }
 .wilp-done input { width: 20px; height: 20px; accent-color: var(--navy); }
 .wilp-del {
   background: none; border: none; color: #b3261e; cursor: pointer;
@@ -343,6 +371,86 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 .toast.on { transform: translateX(-50%) translateY(0); }
 .footnote { font-size: .85rem; color: var(--ink-soft); }
 .footnote a { color: var(--navy); }
+
+/* FIX R17: a grid/flex child's intrinsic text width must not push into its neighbour.
+   Keep content visible and wrap it; do not conceal overflow at the page or card level. */
+.split > *, .fb-grid > *, .stage-grid > *, .domain-panel > .card > *,
+#feedback-cards > *, .site-header-inner > *, .gov-mark > *, .stage-banner > *,
+.btn-row > *, .tree-actions > *, .panel-nav > *, .report-actions > *,
+.progress-row > *, .domain-tab > *, .feedback-card h3 > *, .scale label,
+.scale-key summary > *, .q-text > span:last-child, .compass-legend > span {
+  min-width: 0;
+  max-width: 100%;
+}
+/* FIX R17: wrap long action labels and badges without shrinking controls or clipping text. */
+.btn, .note-toggle, .domain-tab, .stage-card, .tier-badge {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.scale input, .q-num, .legend-swatch, .tab-count { flex-shrink: 0; }
+.scale-key summary { flex-wrap: wrap; }
+/* FIX R17: preserve explicit user line breaks and contain long pasted strings in plan fields. */
+.note-box textarea, .wilp-table textarea {
+  min-width: 0;
+  max-width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+/* FIX R17: keep step titles and descriptions distinct, with predictable list indentation. */
+.intro-steps { padding-left: 1.5em; }
+.intro-steps li { padding-left: .15em; margin-bottom: .7em; }
+.intro-steps strong, .intro-steps .step-description { display: block; }
+.intro-steps li:last-child { margin-bottom: 0; }
+/* FIX R18: choose columns from the space in each component, including nested report cards.
+   min(100%, ...) lets each grid fall back to a single column without horizontal overflow. */
+@media screen {
+  .split { grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr)); }
+  .fb-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+  .stage-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 215px), 1fr)); }
+  /* Keep long entries from changing plan-column widths; the existing wrapper scrolls on mobile. */
+  .wilp-table { table-layout: fixed; }
+}
+
+/* FIX R16: use wider screens for useful content rather than oversized text lines.
+   Screen-only rules leave the A4 print layout and smaller-screen stacking intact. */
+@media screen and (min-width: 1100px) {
+  /* FIX R17: constrain reading length inside the column, not the grid item itself. */
+  .intro-copy > p, .intro-copy > ol { max-width: 85ch; }
+  /* Override the SVG's inline screen-size cap, while preserving its aspect ratio. */
+  #compass-intro-holder svg { max-width: clamp(420px, 30vw, 600px) !important; }
+  #compass-report-holder svg { max-width: clamp(460px, 28vw, 600px) !important; }
+}
+/* FIX R16: show assessment items in two columns when each has adequate reading space.
+   DOM order is unchanged, so keyboard and screen-reader order still follows item numbers. */
+@media screen and (min-width: 1440px) {
+  .domain-panel > .card {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 24px;
+    align-items: start;
+  }
+  .domain-panel .domain-head, .domain-panel .panel-nav { grid-column: 1 / -1; }
+  .domain-panel .domain-head, .domain-panel .q-item { margin-bottom: 0; }
+  .domain-panel .panel-nav { margin-top: 4px; }
+}
+/* FIX R16: compare domain feedback side by side on wide desktops; stage guidance spans both. */
+@media screen and (min-width: 1600px) {
+  #feedback-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    margin-bottom: 22px;
+    align-items: start;
+  }
+  #feedback-cards > .card { margin-bottom: 0; }
+  #feedback-cards > .card:not(.feedback-card) { grid-column: 1 / -1; }
+}
+
+/* FIX R07: place transition overrides after component rules so reduced motion is honoured. */
+@media (prefers-reduced-motion: reduce) {
+  .progress-fill, .save-flash, .toast, .scale-key summary::before { transition: none; }
+}
 
 /* ============================================================
    11. PRINT  (FIX X5: rewritten after a real print run showed a blank
@@ -367,7 +475,11 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   /* Cards may break across pages; a blanket avoid on tall cards is what produced the blank pages.
      Only units that are small enough to always fit are kept together. */
   .card { box-shadow: none; border: 1px solid #c9cdd8; padding: 12px 14px; margin-bottom: 10px; break-inside: auto; }
-  .feedback-card, .fb-next, .compass-wrap, .compass-legend, tr, #wilp-card { break-inside: avoid; }
+  /* FIX R08: long plans and long rows must be allowed to flow across print pages. */
+  .feedback-card, .fb-next, .compass-wrap, .compass-legend, tr { break-inside: avoid; }
+  #wilp-card, .wilp-table tr { break-inside: auto; }
+  .table-wrap { overflow: visible; }
+  .wilp-table { table-layout: fixed; }
   thead { display: table-header-group; } /* repeat column headings if the plan spans pages */
   h2, h3, h4 { break-after: avoid; }
   h2 { font-size: 13pt; } h3 { font-size: 12pt; }
@@ -399,8 +511,10 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 <header class="site-header no-print">
   <div class="site-header-inner">
     <div class="gov-mark">
+      <!-- FIX R14: show text until the official logo loads; retain it if offline or blocked. -->
       <img src="https://www.health.qld.gov.au/_qgds-design/images/header-logo-qgov-dark.svg"
-           alt="Queensland Government" class="gov-logo" id="gov-logo"> <!-- FIX M7: fallback wired in script -->
+           alt="Queensland Government" class="gov-logo" id="gov-logo" referrerpolicy="no-referrer" hidden>
+      <span class="gov-agency" id="gov-logo-fallback">Queensland Government</span>
       <div class="gov-divider"></div>
       <span class="gov-agency">Queensland Health</span>
     </div>
@@ -414,11 +528,15 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 <div class="title-banner">
   <div class="title-banner-inner">
     <h1>Allied Health Leadership and Advancing Practice Framework</h1>
-    <p>Self-assessment tool &middot; Clinical Excellence Queensland &middot; 2022</p>
+    <!-- FIX R15: reflect the organisational location supplied by OCAHO; 2022 is the framework edition. -->
+    <p>Self-assessment tool &middot; <a href="https://www.health.qld.gov.au/ahwac" target="_blank" rel="noopener">Office of the Chief Allied Health Officer</a>
+      &middot; Health Workforce Division &middot; Framework 2022</p>
   </div>
 </div>
 
 <main>
+<!-- FIX R04: persistent, announced storage feedback is available in every view. -->
+<p id="storage-warning" class="storage-warning no-print" role="status" hidden></p>
 
 <!-- ==========================================================
      VIEW: INTRO
@@ -427,25 +545,33 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 
   <div class="card">
     <div class="split">
-      <div>
+      <!-- FIX R17: explicit copy container keeps text wrapping independent of the compass. -->
+      <div class="intro-copy">
         <h2>About this self-assessment</h2>
-        <p>The <strong>Allied Health Leadership and Advancing Practice Framework</strong> helps you reflect on
+        <!-- FIX R15: link directly to the original framework webpage from the introduction. -->
+        <p>The <a href="https://www.health.qld.gov.au/ahwac/html/allied-health-workforce/leadership" target="_blank" rel="noopener"><strong>Allied Health Leadership and Advancing Practice Framework</strong></a> helps you reflect on
         the clinical and non-clinical capabilities you need to advance your practice and your leadership.
         It describes how allied health professionals progressively expand their <em>sphere of influence</em> —
         from leading themselves, to leading others, to leading innovations, to leading systems.</p>
 
         <p>This tool walks you through the framework's assessment process:</p>
-        <ol>
-          <li><strong>Framework Assessment Tree</strong> — a few short questions to identify which stage you are working within.</li>
-          <li><strong>Self-reflection</strong> — rate how strongly you agree with each statement for that stage.</li>
-          <li><strong>Capability Compass</strong> — see your average score in each of the six domains plotted visually.</li>
-          <li><strong>Supervisor review</strong> — discuss your results, strengths and development areas with your supervisor.</li>
-          <li><strong>Work-Integrated Learning Plan</strong> — record the development activities you will pursue.</li>
+        <!-- FIX R17: separate titles from descriptions instead of wrapping a long combined line. -->
+        <ol class="intro-steps">
+          <li><strong>Framework Assessment Tree</strong><span class="step-description">A few short questions to identify which stage you are working within.</span></li>
+          <li><strong>Self-reflection</strong><span class="step-description">Rate how strongly you agree with each statement for that stage.</span></li>
+          <li><strong>Capability Compass</strong><span class="step-description">See your average score in each of the six domains plotted visually.</span></li>
+          <li><strong>Supervisor review</strong><span class="step-description">Discuss your results, strengths and development areas with your supervisor.</span></li>
+          <li><strong>Work-Integrated Learning Plan</strong><span class="step-description">Record the development activities you will pursue.</span></li>
         </ol>
 
         <p class="footnote"><strong>Scores are not performance indicators.</strong> This is a reflective tool
         to help you and your supervisor identify strengths and target areas for development. Your answers stay
-        in this browser — nothing is sent anywhere.</p>
+        in this browser — the app does not transmit your answers, notes or learning plan.
+        <!-- FIX R10: explain the persistence and access boundary of local storage. -->
+        Progress is saved on this browser profile until you discard it or clear browser data.
+        Other people using the same profile may be able to access it.
+        <!-- FIX R14: the optional logo request does not contain assessment data. -->
+        The government logo loads from Queensland Health when available. Opening a source link leaves this app.</p>
       </div>
       <div>
         <figure style="margin:0">
@@ -553,7 +679,8 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 
   <div class="progress-row">
     <span><strong id="progress-count">0</strong> of <span id="progress-total">19</span> statements answered</span>
-    <span class="save-flash" id="save-flash" role="status">Progress saved &#10003;</span>
+    <!-- FIX R04: update live-region text when a save actually succeeds. -->
+    <span class="save-flash" id="save-flash" role="status"></span>
   </div>
   <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"
        aria-valuenow="0" aria-label="Overall progress" id="progress-bar">
@@ -603,10 +730,8 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
             <tbody id="results-body"></tbody>
           </table>
         </div>
-        <p class="footnote" style="margin-top:14px">
-          A score of five across all domains may indicate you are equipped with the skills to advance
-          to the next stage of the framework. Scores are not designed for use as performance indicators.
-        </p>
+        <!-- FIX R09: progression advice is rendered for the current stage. -->
+        <p class="footnote" id="progression-note" style="margin-top:14px"></p>
       </div>
     </div>
   </div>
@@ -643,7 +768,8 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   </div>
 
   <p class="footnote">
-    Source: <em>Allied Health Leadership and Advancing Practice Framework 2022</em>, State of Queensland
+    <!-- FIX R15: retain the original attribution and make its framework source directly accessible. -->
+    Source: <a href="https://www.health.qld.gov.au/ahwac/html/allied-health-workforce/leadership" target="_blank" rel="noopener"><em>Allied Health Leadership and Advancing Practice Framework 2022</em></a>, State of Queensland
     (Queensland Health), prepared by the Australian Healthcare and Hospitals Association.
     Licensed under <a href="https://creativecommons.org/licenses/by/3.0/au/" target="_blank" rel="noopener">CC BY 3.0 AU</a>.
   </p>
@@ -663,7 +789,8 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
    (State of Queensland / Queensland Health, CC BY 3.0 AU).
    ================================================================ */
 
-const FRAMEWORK_URL = 'https://www.health.qld.gov.au/ahwac/';
+// FIX R15: feedback links lead to the framework itself rather than the general office homepage.
+const FRAMEWORK_URL = 'https://www.health.qld.gov.au/ahwac/html/allied-health-workforce/leadership';
 
 /* 5-point Likert scale, from the Assessment Tool rating table. */
 const SCALE = [ // FIX M5: `guide` replaces the awkward `if` property
@@ -727,7 +854,8 @@ const STAGES = [
     role: 'Advanced',
     focus: 'Inter-organisational thinking and strategic engagement',
     sphere: 'Leads systemic development and change, leverages external partnerships, and involves consumers and communities in policy decision-making and addressing wider health problems.',
-    treeDesc: 'You are very experienced in your role and have taken advances in your career that have allowed you to lead significant service improvements and innovation.',
+    // FIX R13: distinguish system leadership from the service-improvement focus of Stage 3.
+    treeDesc: 'You lead strategic change across services, organisations or sectors, building external partnerships and influencing policy and system-wide outcomes.',
     training: [
       'Self-identified development.',
       'Research or formal education, and work-integrated learning.',
@@ -1057,7 +1185,8 @@ const STATEMENTS = {
 };
 
 /* ----------------------------------------------------------------
-   Framework Assessment Tree (Appendix A). Each node asks the user to
+   Framework Assessment Tree, adapted from the framework stage descriptions.
+   FIX R13: each node asks the user to
    confirm a description, or say they have advanced beyond it.
    ---------------------------------------------------------------- */
 const TREE = [
@@ -1072,9 +1201,10 @@ const TREE = [
     no:  { label: 'I have advanced further than that', next: 2 }
   },
   {
-    desc: STAGES[3].treeDesc,
-    yes: { label: 'Yes',        stage: 'systems' },
-    no:  { label: 'Not quite',  stage: 'innovations' }
+    // FIX R13: agreeing with the innovation description selects Stage 3, not Stage 4.
+    desc: STAGES[2].treeDesc,
+    yes: { label: 'Yes — Leads innovations (Stage 3)', stage: 'innovations' },
+    no:  { label: 'I lead strategic change across services or organisations — Leads systems (Stage 4)', stage: 'systems' }
   }
 ];
 
@@ -1087,7 +1217,8 @@ const state = {
   stage: null,      // stage id
   answers: {},      // 'domainId.index' -> 1..5
   notes: {},        // 'domainId.index' -> string
-  wilp: []          // [{ need, activities, done, reflection }]
+  wilp: [],         // [{ need, activities, done, reflection, seed }]
+  wilpEdited: false // FIX R03: structural changes count as edits, even if remaining rows are untouched.
 };
 
 const domainById = id => DOMAINS.find(d => d.id === id);
@@ -1130,6 +1261,32 @@ function bandFor(avg) {
 const emptyWilpRow = () => ({ need: '', activities: '', done: false, reflection: '', seed: '' }); // FIX M2
 const str = v => (typeof v === 'string' ? v : '');
 
+// FIX R01: illustrative activity prompts, not prescribed or pre-entered activities.
+const ACTIVITY_EXAMPLES = {
+  clinical: 'e.g. Supervised case review and clinical guideline appraisal',
+  person: 'e.g. Consumer feedback and shared decision-making practice',
+  management: 'e.g. Project planning or resource management training',
+  learning: 'e.g. Journal club, critical appraisal or peer mentoring',
+  governance: 'e.g. Clinical audit or safety and quality improvement',
+  data: 'e.g. Digital systems training or a data quality review'
+};
+function activityPlaceholder(need) {
+  const text = str(need).trim();
+  // Recognise explicit single-domain identifiers only; never guess from free-form wording.
+  // FIX R01: anchored matching gives ambiguous or multi-domain descriptions a neutral hint.
+  const domain = DOMAINS.find(d => d.title.toLowerCase() === text.toLowerCase() ||
+    new RegExp('^Domain\\s+' + d.num + '(?:\\s*[—–-]\\s*' + d.title +
+      ')?(?:\\s*\\(\\d+(?:\\.\\d+)?\\s*/\\s*5\\))?$', 'i').test(text));
+  return domain ? ACTIVITY_EXAMPLES[domain.id]
+    : 'e.g. Agree a relevant learning activity with your supervisor';
+}
+
+// FIX R02: ratings are not the only work that must be resumable or protected.
+function hasRecordedWork() {
+  return Object.keys(state.answers).length > 0 || Object.values(state.notes).some(v => v.trim()) ||
+    state.wilpEdited || state.wilp.some(r => r.need || r.activities || r.reflection || r.done);
+}
+
 /* FIX B1: rebuild state from storage field by field, keeping only values the app
    could have written itself. A tampered or half-written payload previously
    reached the averages untouched (strings concatenate, 99 plots off the chart). */
@@ -1150,37 +1307,75 @@ function sanitiseSaved(saved) {
     .filter(r => r && typeof r === 'object')
     .map(r => ({ need: str(r.need), activities: str(r.activities), done: r.done === true,
                  reflection: str(r.reflection), seed: str(r.seed) }));
-  return { stage: saved.stage, answers, notes, wilp };
+  // FIX R03: migrate older saves conservatively; retain any apparently manual plan.
+  const wilpEdited = saved.wilpEdited === true || wilp.some(r =>
+    r.activities || r.reflection || r.done || r.need !== r.seed ||
+    (typeof saved.wilpEdited !== 'boolean' && !r.seed));
+  return { stage: saved.stage, answers, notes, wilp, wilpEdited };
 }
 
+// FIX R11: compare against the last version this tab read or successfully wrote.
+let storageSnapshot = null, storageConflict = false;
+let saveTimer = null, flashTimer = null;
+
+// FIX R04: persistent feedback replaces the one-off, easily missed failure toast.
+function storageWarning(message) {
+  const warning = document.getElementById('storage-warning');
+  warning.textContent = message;
+  warning.hidden = !message;
+  if (message) {
+    clearTimeout(flashTimer);
+    const flash = document.getElementById('save-flash');
+    flash.classList.remove('on');
+    flash.textContent = '';
+  }
+}
+function markStorageConflict() {
+  // FIX R11: retain current on-screen work but never silently replace another tab's save.
+  storageConflict = true;
+  storageWarning('Saved progress changed in another tab. Saving and clearing the saved copy are paused here. Print or copy any work you need from this tab, then reload to use the latest saved progress.');
+}
+function savedVersionMatches() {
+  if (storageConflict) return false;
+  if (localStorage.getItem(STORAGE_KEY) !== storageSnapshot) {
+    markStorageConflict();
+    return false;
+  }
+  return true;
+}
 function loadState() {
   let raw;
-  try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { return; }
+  try { raw = localStorage.getItem(STORAGE_KEY); storageSnapshot = raw; }
+  catch (e) { storageWarning('Saved progress cannot be accessed in this browser. Keep a printed or copied record before closing.'); return; } // FIX R04
   if (!raw) return;
   let clean = null;
   try { clean = sanitiseSaved(JSON.parse(raw)); } catch (e) { /* corrupt payload — start fresh */ }
   if (clean) Object.assign(state, clean);
+  else storageWarning('Saved progress could not be restored. Starting a new assessment will replace that unreadable saved copy.'); // FIX R04
 }
-
-let saveTimer = null, flashTimer = null, storageWarned = false;
 
 /* FIX B6: `quiet` skips the "Progress saved" flash for housekeeping writes (e.g. choosing a stage). */
 function persistState(quiet) {
+  // FIX R04: an immediate save also satisfies any pending debounced save.
+  clearTimeout(saveTimer);
+  saveTimer = null;
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if (!savedVersionMatches()) return false; // FIX R11
+    const raw = JSON.stringify(state);
+    localStorage.setItem(STORAGE_KEY, raw);
+    storageSnapshot = raw; // FIX R11
   } catch (e) {
-    // FIX B7: a full or disabled store used to fail silently, so the user believed progress was kept.
-    if (!storageWarned) {
-      storageWarned = true;
-      toast('Progress could not be saved in this browser — print or note your answers before closing.');
-    }
-    return;
+    storageWarning('Progress could not be saved in this browser. Print or copy your work before closing.'); // FIX R04
+    return false;
   }
-  if (quiet) return;
+  storageWarning(''); // FIX R04: a successful retry clears the persistent warning.
+  if (quiet) return true;
   const flash = document.getElementById('save-flash');
+  flash.textContent = 'Progress saved ✓'; // FIX R04
   flash.classList.add('on');
   clearTimeout(flashTimer);
-  flashTimer = setTimeout(() => flash.classList.remove('on'), CONFIG.saveFlashMs);
+  flashTimer = setTimeout(() => { flash.classList.remove('on'); flash.textContent = ''; }, CONFIG.saveFlashMs); // FIX R04
+  return true;
 }
 
 /* FIX B3: one debounce for free-text fields, flushed on navigation and page hide so a
@@ -1197,11 +1392,29 @@ function flushPersist() {
 }
 
 function clearSaved() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* nothing to clear */ }
+  // FIX R04: reset must not leave a scheduled write or claim a failed deletion succeeded.
+  clearTimeout(saveTimer);
+  saveTimer = null;
+  clearTimeout(flashTimer);
+  document.getElementById('save-flash').classList.remove('on');
+  document.getElementById('save-flash').textContent = '';
+  let removed = false;
+  try {
+    if (savedVersionMatches()) { // FIX R11: do not delete another tab's newer work.
+      localStorage.removeItem(STORAGE_KEY);
+      storageSnapshot = null;
+      removed = true;
+      storageWarning('');
+    }
+  } catch (e) {
+    storageWarning('This session was cleared, but the saved copy could not be removed from this browser. It may reappear after reload.');
+  }
   state.stage = null;
   state.answers = {};
   state.notes = {};
   state.wilp = [];
+  state.wilpEdited = false; // FIX R03
+  return removed;
 }
 
 /* ================================================================
@@ -1216,6 +1429,7 @@ function show(view, focusSelector) {
   document.getElementById('btn-home').hidden = (view === 'intro');
   window.scrollTo(0, 0);
   if (focusSelector) focusEl(document.querySelector(focusSelector));
+  autosizeAll('#view-' + view + ' textarea'); // FIX R06: size restored fields after revealing the view.
 }
 
 function focusEl(el) {
@@ -1228,14 +1442,41 @@ function focusEl(el) {
    (Printing does not rely on this: the plan prints from .print-text mirrors instead,
    because a height measured at screen width is wrong at the narrower print width.)
    Hidden elements report scrollHeight 0 and are skipped. */
+// FIX R06: coalesce input/reveal/resize work into one frame and batch layout reads/writes.
+const pendingTextareas = new Set();
+let layoutFrame = null;
 function autosize(ta) {
-  if (!ta || !ta.offsetParent) return;
-  ta.style.height = 'auto';
-  ta.style.height = Math.max(ta.scrollHeight, 54) + 'px';
+  if (ta) pendingTextareas.add(ta);
+  if (layoutFrame !== null) return;
+  layoutFrame = requestAnimationFrame(() => {
+    layoutFrame = null;
+    const fields = [...pendingTextareas].filter(el => el.isConnected && el.getClientRects().length);
+    pendingTextareas.clear();
+    fields.forEach(el => { el.style.height = 'auto'; });
+    const heights = fields.map(el => el.scrollHeight + el.offsetHeight - el.clientHeight);
+    fields.forEach((el, i) => { el.style.height = heights[i] + 'px'; });
+    // FIX R07: only genuinely overflowing, visible table wrappers enter the Tab order.
+    document.querySelectorAll('.table-wrap').forEach(wrap => {
+      const overflowing = wrap.getClientRects().length && wrap.scrollWidth > wrap.clientWidth;
+      if (overflowing) {
+        wrap.tabIndex = 0;
+        wrap.setAttribute('role', 'region');
+        const context = wrap.closest('.card, .scale-key');
+        const heading = context && context.querySelector('h2, h3, summary');
+        wrap.setAttribute('aria-label', (heading ? heading.textContent.trim() : 'Table') + ' — scrollable table');
+      } else {
+        wrap.removeAttribute('tabindex');
+        wrap.removeAttribute('role');
+        wrap.removeAttribute('aria-label');
+      }
+    });
+  });
 }
 function autosizeAll(selector) {
-  document.querySelectorAll(selector).forEach(autosize);
+  document.querySelectorAll(selector).forEach(ta => pendingTextareas.add(ta));
+  autosize(); // also refresh keyboard scrolling when the current view has no textareas.
 }
+window.addEventListener('resize', () => autosizeAll('textarea'));
 
 let toastTimer = null;
 function toast(msg) {
@@ -1396,7 +1637,7 @@ function scaleRows(idPrefix) {
 function renderResumeNote() {
   const note = document.getElementById('resume-note');
   const count = state.stage ? answeredCount() : 0;
-  if (!state.stage || count === 0) { note.hidden = true; return; }
+  if (!state.stage) { note.hidden = true; return; } // FIX R02: a selected stage or notes-only session is resumable.
   note.hidden = false;
   document.getElementById('resume-stage').textContent = stageById(state.stage).title;
   document.getElementById('resume-count').textContent =
@@ -1474,14 +1715,16 @@ function renderStageGrid(suggestedId) {
 function startAssessment(stageId) {
   if (!stageById(stageId)) return; // FIX B5: ignore anything that is not a known stage
   if (state.stage !== stageId) {
-    const hadAnswers = state.stage && answeredCount() > 0;
-    if (hadAnswers && !confirm(
-      'Switching to ' + stageById(stageId).title + ' will clear the answers you have recorded for ' +
+    // FIX R02: protect notes and plans as well as ratings, and name all cleared fields.
+    const hadWork = state.stage && hasRecordedWork();
+    if (hadWork && !confirm(
+      'Switching to ' + stageById(stageId).title + ' will clear the answers, notes and learning plan for ' +
       stageById(state.stage).title + '. Continue?')) return;
     state.stage = stageId;
     state.answers = {};
     state.notes = {};
     state.wilp = [];
+    state.wilpEdited = false; // FIX R03: a new stage starts a new automatic plan.
   }
   persistState(true); // FIX B6: nothing answered yet, so no "Progress saved" flash
   renderAssessment();
@@ -1592,11 +1835,11 @@ function onPanelInput(e) {
   const ta = e.target;
   if (!ta.matches('textarea[data-note]')) return;
   const key = ta.dataset.note;
-  const v = ta.value.trim();
-  if (v) state.notes[key] = v; else delete state.notes[key];
-  document.getElementById('qi-' + key).classList.toggle('has-note', !!v);
+  const v = ta.value; // FIX R12: preserve formatting; trim only to decide whether a note is empty.
+  if (v.trim()) state.notes[key] = v; else delete state.notes[key];
+  document.getElementById('qi-' + key).classList.toggle('has-note', !!v.trim()); // FIX R12
   const btn = document.querySelector('[data-note-toggle="' + key + '"]');
-  if (btn) btn.textContent = v ? 'Edit note' : 'Add a note for your supervisor';
+  if (btn) btn.textContent = v.trim() ? 'Edit note' : 'Add a note for your supervisor'; // FIX R12
   autosize(ta); // FIX X5
   schedulePersist(); // FIX B3
 }
@@ -1630,6 +1873,7 @@ function openDomain(id, moveFocus) {
   });
   document.getElementById('view-assess').scrollIntoView({ block: 'start' }); // CSS decides smooth vs instant (FIX P3)
   if (moveFocus) focusEl(document.querySelector('#panel-' + id + ' h2'));
+  autosizeAll('#panel-' + id + ' textarea'); // FIX R06: restored notes need sizing when their tab becomes visible.
 }
 
 function updateProgress() {
@@ -1674,7 +1918,14 @@ function renderReport() {
 
   document.getElementById('report-date').innerHTML =
     '<strong>' + esc(stage.title) + '</strong> &middot; ' + esc(stage.role) +
-    ' &middot; completed ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+    // FIX R09: generating a report does not imply that all statements were completed.
+    ' &middot; generated ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' }) +
+    ' &middot; ' + answeredCount() + ' of ' + totalQuestions(state.stage) + ' statements answered';
+  // FIX R09: there is no stage beyond Leads systems.
+  document.getElementById('progression-note').textContent = (nextStage
+    ? 'A score of five across all domains may indicate you are equipped with the skills to advance to the next stage of the framework. '
+    : 'Leads systems is the final stage. Continue to deepen these capabilities and support colleagues to progress. ') +
+    'Scores are not designed for use as performance indicators.';
 
   const averages = {};
   DOMAINS.forEach(d => { averages[d.id] = domainAverage(d.id); });
@@ -1744,9 +1995,11 @@ function renderSupervisorSection(averages, stage, priority) {
       (priority.length === 1 ? 'is' : 'are') + ' <strong>' +
       priority.map(d => esc(d.title)).join('</strong>, <strong>') + '</strong>.');
   } else if (scored.length && scored.every(d => averages[d.id] > CONFIG.band.highAbove)) { // FIX M1
-    lines.push('You rated yourself above 4 in every domain you answered. A score of five across all domains may ' +
-      'indicate you are equipped with the skills to advance to the next stage of the framework — worth discussing ' +
-      'with your supervisor.');
+    // FIX R09: respect the configured threshold and avoid next-stage advice at the final stage.
+    lines.push('You rated yourself above ' + CONFIG.band.highAbove + ' in every domain you answered. ' +
+      (stage.id === STAGES[STAGES.length - 1].id
+        ? 'Leads systems is the final stage. Discuss how to deepen your capabilities and support colleagues with your supervisor.'
+        : 'A score of five across all domains may indicate you are equipped with the skills to advance to the next stage of the framework — worth discussing with your supervisor.'));
   } else if (scored.length) {
     lines.push('Your scores are evenly spread across the domains, so no single domain stands out as a starting ' +
       'point. Use the statements themselves — and any notes you recorded — to agree priorities with your supervisor.');
@@ -1772,7 +2025,8 @@ function renderSupervisorSection(averages, stage, priority) {
       rows.push(`<tr>
         <td style="white-space:nowrap"><span class="domain-dot" style="background:${d.color}"></span><strong>${d.num}.${i + 1}</strong></td>
         <td>${esc(text)}</td>
-        <td>${esc(state.notes[key])}</td>
+        <!-- FIX R12: render escaped notes with their original line breaks. -->
+        <td class="note-summary-text">${esc(state.notes[key])}</td>
       </tr>`);
     });
   });
@@ -1838,20 +2092,18 @@ function renderFeedbackCards(averages, stage, nextStage, priority) {
       <p class="lead">The framework suggests these kinds of training and development for someone working at this stage.</p>
       <ul>${stage.training.map(t => '<li>' + esc(t) + '</li>').join('')}</ul>
       <p class="footnote" style="margin-bottom:0">Further guidance is available from the
-        <a href="${FRAMEWORK_URL}" target="_blank" rel="noopener">Queensland Health allied health workforce site</a>.</p>
+        <!-- FIX R15: identify the direct framework destination accurately. -->
+        <a href="${FRAMEWORK_URL}" target="_blank" rel="noopener">original framework webpage</a>.</p>
     </div>`;
 }
 
 /* ================================================================
    WORK-INTEGRATED LEARNING PLAN
    ================================================================ */
-/* FIX B2: seeded rows used to persist forever, so a plan generated from an early
-   run kept naming domains the user had since re-rated. Rows are now re-seeded when
-   the user has not touched the plan at all (every row is still an untouched seed);
-   any edit anywhere in the plan freezes it. */
+/* FIX R03: explicit edit state preserves additions/deletions and lets a still-automatic
+   blank plan acquire priorities later. Older saves are migrated by sanitiseSaved. */
 function ensureWilpSeed(averages, priority) {
-  const untouched = state.wilp.every(r => r.seed && r.seed === r.need && !r.activities && !r.reflection && !r.done);
-  if (state.wilp.length && !untouched) return;
+  if (state.wilpEdited) return; // FIX R03: only untouched automatic plans are regenerated.
   state.wilp = priority.map(d => {
     const need = 'Domain ' + d.num + ' — ' + d.title + ' (' + averages[d.id].toFixed(1) + ' / 5)';
     return Object.assign(emptyWilpRow(), { need, seed: need });
@@ -1868,7 +2120,8 @@ function renderWilp() {
     <tr>
       <td><textarea data-wilp="need" data-i="${i}" rows="2" placeholder="e.g. Criteria 1.1, 1.2, 1.3"
           aria-label="Identified development need, ${r}">${esc(row.need)}</textarea><div class="print-text">${esc(row.need)}</div></td>
-      <td><textarea data-wilp="activities" data-i="${i}" rows="2" placeholder="e.g. Cultural Awareness Training module"
+      <!-- FIX R01: escaped, domain-specific prompt leaves the user's activity value unchanged. -->
+      <td><textarea data-wilp="activities" data-i="${i}" rows="2" placeholder="${esc(activityPlaceholder(row.need))}"
           aria-label="Potential activities, ${r}">${esc(row.activities)}</textarea><div class="print-text">${esc(row.activities)}</div></td>
       <td class="wilp-done"><input type="checkbox" data-wilp="done" data-i="${i}" ${row.done ? 'checked' : ''}
           aria-label="Activity completed, ${r}"></td>
@@ -1884,11 +2137,19 @@ function renderWilp() {
 function onWilpEdit(e) {
   const el = e.target;
   if (!el.matches('[data-wilp]')) return;
+  // FIX R06: input handles text; change handles checkboxes, avoiding duplicate work.
+  if ((el.type === 'checkbox') !== (e.type === 'change')) return;
   const row = state.wilp[Number(el.dataset.i)];
   if (!row) return;
+  state.wilpEdited = true; // FIX R03: preserve any intentional edit across report generation.
   if (el.type === 'checkbox') { row.done = el.checked; persistState(); }
   else {
     row[el.dataset.wilp] = el.value;
+    // FIX R01: an edited domain changes only the hint, never an existing activity.
+    if (el.dataset.wilp === 'need') {
+      const activity = el.closest('tr').querySelector('[data-wilp="activities"]');
+      activity.placeholder = activityPlaceholder(el.value);
+    }
     autosize(el);
     const mirror = el.nextElementSibling;                       // FIX X5: print-only copy of the text
     if (mirror && mirror.classList.contains('print-text')) mirror.textContent = el.value;
@@ -1897,8 +2158,10 @@ function onWilpEdit(e) {
 }
 
 function onWilpClick(e) {
+  if (e.detail > 1) return; // FIX R05: a double-click must not delete the next row after rerender.
   const del = e.target.closest('[data-del]');
   if (!del) return;
+  state.wilpEdited = true; // FIX R03: deletion is an intentional plan edit.
   state.wilp.splice(Number(del.dataset.del), 1);
   if (!state.wilp.length) state.wilp.push(emptyWilpRow());
   persistState();
@@ -1929,6 +2192,7 @@ tabs.addEventListener('click', e => {
 tabs.addEventListener('keydown', onTabKeydown); // FIX A2
 
 document.getElementById('tree-actions').addEventListener('click', e => {
+  if (e.detail > 1) return; // FIX R05: ignore the second click on a newly rendered question.
   const btn = e.target.closest('[data-tree]');
   if (btn) answerTree(btn.dataset.tree);
 });
@@ -1956,10 +2220,11 @@ document.getElementById('btn-resume').addEventListener('click', () => {
 });
 
 document.getElementById('btn-clear-saved').addEventListener('click', () => {
-  if (!confirm('Discard your saved answers and start again?')) return;
-  clearSaved();
+  if (!confirm('Discard your saved answers, notes and learning plan and start again?')) return; // FIX R02
+  const removed = clearSaved(); // FIX R04
   renderResumeNote();
-  toast('Saved progress cleared.');
+  focusEl(document.querySelector('#view-intro h2')); // FIX R02: the discarded Resume controls disappear.
+  toast(removed ? 'Saved progress cleared.' : 'Session cleared; the saved copy was not removed.'); // FIX R04
 });
 
 document.getElementById('btn-change-stage').addEventListener('click', goToTree);
@@ -1980,13 +2245,15 @@ document.getElementById('btn-print').addEventListener('click', () => { flushPers
 
 document.getElementById('btn-start-over').addEventListener('click', () => {
   if (!confirm('Start over? This clears all of your answers, notes and learning plan.')) return;
-  clearSaved();
+  const removed = clearSaved(); // FIX R04
   renderResumeNote();
   show('intro', '#view-intro h2');
-  toast('Assessment cleared.');
+  toast(removed ? 'Assessment cleared.' : 'Session cleared; the saved copy was not removed.'); // FIX R04
 });
 
-document.getElementById('btn-add-wilp').addEventListener('click', () => {
+document.getElementById('btn-add-wilp').addEventListener('click', e => {
+  if (e.detail > 1) return; // FIX R05: one new row per double-click.
+  state.wilpEdited = true; // FIX R03
   state.wilp.push(emptyWilpRow()); // FIX M2
   persistState();
   renderWilp();
@@ -1998,15 +2265,32 @@ document.getElementById('btn-add-wilp').addEventListener('click', () => {
 window.addEventListener('pagehide', flushPersist);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushPersist(); });
 
-/* FIX M7: logo fallback lives with the rest of the script instead of an inline handler. */
+// FIX R14: handle cached success, live load and failure without losing the text fallback.
 const logo = document.getElementById('gov-logo');
-logo.addEventListener('error', () => {
-  const span = document.createElement('span');
-  span.className = 'gov-agency';
-  span.textContent = 'Queensland Government';
-  logo.replaceWith(span);
+const logoFallback = document.getElementById('gov-logo-fallback');
+function updateLogoVisibility() {
+  const loaded = logo.complete && logo.naturalWidth > 0;
+  logo.hidden = !loaded;
+  logoFallback.hidden = loaded;
+}
+logo.addEventListener('load', updateLogoVisibility);
+logo.addEventListener('error', updateLogoVisibility);
+updateLogoVisibility();
+
+// FIX R05: holding Enter/Space must not repeatedly activate structural actions.
+function preventRepeatedActivation(e) {
+  if (e.repeat && (e.key === 'Enter' || e.key === ' ') && e.target.closest('button')) e.preventDefault();
+}
+['tree-actions', 'wilp-body', 'btn-add-wilp'].forEach(id =>
+  document.getElementById(id).addEventListener('keydown', preventRepeatedActivation));
+
+// FIX R11: detect a changed or deleted save from another tab, including clear-all storage.
+window.addEventListener('storage', e => {
+  if (e.storageArea !== localStorage || (e.key !== STORAGE_KEY && e.key !== null)) return;
+  // FIX R11: read the current value; a delayed event may describe an already superseded save.
+  try { savedVersionMatches(); }
+  catch (error) { storageWarning('Saved progress cannot be accessed. Print or copy your work before closing.'); }
 });
-if (logo.complete && logo.naturalWidth === 0) logo.dispatchEvent(new Event('error')); // already failed before wiring
 
 /* ================================================================
    BOOT
