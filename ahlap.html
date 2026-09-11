@@ -319,6 +319,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   padding: 7px 9px; font-family: inherit; font-size: .9rem; resize: vertical; color: var(--ink);
 }
 .wilp-table td { vertical-align: top; }
+.print-text { display: none; } /* FIX X5: print-only mirror of each plan field */
 @media (max-width: 640px) { textarea { font-size: 16px; } } /* FIX X2: stop iOS focus-zoom */
 .wilp-done { display: grid; place-items: center; }
 .wilp-done input { width: 20px; height: 20px; accent-color: var(--navy); }
@@ -344,20 +345,52 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 .footnote a { color: var(--navy); }
 
 /* ============================================================
-   11. PRINT
+   11. PRINT  (FIX X5: rewritten after a real print run showed a blank
+   first page, the toast repeated on every page, and a full-page compass)
    ============================================================ */
+@page { size: A4; margin: 14mm 12mm; }
+
 @media print {
-  body { background: #fff; font-size: 11.5pt; }
-  .no-print, .site-header, .domain-tabs, .progress, .progress-row { display: none !important; }
+  body { background: #fff; font-size: 10.5pt; line-height: 1.45;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; } /* keep badge/dot colours without "background graphics" */
+
+  /* Chrome repeats position:fixed boxes on every page — the toast must not exist in print */
+  .no-print, .site-header, .banner-stripe, .domain-tabs, .progress, .progress-row,
+  .toast, .save-flash, .scale-key { display: none !important; }
+
   main { max-width: none; padding: 0; }
-  .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; margin-bottom: 14px; }
-  .feedback-card { page-break-inside: avoid; }
-  .title-banner { background: #fff; color: var(--navy); border-bottom: 2px solid var(--navy); }
-  .title-banner h1 { color: var(--navy); }
+  .title-banner { background: #fff; color: var(--navy); border-bottom: 2px solid var(--navy); margin-bottom: 10px; }
+  .title-banner-inner { padding: 0 0 8px; }
+  .title-banner h1 { color: var(--navy); font-size: 15pt; }
   .title-banner p { color: var(--ink-soft); }
+
+  /* Cards may break across pages; a blanket avoid on tall cards is what produced the blank pages.
+     Only units that are small enough to always fit are kept together. */
+  .card { box-shadow: none; border: 1px solid #c9cdd8; padding: 12px 14px; margin-bottom: 10px; break-inside: auto; }
+  .feedback-card, .fb-next, .compass-wrap, .compass-legend, tr, #wilp-card { break-inside: avoid; }
+  thead { display: table-header-group; } /* repeat column headings if the plan spans pages */
+  h2, h3, h4 { break-after: avoid; }
+  h2 { font-size: 13pt; } h3 { font-size: 12pt; }
+
+  /* Print width is below the 780px breakpoint, so force the compass and table side by side */
+  .split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+  .compass-wrap svg { max-width: 290px !important; }
+  .fb-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+
+  table { font-size: 9.5pt; }
+  th, td { padding: 5px 8px; }
+  .wilp-table th, .wilp-table td { padding: 5px 6px; }
+  /* The plan prints from plain text blocks that flow with the page; textareas cannot
+     grow to fit at print width and clipped long entries (FIX X5). */
+  .wilp-table textarea { display: none; }
+  .print-text {
+    display: block; white-space: pre-wrap; overflow-wrap: anywhere; min-height: 44px;
+    border: 1px solid #bbb; border-radius: 4px; padding: 5px 7px; font-size: 9.5pt; line-height: 1.4;
+  }
+  .wilp-done input { width: 14px; height: 14px; }
+
   a[href]::after { content: ""; }
-  textarea { border: 1px solid #bbb !important; overflow: hidden; resize: none; } /* FIX X4 */
-  .scale-key { display: none; }
+  .footnote { font-size: 8.5pt; }
 }
 </style>
 </head>
@@ -1191,6 +1224,19 @@ function focusEl(el) {
   el.focus({ preventScroll: true });
 }
 
+/* FIX X5: textareas grow with their content on screen so the user sees every line.
+   (Printing does not rely on this: the plan prints from .print-text mirrors instead,
+   because a height measured at screen width is wrong at the narrower print width.)
+   Hidden elements report scrollHeight 0 and are skipped. */
+function autosize(ta) {
+  if (!ta || !ta.offsetParent) return;
+  ta.style.height = 'auto';
+  ta.style.height = Math.max(ta.scrollHeight, 54) + 'px';
+}
+function autosizeAll(selector) {
+  document.querySelectorAll(selector).forEach(autosize);
+}
+
 let toastTimer = null;
 function toast(msg) {
   const el = document.getElementById('toast');
@@ -1536,7 +1582,7 @@ function onPanelClick(e) {
     const box = document.getElementById('note-' + toggle.dataset.noteToggle);
     box.hidden = !box.hidden;
     toggle.setAttribute('aria-expanded', String(!box.hidden)); // FIX A11
-    if (!box.hidden) box.querySelector('textarea').focus();
+    if (!box.hidden) { const ta = box.querySelector('textarea'); autosize(ta); ta.focus(); } // FIX X5
     return;
   }
   if (e.target.closest('#btn-generate')) generateReport();
@@ -1551,6 +1597,7 @@ function onPanelInput(e) {
   document.getElementById('qi-' + key).classList.toggle('has-note', !!v);
   const btn = document.querySelector('[data-note-toggle="' + key + '"]');
   if (btn) btn.textContent = v ? 'Edit note' : 'Add a note for your supervisor';
+  autosize(ta); // FIX X5
   schedulePersist(); // FIX B3
 }
 
@@ -1618,6 +1665,7 @@ function generateReport() {
   flushPersist(); // FIX B3
   renderReport();
   show('report', '#view-report h2');
+  autosizeAll('#wilp-body textarea'); // FIX X5: runs after the view is visible
 }
 
 function renderReport() {
@@ -1819,17 +1867,18 @@ function renderWilp() {
     return `
     <tr>
       <td><textarea data-wilp="need" data-i="${i}" rows="2" placeholder="e.g. Criteria 1.1, 1.2, 1.3"
-          aria-label="Identified development need, ${r}">${esc(row.need)}</textarea></td>
+          aria-label="Identified development need, ${r}">${esc(row.need)}</textarea><div class="print-text">${esc(row.need)}</div></td>
       <td><textarea data-wilp="activities" data-i="${i}" rows="2" placeholder="e.g. Cultural Awareness Training module"
-          aria-label="Potential activities, ${r}">${esc(row.activities)}</textarea></td>
+          aria-label="Potential activities, ${r}">${esc(row.activities)}</textarea><div class="print-text">${esc(row.activities)}</div></td>
       <td class="wilp-done"><input type="checkbox" data-wilp="done" data-i="${i}" ${row.done ? 'checked' : ''}
           aria-label="Activity completed, ${r}"></td>
       <td><textarea data-wilp="reflection" data-i="${i}" rows="2" placeholder="Reflection"
-          aria-label="Has this activity helped you meet the development objective, ${r}">${esc(row.reflection)}</textarea></td>
+          aria-label="Has this activity helped you meet the development objective, ${r}">${esc(row.reflection)}</textarea><div class="print-text">${esc(row.reflection)}</div></td>
       <td class="no-print"><button type="button" class="wilp-del" data-del="${i}"
           aria-label="Remove ${r}">&times;</button></td>
     </tr>`;
   }).join('');
+  autosizeAll('#wilp-body textarea'); // FIX X5 (no-op while the report is hidden)
 }
 
 function onWilpEdit(e) {
@@ -1838,7 +1887,13 @@ function onWilpEdit(e) {
   const row = state.wilp[Number(el.dataset.i)];
   if (!row) return;
   if (el.type === 'checkbox') { row.done = el.checked; persistState(); }
-  else { row[el.dataset.wilp] = el.value; schedulePersist(); } // FIX B3
+  else {
+    row[el.dataset.wilp] = el.value;
+    autosize(el);
+    const mirror = el.nextElementSibling;                       // FIX X5: print-only copy of the text
+    if (mirror && mirror.classList.contains('print-text')) mirror.textContent = el.value;
+    schedulePersist(); // FIX B3
+  }
 }
 
 function onWilpClick(e) {
@@ -1937,22 +1992,6 @@ document.getElementById('btn-add-wilp').addEventListener('click', () => {
   renderWilp();
   const added = wilpBody.querySelector('tr:last-child textarea');
   if (added) added.focus(); // FIX A3: land in the new row
-});
-
-/* FIX X4: textareas do not grow to fit their text when printed, so long plan entries
-   were clipped. Expand them for the print pass and restore afterwards. */
-window.addEventListener('beforeprint', () => {
-  document.querySelectorAll('#view-report textarea').forEach(t => {
-    t.dataset.prevHeight = t.style.height;
-    t.style.height = 'auto';
-    t.style.height = t.scrollHeight + 'px';
-  });
-});
-window.addEventListener('afterprint', () => {
-  document.querySelectorAll('#view-report textarea').forEach(t => {
-    t.style.height = t.dataset.prevHeight || '';
-    delete t.dataset.prevHeight;
-  });
 });
 
 /* FIX B3: write any pending debounced edit before the page is hidden or closed. */
