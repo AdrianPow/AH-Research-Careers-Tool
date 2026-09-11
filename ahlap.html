@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU"> <!-- FIX A10: AU spelling and en-AU dates -->
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,14 +29,6 @@
   --d-governance:  #7ED858;
   --d-data:        #FE5756;
 
-  /* Darkened variants, for text and badges on white */
-  --i-clinical:    #B4157A;
-  --i-person:      #8A5A00;
-  --i-management:  #0A6E9E;
-  --i-learning:    #5A21C9;
-  --i-governance:  #3D7A22;
-  --i-data:        #C1272D;
-
   --radius: 8px;
   --shadow: 0 2px 10px rgba(5, 17, 128, 0.10);
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
@@ -44,6 +36,11 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+/* FIX P3: honour the OS reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .progress-fill, .save-flash, .toast { transition: none; }
+}
 
 body {
   margin: 0;
@@ -56,7 +53,10 @@ body {
 
 h1, h2, h3, h4 { color: var(--navy); line-height: 1.3; }
 button { font-family: inherit; }
-:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+:focus-visible {
+  /* FIX A5: navy ring with a white gap reads on both white cards and navy buttons */
+  outline: 3px solid var(--navy); outline-offset: 2px; box-shadow: 0 0 0 2px #fff;
+}
 [hidden] { display: none !important; }
 
 .visually-hidden {
@@ -140,7 +140,6 @@ main { max-width: 1100px; margin: 0 auto; padding: 28px 24px 80px; }
 .btn-quiet:hover { background: #eef0fb; }
 .btn-danger { background: #fff; color: #b3261e; border-color: #b3261e; }
 .btn-danger:hover { background: #fdeceb; }
-.btn:disabled { opacity: .45; cursor: not-allowed; }
 .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 
 /* ============================================================
@@ -171,7 +170,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   display: flex; flex-direction: column; gap: 6px;
 }
 .stage-card:hover { border-color: var(--navy); background: #f7f8fe; }
-.stage-card[aria-pressed="true"] { border-color: var(--navy); background: #eef0fb; }
+.stage-card.suggested { border-color: var(--navy); background: #eef0fb; } /* FIX A6 */
 .stage-card .sc-num {
   width: 30px; height: 30px; border-radius: 50%; background: var(--navy); color: #fff;
   display: grid; place-items: center; font-weight: 700; font-size: .9rem;
@@ -218,24 +217,48 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   border-radius: var(--radius); padding: 16px; margin-bottom: 14px; background: #fff;
 }
 .q-item.answered { border-left-color: var(--domain-color); background: #fcfdff; }
-.q-text { font-weight: 600; margin: 0 0 12px; display: flex; gap: 10px; }
-.q-num { color: var(--domain-color); font-weight: 700; flex-shrink: 0; filter: brightness(.75); }
+.q-item fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.q-item legend { padding: 0; display: block; width: 100%; margin: 0 0 12px; } /* FIX A1: visible legend */
+.q-text { font-weight: 600; margin: 0; display: flex; gap: 10px; }
+.q-num { color: var(--domain-ink); font-weight: 700; flex-shrink: 0; } /* FIX A4: no brightness filter */
 
+/* FIX U1: tiles carry only the number and short label; the full descriptors live once in the rating guide */
 .scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 .scale label {
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  padding: 9px 4px; border: 1px solid var(--line); border-radius: var(--radius);
-  cursor: pointer; text-align: center; font-size: .78rem; color: var(--ink-soft); line-height: 1.25;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 9px 4px 8px; border: 1px solid var(--line); border-radius: var(--radius);
+  cursor: pointer; text-align: center; color: var(--ink-soft); line-height: 1.25;
 }
 .scale label:hover { background: #f7f8fe; border-color: var(--navy-light); }
+.scale label:focus-within { outline: 3px solid var(--navy); outline-offset: 2px; } /* FIX A8 */
+.scale label.selected { border-color: var(--navy); background: #eef0fb; }         /* FIX X1: class instead of :has() */
+.scale label.selected .sc-n, .scale label.selected .sc-l { color: var(--navy); }
 .scale input { margin: 0; accent-color: var(--navy); width: 18px; height: 18px; }
-.scale input:checked + .sc-n { color: var(--navy); font-weight: 700; }
-.scale label:has(input:checked) { border-color: var(--navy); background: #eef0fb; }
-.sc-n { font-weight: 600; }
+.sc-n { font-weight: 700; font-size: .95rem; }
+.sc-l { font-size: .78rem; }
 @media (max-width: 640px) {
   .scale { grid-template-columns: 1fr; }
-  .scale label { flex-direction: row; justify-content: flex-start; gap: 12px; text-align: left; font-size: .86rem; }
+  .scale label { flex-direction: row; justify-content: flex-start; gap: 12px; text-align: left; padding: 8px 12px; }
+  .sc-l { font-size: .9rem; }
 }
+
+/* FIX U1: rating guide, shown once above the domain panels */
+.scale-key {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 6px 16px; margin-bottom: 18px;
+}
+.scale-key summary {
+  cursor: pointer; font-weight: 700; color: var(--navy); padding: 6px 0; list-style: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.scale-key summary::-webkit-details-marker { display: none; }
+.scale-key summary::before { content: "\25B8"; font-size: .8rem; transition: transform .15s; }
+.scale-key[open] summary::before { transform: rotate(90deg); }
+.scale-key summary .footnote { font-weight: 400; }
+.scale-key table { font-size: .88rem; margin: 4px 0 8px; }
+.scale-key td, .scale-key th { padding: 6px 10px; }
+.scale-key td.num { color: var(--navy); font-weight: 700; }
+@media (max-width: 640px) { .scale-key .sk-label { display: none; } .scale-key td:first-child { white-space: nowrap; } }
 
 .note-toggle {
   margin-top: 10px; background: none; border: none; padding: 0;
@@ -275,7 +298,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   font-size: .82rem; font-weight: 600; color: var(--ink-soft);
   background: #eef0f4; border-radius: 999px; padding: 3px 11px;
 }
-.fb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+.fb-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; margin-top: 14px; } /* FIX X3 */
 @media (max-width: 760px) { .fb-grid { grid-template-columns: 1fr; } }
 .fb-col h4 { margin: 0 0 8px; font-size: .92rem; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-soft); }
 .fb-col ul { margin: 0; padding-left: 20px; }
@@ -296,6 +319,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   padding: 7px 9px; font-family: inherit; font-size: .9rem; resize: vertical; color: var(--ink);
 }
 .wilp-table td { vertical-align: top; }
+@media (max-width: 640px) { textarea { font-size: 16px; } } /* FIX X2: stop iOS focus-zoom */
 .wilp-done { display: grid; place-items: center; }
 .wilp-done input { width: 20px; height: 20px; accent-color: var(--navy); }
 .wilp-del {
@@ -332,7 +356,8 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   .title-banner h1 { color: var(--navy); }
   .title-banner p { color: var(--ink-soft); }
   a[href]::after { content: ""; }
-  textarea { border: 1px solid #bbb !important; }
+  textarea { border: 1px solid #bbb !important; overflow: hidden; resize: none; } /* FIX X4 */
+  .scale-key { display: none; }
 }
 </style>
 </head>
@@ -342,8 +367,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   <div class="site-header-inner">
     <div class="gov-mark">
       <img src="https://www.health.qld.gov.au/_qgds-design/images/header-logo-qgov-dark.svg"
-           alt="Queensland Government" class="gov-logo"
-           onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'gov-agency',textContent:'Queensland Government'}))">
+           alt="Queensland Government" class="gov-logo" id="gov-logo"> <!-- FIX M7: fallback wired in script -->
       <div class="gov-divider"></div>
       <span class="gov-agency">Queensland Health</span>
     </div>
@@ -406,7 +430,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
     <p class="lead">Leadership, research and communication are embedded within each of the six domains.</p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th style="width:210px">Domain</th><th>What it covers</th></tr></thead>
+        <thead><tr><th scope="col" style="width:210px">Domain</th><th scope="col">What it covers</th></tr></thead>
         <tbody id="domain-table-body"></tbody>
       </table>
     </div>
@@ -419,7 +443,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th style="width:150px">Stage</th><th style="width:120px">Role</th><th>Development focus</th></tr>
+          <tr><th scope="col" style="width:150px">Stage</th><th scope="col" style="width:120px">Role</th><th scope="col">Development focus</th></tr>
         </thead>
         <tbody id="stage-table-body"></tbody>
       </table>
@@ -431,7 +455,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
     <p class="lead">Each statement is rated from 1 to 5.</p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th style="width:70px">Rating</th><th style="width:200px">Description</th><th>Choose this rating if&hellip;</th></tr></thead>
+        <thead><tr><th scope="col" style="width:70px">Rating</th><th scope="col" style="width:200px">Description</th><th scope="col">Choose this rating if&hellip;</th></tr></thead>
         <tbody id="scale-table-body"></tbody>
       </table>
     </div>
@@ -439,7 +463,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 
   <div class="card" style="text-align:center">
     <button type="button" class="btn btn-lg" id="btn-start">Start the Framework Assessment Tree &rarr;</button>
-    <p class="lead" style="margin-bottom:0">19 statements across 6 domains &middot; about 10&ndash;15 minutes</p>
+    <p class="lead" style="margin-bottom:0"><span id="intro-count"></span> &middot; about 10&ndash;15 minutes</p> <!-- FIX M6 -->
     <div class="resume-note" id="resume-note" hidden>
       You have saved progress for <strong><span id="resume-stage"></span></strong>
       (<span id="resume-count"></span> answered).
@@ -459,8 +483,8 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
     <h2>Framework Assessment Tree</h2>
     <p class="lead">Answer these questions to identify the stage of the framework you are currently working within.</p>
     <div class="tree-step">
-      <p class="tree-progress" id="tree-progress"></p>
-      <div class="tree-q" id="tree-question"></div>
+      <p class="tree-progress" id="tree-progress" aria-live="polite"></p>
+      <div class="tree-q" id="tree-question" tabindex="-1"></div> <!-- FIX A3: receives focus after each answer -->
       <div class="tree-actions" id="tree-actions"></div>
     </div>
     <p class="footnote" style="margin-top:22px">
@@ -469,7 +493,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   </div>
 
   <div class="card" id="stage-picker" hidden>
-    <h2 id="stage-picker-title">Choose your stage</h2>
+    <h2 id="stage-picker-title" tabindex="-1">Choose your stage</h2> <!-- FIX A3 -->
     <p class="lead" id="stage-picker-lead">Select the stage that best describes where you are working now.</p>
     <div class="stage-grid" id="stage-grid"></div>
     <p class="footnote" style="margin-top:18px">
@@ -503,6 +527,17 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
     <div class="progress-fill" id="progress-fill"></div>
   </div>
 
+  <!-- FIX U1: descriptors appear here once instead of on all 95 tiles -->
+  <details class="scale-key" id="scale-key" open>
+    <summary>Rating guide <span class="footnote">&mdash; what each score means</span></summary>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col" style="width:60px">Score</th><th scope="col" class="sk-label" style="width:180px">Description</th><th scope="col">Choose this score if&hellip;</th></tr></thead>
+        <tbody id="scale-key-body"></tbody>
+      </table>
+    </div>
+  </details>
+
   <div id="domain-panels"></div>
 </section>
 
@@ -531,7 +566,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
       <div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Domain</th><th class="num">Average</th><th>Band</th></tr></thead>
+            <thead><tr><th scope="col">Domain</th><th scope="col" class="num">Average</th><th scope="col">Band</th></tr></thead>
             <tbody id="results-body"></tbody>
           </table>
         </div>
@@ -559,11 +594,11 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
       <table class="wilp-table">
         <thead>
           <tr>
-            <th style="width:22%">Identified development need</th>
-            <th style="width:30%">Potential activities</th>
-            <th style="width:80px">Done?</th>
-            <th>Has this activity helped you meet the development objective? How?</th>
-            <th class="no-print" style="width:44px"><span class="visually-hidden">Remove</span></th>
+            <th scope="col" style="width:22%">Identified development need</th>
+            <th scope="col" style="width:30%">Potential activities</th>
+            <th scope="col" style="width:80px">Done?</th>
+            <th scope="col">Has this activity helped you meet the development objective? How?</th>
+            <th scope="col" class="no-print" style="width:44px"><span class="visually-hidden">Remove</span></th>
           </tr>
         </thead>
         <tbody id="wilp-body"></tbody>
@@ -598,13 +633,22 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 const FRAMEWORK_URL = 'https://www.health.qld.gov.au/ahwac/';
 
 /* 5-point Likert scale, from the Assessment Tool rating table. */
-const SCALE = [
-  { value: 1, label: 'Disagree',          if: 'I am inexperienced in demonstrating this' },
-  { value: 2, label: 'Somewhat disagree', if: 'I have demonstrated this once or twice, but need to get better' },
-  { value: 3, label: 'Neutral',           if: 'I have demonstrated this competently, but need more experience' },
-  { value: 4, label: 'Somewhat agree',    if: 'I demonstrate this most of the time' },
-  { value: 5, label: 'Agree',             if: 'I always demonstrate this competently and effectively' }
+const SCALE = [ // FIX M5: `guide` replaces the awkward `if` property
+  { value: 1, label: 'Disagree',          guide: 'I am inexperienced in demonstrating this' },
+  { value: 2, label: 'Somewhat disagree', guide: 'I have demonstrated this once or twice, but need to get better' },
+  { value: 3, label: 'Neutral',           guide: 'I have demonstrated this competently, but need more experience' },
+  { value: 4, label: 'Somewhat agree',    guide: 'I demonstrate this most of the time' },
+  { value: 5, label: 'Agree',             guide: 'I always demonstrate this competently and effectively' }
 ];
+
+/* FIX M1: tunables that were previously magic numbers scattered through the code. */
+const CONFIG = {
+  band: { lowBelow: 2.5, highAbove: 4 },   // domain average -> Developing / Progressing / Established
+  focus: { maxDomains: 3, minSpread: 0.5 }, // how "focus areas" are chosen for the supervisor conversation
+  saveDebounceMs: 500,
+  saveFlashMs: 1400,
+  toastMs: 2600
+};
 
 /* The four stages (milestones / spheres of influence). */
 const STAGES = [
@@ -1045,33 +1089,78 @@ function domainAverage(domainId) {
 /* Bands used to prioritise development conversations. */
 function bandFor(avg) {
   if (avg === null) return { key: null, label: 'Not answered', css: 'tier-none' };
-  if (avg < 2.5)    return { key: 'low',  label: 'Developing',  css: 'tier-low'  };
-  if (avg <= 4)     return { key: 'mid',  label: 'Progressing', css: 'tier-mid'  };
+  if (avg < CONFIG.band.lowBelow)   return { key: 'low',  label: 'Developing',  css: 'tier-low'  }; // FIX M1
+  if (avg <= CONFIG.band.highAbove) return { key: 'mid',  label: 'Progressing', css: 'tier-mid'  };
   return { key: 'high', label: 'Established', css: 'tier-high' };
+}
+
+const emptyWilpRow = () => ({ need: '', activities: '', done: false, reflection: '', seed: '' }); // FIX M2
+const str = v => (typeof v === 'string' ? v : '');
+
+/* FIX B1: rebuild state from storage field by field, keeping only values the app
+   could have written itself. A tampered or half-written payload previously
+   reached the averages untouched (strings concatenate, 99 plots off the chart). */
+function sanitiseSaved(saved) {
+  if (!saved || typeof saved !== 'object' || !stageById(saved.stage)) return null;
+  const answers = {}, notes = {};
+  const a = saved.answers && typeof saved.answers === 'object' ? saved.answers : {};
+  const n = saved.notes   && typeof saved.notes   === 'object' ? saved.notes   : {};
+  DOMAINS.forEach(d => {
+    const len = statementsFor(saved.stage, d.id).length;
+    for (let i = 0; i < len; i++) {
+      const k = qKey(d.id, i);
+      if (Number.isInteger(a[k]) && a[k] >= 1 && a[k] <= SCALE.length) answers[k] = a[k];
+      if (typeof n[k] === 'string' && n[k].trim()) notes[k] = n[k];
+    }
+  });
+  const wilp = (Array.isArray(saved.wilp) ? saved.wilp : [])
+    .filter(r => r && typeof r === 'object')
+    .map(r => ({ need: str(r.need), activities: str(r.activities), done: r.done === true,
+                 reflection: str(r.reflection), seed: str(r.seed) }));
+  return { stage: saved.stage, answers, notes, wilp };
 }
 
 function loadState() {
   let raw;
   try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { return; }
   if (!raw) return;
-  try {
-    const saved = JSON.parse(raw);
-    if (saved && typeof saved === 'object' && stageById(saved.stage)) {
-      state.stage   = saved.stage;
-      state.answers = saved.answers && typeof saved.answers === 'object' ? saved.answers : {};
-      state.notes   = saved.notes   && typeof saved.notes   === 'object' ? saved.notes   : {};
-      state.wilp    = Array.isArray(saved.wilp) ? saved.wilp : [];
-    }
-  } catch (e) { /* corrupt payload — start fresh */ }
+  let clean = null;
+  try { clean = sanitiseSaved(JSON.parse(raw)); } catch (e) { /* corrupt payload — start fresh */ }
+  if (clean) Object.assign(state, clean);
 }
 
-let saveTimer = null;
-function persistState() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { return; }
+let saveTimer = null, flashTimer = null, storageWarned = false;
+
+/* FIX B6: `quiet` skips the "Progress saved" flash for housekeeping writes (e.g. choosing a stage). */
+function persistState(quiet) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    // FIX B7: a full or disabled store used to fail silently, so the user believed progress was kept.
+    if (!storageWarned) {
+      storageWarned = true;
+      toast('Progress could not be saved in this browser — print or note your answers before closing.');
+    }
+    return;
+  }
+  if (quiet) return;
   const flash = document.getElementById('save-flash');
   flash.classList.add('on');
+  clearTimeout(flashTimer);
+  flashTimer = setTimeout(() => flash.classList.remove('on'), CONFIG.saveFlashMs);
+}
+
+/* FIX B3: one debounce for free-text fields, flushed on navigation and page hide so a
+   note typed in the last half-second is never lost. */
+function schedulePersist() {
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => flash.classList.remove('on'), 1400);
+  saveTimer = setTimeout(() => { saveTimer = null; persistState(); }, CONFIG.saveDebounceMs);
+}
+function flushPersist() {
+  if (saveTimer === null) return;
+  clearTimeout(saveTimer);
+  saveTimer = null;
+  persistState(true);
 }
 
 function clearSaved() {
@@ -1085,20 +1174,30 @@ function clearSaved() {
 /* ================================================================
    VIEW SWITCHING
    ================================================================ */
-function show(view) {
+/* FIX B4: `'instant' in window` was always false; plain scrollTo(0,0) is what was intended.
+   FIX A3: move keyboard/screen-reader focus to the new view's heading. */
+function show(view, focusSelector) {
   ['intro', 'tree', 'assess', 'report'].forEach(v => {
     document.getElementById('view-' + v).hidden = (v !== view);
   });
   document.getElementById('btn-home').hidden = (view === 'intro');
-  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  window.scrollTo(0, 0);
+  if (focusSelector) focusEl(document.querySelector(focusSelector));
 }
 
+function focusEl(el) {
+  if (!el) return;
+  if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+  el.focus({ preventScroll: true });
+}
+
+let toastTimer = null;
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('on');
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.classList.remove('on'), 2600);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), CONFIG.toastMs);
 }
 
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -1227,14 +1326,25 @@ function renderIntro() {
       <td>${esc(s.focus)}. <span class="lead">${esc(s.sphere)}</span></td>
     </tr>`).join('');
 
-  document.getElementById('scale-table-body').innerHTML = SCALE.map(s => `
-    <tr>
-      <td class="num"><strong>${s.value}</strong></td>
-      <td>${esc(s.label)}</td>
-      <td>${esc(s.if)}</td>
-    </tr>`).join('');
+  document.getElementById('scale-table-body').innerHTML = scaleRows('');
+  // FIX U1: the same rows feed the rating guide above the statements; its cells carry ids
+  // so every radio can point at its descriptor with aria-describedby.
+  document.getElementById('scale-key-body').innerHTML = scaleRows('skey-');
+
+  // FIX M6: derived from the data rather than typed into the copy
+  document.getElementById('intro-count').textContent =
+    totalQuestions(STAGES[0].id) + ' statements across ' + DOMAINS.length + ' domains';
 
   renderResumeNote();
+}
+
+function scaleRows(idPrefix) {
+  return SCALE.map(s => `
+    <tr>
+      <td class="num"><strong>${s.value}</strong></td>
+      <td class="sk-label">${esc(s.label)}</td>
+      <td ${idPrefix ? `id="${idPrefix}${s.value}"` : ''}>${esc(s.guide)}</td>
+    </tr>`).join('');
 }
 
 function renderResumeNote() {
@@ -1258,54 +1368,65 @@ function renderTree() {
     'Question ' + (treeIndex + 1) + ' of ' + TREE.length;
   document.getElementById('tree-question').textContent = node.desc;
 
-  const opts = [node.yes, node.no];
+  // FIX P2: buttons are handled by one delegated listener on #tree-actions (see WIRING)
   document.getElementById('tree-actions').innerHTML =
-    opts.map((o, i) => `<button type="button" class="btn ${i === 0 ? '' : 'btn-secondary'}" data-tree="${i}">${esc(o.label)}</button>`).join('') +
+    `<button type="button" class="btn" data-tree="yes">${esc(node.yes.label)}</button>` +
+    `<button type="button" class="btn btn-secondary" data-tree="no">${esc(node.no.label)}</button>` +
     (treeIndex > 0 ? '<button type="button" class="btn btn-quiet" data-tree="back">&#8592; Back</button>' : '');
-
-  document.getElementById('tree-actions').querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const v = btn.dataset.tree;
-      if (v === 'back') { treeIndex--; renderTree(); return; }
-      const choice = opts[Number(v)];
-      if (choice.stage) proposeStage(choice.stage);
-      else { treeIndex = choice.next; renderTree(); }
-    });
-  });
 
   document.getElementById('stage-picker').hidden = true;
 }
 
+function answerTree(which) {
+  if (which === 'back') { treeIndex = Math.max(0, treeIndex - 1); renderTree(); focusEl(document.getElementById('tree-question')); return; }
+  const choice = TREE[treeIndex][which];
+  if (!choice) return;
+  if (choice.stage) { proposeStage(choice.stage); return; }
+  treeIndex = choice.next;
+  renderTree();
+  focusEl(document.getElementById('tree-question')); // FIX A3: focus follows the new question
+}
+
 /* Show the suggested stage, and let the user confirm or pick another. */
 function proposeStage(stageId) {
+  const title = stageById(stageId).title;
+  showStagePicker('Suggested stage: ' + title,
+    'Based on your answers, start the framework at <strong>' + esc(title) + '</strong>. ' +
+    'If that does not sound like you, choose a different stage below — you may do so with the consent of your supervisor.',
+    stageId);
+}
+
+/* FIX M3: the two ways into the picker (tree result, "skip the tree") shared this logic. */
+function showStagePicker(title, leadHtml, suggestedId) {
   const picker = document.getElementById('stage-picker');
   picker.hidden = false;
-  document.getElementById('stage-picker-title').textContent = 'Suggested stage: ' + stageById(stageId).title;
-  document.getElementById('stage-picker-lead').innerHTML =
-    'Based on your answers, start the framework at <strong>' + esc(stageById(stageId).title) + '</strong>. ' +
-    'If that does not sound like you, choose a different stage below — you may do so with the consent of your supervisor.';
-  renderStageGrid(stageId);
-  picker.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('stage-picker-title').textContent = title;
+  document.getElementById('stage-picker-lead').innerHTML = leadHtml;
+  renderStageGrid(suggestedId);
+  picker.scrollIntoView({ block: 'start' });
+  focusEl(document.getElementById('stage-picker-title')); // FIX A3
 }
 
 function renderStageGrid(suggestedId) {
-  document.getElementById('stage-grid').innerHTML = STAGES.map(s => `
-    <button type="button" class="stage-card" data-stage="${s.id}" aria-pressed="${s.id === suggestedId}">
-      <span class="sc-num">${s.num}</span>
-      <span class="sc-title">${esc(s.title)}${s.id === suggestedId ? ' &#10003;' : ''}</span>
+  // FIX A6: these buttons navigate, so aria-pressed (a toggle state) was misleading;
+  // the suggestion is conveyed by a class plus visually hidden text instead.
+  document.getElementById('stage-grid').innerHTML = STAGES.map(s => {
+    const sug = s.id === suggestedId;
+    return `
+    <button type="button" class="stage-card ${sug ? 'suggested' : ''}" data-stage="${s.id}">
+      <span class="sc-num" aria-hidden="true">${s.num}</span>
+      <span class="sc-title">${esc(s.title)}${sug ? ' <span aria-hidden="true">&#10003;</span><span class="visually-hidden">(suggested)</span>' : ''}</span>
       <span class="sc-role">${esc(s.role)} &middot; ${esc(s.focus)}</span>
       <span class="sc-desc">${esc(s.sphere)}</span>
-    </button>`).join('');
-
-  document.getElementById('stage-grid').querySelectorAll('.stage-card').forEach(btn => {
-    btn.addEventListener('click', () => startAssessment(btn.dataset.stage));
-  });
+    </button>`;
+  }).join('');
 }
 
 /* ================================================================
    ASSESSMENT
    ================================================================ */
 function startAssessment(stageId) {
+  if (!stageById(stageId)) return; // FIX B5: ignore anything that is not a known stage
   if (state.stage !== stageId) {
     const hadAnswers = state.stage && answeredCount() > 0;
     if (hadAnswers && !confirm(
@@ -1316,9 +1437,9 @@ function startAssessment(stageId) {
     state.notes = {};
     state.wilp = [];
   }
-  persistState();
+  persistState(true); // FIX B6: nothing answered yet, so no "Progress saved" flash
   renderAssessment();
-  show('assess');
+  show('assess', '#domain-panels .domain-panel:not([hidden]) h2');
 }
 
 function renderAssessment() {
@@ -1327,9 +1448,10 @@ function renderAssessment() {
     stage.title + ' — ' + stage.role;
   document.getElementById('progress-total').textContent = totalQuestions(state.stage);
 
+  // FIX A2: roving tabindex — only the selected tab is in the Tab order; arrows move between tabs
   document.getElementById('domain-tabs').innerHTML = DOMAINS.map((d, i) => `
     <button type="button" class="domain-tab" role="tab" id="tab-${d.id}"
-            aria-controls="panel-${d.id}" aria-selected="${i === 0}"
+            aria-controls="panel-${d.id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}"
             style="--domain-color:${d.color}" data-domain="${d.id}">
       <span style="color:${d.ink}">${d.num}. ${esc(d.title)}</span>
       <span class="tab-count" id="tab-count-${d.id}"></span>
@@ -1341,21 +1463,26 @@ function renderAssessment() {
       const key = qKey(d.id, i);
       const val = state.answers[key];
       const note = state.notes[key] || '';
+      // FIX U1: tile shows score + short label; the descriptor is the tile's tooltip and its
+      //         accessible description (aria-describedby -> rating guide cell), not repeated text.
+      // FIX X1: the selected tile is marked with a class rather than :has(), which Firefox ESR lacks.
       const radios = SCALE.map(s => `
-        <label for="r-${key}-${s.value}">
+        <label for="r-${key}-${s.value}" class="${val === s.value ? 'selected' : ''}" title="${esc(s.guide)}">
           <input type="radio" id="r-${key}-${s.value}" name="q-${key}" value="${s.value}"
-                 ${val === s.value ? 'checked' : ''} data-key="${key}">
-          <span class="sc-n">${s.value} &middot; ${esc(s.label)}</span>
-          <span>${esc(s.if)}</span>
+                 ${val === s.value ? 'checked' : ''} data-key="${key}" aria-describedby="skey-${s.value}">
+          <span class="sc-n">${s.value}</span>
+          <span class="sc-l">${esc(s.label)}</span>
         </label>`).join('');
       return `
-        <div class="q-item ${val ? 'answered' : ''} ${note ? 'has-note' : ''}" style="--domain-color:${d.color}" id="qi-${key}">
-          <p class="q-text"><span class="q-num">${d.num}.${i + 1}</span><span>${esc(text)}</span></p>
-          <fieldset style="border:0;padding:0;margin:0">
-            <legend class="visually-hidden">${esc(d.num + '.' + (i + 1) + ' ' + text)}</legend>
+        <div class="q-item ${val ? 'answered' : ''} ${note ? 'has-note' : ''}"
+             style="--domain-color:${d.color};--domain-ink:${d.ink}" id="qi-${key}">
+          <fieldset>
+            <!-- FIX A1: the statement is the group's visible legend, announced once -->
+            <legend><span class="q-text"><span class="q-num">${d.num}.${i + 1}</span> <span>${esc(text)}</span></span></legend>
             <div class="scale">${radios}</div>
           </fieldset>
-          <button type="button" class="note-toggle" data-note-toggle="${key}">
+          <button type="button" class="note-toggle" data-note-toggle="${key}"
+                  aria-expanded="${note ? 'true' : 'false'}" aria-controls="note-${key}">
             ${note ? 'Edit note' : 'Add a note for your supervisor'}
           </button>
           <div class="note-box" id="note-${key}" ${note ? '' : 'hidden'}>
@@ -1371,7 +1498,7 @@ function renderAssessment() {
       <div class="domain-panel" id="panel-${d.id}" role="tabpanel" aria-labelledby="tab-${d.id}" ${di === 0 ? '' : 'hidden'}>
         <div class="card">
           <div class="domain-head" style="--domain-color:${d.color}">
-            <h2>Domain ${d.num}: ${esc(d.title)}</h2>
+            <h2 tabindex="-1">Domain ${d.num}: ${esc(d.title)}</h2>
             <p>${esc(d.description)}</p>
           </div>
           ${items}
@@ -1385,54 +1512,77 @@ function renderAssessment() {
       </div>`;
   }).join('');
 
-  wireAssessment();
+  updateProgress(); // FIX P2: no per-render wiring — the panel container is wired once at boot
+}
+
+/* FIX P2: one handler per event type on the static #domain-panels container. */
+function onPanelChange(e) {
+  const input = e.target;
+  if (!input.matches('input[type="radio"][data-key]')) return;
+  const key = input.dataset.key;
+  state.answers[key] = Number(input.value);
+  const item = document.getElementById('qi-' + key);
+  item.classList.add('answered');
+  item.querySelectorAll('.scale label').forEach(l => l.classList.toggle('selected', l.contains(input))); // FIX X1
   updateProgress();
+  persistState();
 }
 
-function wireAssessment() {
-  document.querySelectorAll('.domain-tab').forEach(tab => {
-    tab.addEventListener('click', () => openDomain(tab.dataset.domain));
-  });
-  document.querySelectorAll('[data-goto]').forEach(btn => {
-    btn.addEventListener('click', () => openDomain(btn.dataset.goto));
-  });
-  document.querySelectorAll('input[type="radio"][data-key]').forEach(input => {
-    input.addEventListener('change', () => {
-      state.answers[input.dataset.key] = Number(input.value);
-      document.getElementById('qi-' + input.dataset.key).classList.add('answered');
-      updateProgress();
-      persistState();
-    });
-  });
-  document.querySelectorAll('[data-note-toggle]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const box = document.getElementById('note-' + btn.dataset.noteToggle);
-      box.hidden = !box.hidden;
-      if (!box.hidden) box.querySelector('textarea').focus();
-    });
-  });
-  document.querySelectorAll('textarea[data-note]').forEach(ta => {
-    ta.addEventListener('input', () => {
-      const key = ta.dataset.note;
-      const v = ta.value.trim();
-      if (v) state.notes[key] = v; else delete state.notes[key];
-      document.getElementById('qi-' + key).classList.toggle('has-note', !!v);
-      const btn = document.querySelector('[data-note-toggle="' + key + '"]');
-      if (btn) btn.textContent = v ? 'Edit note' : 'Add a note for your supervisor';
-      clearTimeout(ta._t);
-      ta._t = setTimeout(persistState, 500);
-    });
-  });
-  const gen = document.getElementById('btn-generate');
-  if (gen) gen.addEventListener('click', generateReport);
+function onPanelClick(e) {
+  const goto = e.target.closest('[data-goto]');
+  if (goto) { openDomain(goto.dataset.goto, true); return; }
+  const toggle = e.target.closest('[data-note-toggle]');
+  if (toggle) {
+    const box = document.getElementById('note-' + toggle.dataset.noteToggle);
+    box.hidden = !box.hidden;
+    toggle.setAttribute('aria-expanded', String(!box.hidden)); // FIX A11
+    if (!box.hidden) box.querySelector('textarea').focus();
+    return;
+  }
+  if (e.target.closest('#btn-generate')) generateReport();
 }
 
-function openDomain(id) {
+function onPanelInput(e) {
+  const ta = e.target;
+  if (!ta.matches('textarea[data-note]')) return;
+  const key = ta.dataset.note;
+  const v = ta.value.trim();
+  if (v) state.notes[key] = v; else delete state.notes[key];
+  document.getElementById('qi-' + key).classList.toggle('has-note', !!v);
+  const btn = document.querySelector('[data-note-toggle="' + key + '"]');
+  if (btn) btn.textContent = v ? 'Edit note' : 'Add a note for your supervisor';
+  schedulePersist(); // FIX B3
+}
+
+/* FIX A2: arrow keys move between tabs (automatic activation), Home/End jump to the ends. */
+function onTabKeydown(e) {
+  const tab = e.target.closest('.domain-tab');
+  if (!tab) return;
+  const n = DOMAINS.length;
+  const idx = DOMAINS.findIndex(d => d.id === tab.dataset.domain);
+  let next = null;
+  if (e.key === 'ArrowRight') next = (idx + 1) % n;
+  else if (e.key === 'ArrowLeft') next = (idx - 1 + n) % n;
+  else if (e.key === 'Home') next = 0;
+  else if (e.key === 'End') next = n - 1;
+  if (next === null) return;
+  e.preventDefault();
+  openDomain(DOMAINS[next].id, false);
+  document.getElementById('tab-' + DOMAINS[next].id).focus();
+}
+
+/* FIX A3: `moveFocus` sends focus to the panel heading when navigation came from the
+   prev/next buttons, whose own element disappears with the old panel. */
+function openDomain(id, moveFocus) {
   DOMAINS.forEach(d => {
-    document.getElementById('panel-' + d.id).hidden = (d.id !== id);
-    document.getElementById('tab-' + d.id).setAttribute('aria-selected', String(d.id === id));
+    const selected = d.id === id;
+    document.getElementById('panel-' + d.id).hidden = !selected;
+    const tab = document.getElementById('tab-' + d.id);
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
   });
-  document.getElementById('view-assess').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('view-assess').scrollIntoView({ block: 'start' }); // CSS decides smooth vs instant (FIX P3)
+  if (moveFocus) focusEl(document.querySelector('#panel-' + id + ' h2'));
 }
 
 function updateProgress() {
@@ -1440,7 +1590,9 @@ function updateProgress() {
   const done = answeredCount();
   document.getElementById('progress-count').textContent = done;
   document.getElementById('progress-fill').style.width = (total ? (done / total) * 100 : 0) + '%';
-  document.getElementById('progress-bar').setAttribute('aria-valuenow', total ? Math.round(done / total * 100) : 0);
+  const bar = document.getElementById('progress-bar');
+  bar.setAttribute('aria-valuenow', total ? Math.round(done / total * 100) : 0);
+  bar.setAttribute('aria-valuetext', done + ' of ' + total + ' statements answered'); // FIX A9
 
   DOMAINS.forEach(d => {
     const len = statementsFor(state.stage, d.id).length;
@@ -1463,8 +1615,9 @@ function generateReport() {
   if (missing > 0 && !confirm(
       'You have ' + missing + ' unanswered statement' + (missing === 1 ? '' : 's') +
       '. Unanswered statements are excluded from your domain averages. Continue anyway?')) return;
+  flushPersist(); // FIX B3
   renderReport();
-  show('report');
+  show('report', '#view-report h2');
 }
 
 function renderReport() {
@@ -1499,36 +1652,39 @@ function renderReport() {
     </tr>`;
   }).join('');
 
-  renderSupervisorSection(averages, stage);
-  renderFeedbackCards(averages, stage, nextStage);
-  ensureWilpSeed(averages);
+  const priority = priorityDomains(averages); // FIX P1: computed once, shared by the three sections
+  renderSupervisorSection(averages, stage, priority);
+  renderFeedbackCards(averages, stage, nextStage, priority);
+  ensureWilpSeed(averages, priority);
   renderWilp();
 }
 
 /* Priority domains: the lowest scoring, to focus the supervisor conversation. */
 function priorityDomains(averages) {
   const scored = DOMAINS.filter(d => averages[d.id] !== null);
-  if (scored.length < 2) return scored.filter(d => averages[d.id] <= 4);
+  const cap = CONFIG.band.highAbove; // FIX M1
+  if (scored.length < 2) return scored.filter(d => averages[d.id] <= cap);
 
-  const vals = scored.map(d => averages[d.id]);
-  const min = Math.min.apply(null, vals);
-  const max = Math.max.apply(null, vals);
-  if (min > 4) return [];            // established across the board
-  if (max - min < 0.5) return [];    // too even to single any domain out
+  if (!isUneven(averages)) return []; // established across the board, or too even to single any domain out
 
   return scored
-    .filter(d => averages[d.id] <= 4)
+    .filter(d => averages[d.id] <= cap)
     .sort((a, b) => averages[a.id] - averages[b.id] || a.num - b.num)
-    .slice(0, 3);
+    .slice(0, CONFIG.focus.maxDomains);
 }
 
-function renderSupervisorSection(averages, stage) {
-  const priority = priorityDomains(averages);
+/* True when the spread between best and worst domain is wide enough to name a focus area. */
+function isUneven(averages) {
+  const vals = DOMAINS.map(d => averages[d.id]).filter(v => v !== null);
+  if (vals.length < 2) return false;
+  const min = Math.min.apply(null, vals), max = Math.max.apply(null, vals);
+  return min <= CONFIG.band.highAbove && (max - min) >= CONFIG.focus.minSpread;
+}
+
+function renderSupervisorSection(averages, stage, priority) {
   const scored = DOMAINS.filter(d => averages[d.id] !== null);
   const strongest = scored.slice().sort((a, b) => averages[b.id] - averages[a.id])[0];
-
-  const vals = scored.map(d => averages[d.id]);
-  const uneven = vals.length > 1 && (Math.max.apply(null, vals) - Math.min.apply(null, vals)) >= 0.5;
+  const uneven = isUneven(averages);
 
   const lines = [];
   if (strongest && uneven && averages[strongest.id] >= 3) {
@@ -1539,7 +1695,7 @@ function renderSupervisorSection(averages, stage) {
     lines.push('The domain' + (priority.length === 1 ? '' : 's') + ' to focus on first ' +
       (priority.length === 1 ? 'is' : 'are') + ' <strong>' +
       priority.map(d => esc(d.title)).join('</strong>, <strong>') + '</strong>.');
-  } else if (scored.length && scored.every(d => averages[d.id] > 4)) {
+  } else if (scored.length && scored.every(d => averages[d.id] > CONFIG.band.highAbove)) { // FIX M1
     lines.push('You rated yourself above 4 in every domain you answered. A score of five across all domains may ' +
       'indicate you are equipped with the skills to advance to the next stage of the framework — worth discussing ' +
       'with your supervisor.');
@@ -1577,8 +1733,8 @@ function renderSupervisorSection(averages, stage) {
     <tbody>${rows.join('')}</tbody></table></div>`;
 }
 
-function renderFeedbackCards(averages, stage, nextStage) {
-  const priorityIds = priorityDomains(averages).map(d => d.id);
+function renderFeedbackCards(averages, stage, nextStage, priority) {
+  const priorityIds = priority.map(d => d.id);
 
   document.getElementById('feedback-cards').innerHTML = DOMAINS.map(d => {
     const avg = averages[d.id];
@@ -1641,46 +1797,58 @@ function renderFeedbackCards(averages, stage, nextStage) {
 /* ================================================================
    WORK-INTEGRATED LEARNING PLAN
    ================================================================ */
-function ensureWilpSeed(averages) {
-  if (state.wilp.length) return;
-  const priority = priorityDomains(averages);
-  state.wilp = priority.map(d => ({
-    need: 'Domain ' + d.num + ' — ' + d.title + ' (' + averages[d.id].toFixed(1) + ' / 5)',
-    activities: '', done: false, reflection: ''
-  }));
-  if (!state.wilp.length) state.wilp = [{ need: '', activities: '', done: false, reflection: '' }];
-  persistState();
+/* FIX B2: seeded rows used to persist forever, so a plan generated from an early
+   run kept naming domains the user had since re-rated. Rows are now re-seeded when
+   the user has not touched the plan at all (every row is still an untouched seed);
+   any edit anywhere in the plan freezes it. */
+function ensureWilpSeed(averages, priority) {
+  const untouched = state.wilp.every(r => r.seed && r.seed === r.need && !r.activities && !r.reflection && !r.done);
+  if (state.wilp.length && !untouched) return;
+  state.wilp = priority.map(d => {
+    const need = 'Domain ' + d.num + ' — ' + d.title + ' (' + averages[d.id].toFixed(1) + ' / 5)';
+    return Object.assign(emptyWilpRow(), { need, seed: need });
+  });
+  if (!state.wilp.length) state.wilp = [emptyWilpRow()];
+  persistState(true);
 }
 
 function renderWilp() {
-  document.getElementById('wilp-body').innerHTML = state.wilp.map((row, i) => `
+  // FIX A7: each field names its column and row for assistive tech; handlers are delegated (FIX P2)
+  document.getElementById('wilp-body').innerHTML = state.wilp.map((row, i) => {
+    const r = 'row ' + (i + 1);
+    return `
     <tr>
-      <td><textarea data-wilp="need" data-i="${i}" rows="2" placeholder="e.g. Criteria 1.1, 1.2, 1.3">${esc(row.need)}</textarea></td>
-      <td><textarea data-wilp="activities" data-i="${i}" rows="2" placeholder="e.g. Cultural Awareness Training module">${esc(row.activities)}</textarea></td>
+      <td><textarea data-wilp="need" data-i="${i}" rows="2" placeholder="e.g. Criteria 1.1, 1.2, 1.3"
+          aria-label="Identified development need, ${r}">${esc(row.need)}</textarea></td>
+      <td><textarea data-wilp="activities" data-i="${i}" rows="2" placeholder="e.g. Cultural Awareness Training module"
+          aria-label="Potential activities, ${r}">${esc(row.activities)}</textarea></td>
       <td class="wilp-done"><input type="checkbox" data-wilp="done" data-i="${i}" ${row.done ? 'checked' : ''}
-          aria-label="Activity completed for row ${i + 1}"></td>
-      <td><textarea data-wilp="reflection" data-i="${i}" rows="2" placeholder="Reflection">${esc(row.reflection)}</textarea></td>
+          aria-label="Activity completed, ${r}"></td>
+      <td><textarea data-wilp="reflection" data-i="${i}" rows="2" placeholder="Reflection"
+          aria-label="Has this activity helped you meet the development objective, ${r}">${esc(row.reflection)}</textarea></td>
       <td class="no-print"><button type="button" class="wilp-del" data-del="${i}"
-          aria-label="Remove row ${i + 1}">&times;</button></td>
-    </tr>`).join('');
+          aria-label="Remove ${r}">&times;</button></td>
+    </tr>`;
+  }).join('');
+}
 
-  document.querySelectorAll('[data-wilp]').forEach(el => {
-    const field = el.dataset.wilp, i = Number(el.dataset.i);
-    const evt = el.type === 'checkbox' ? 'change' : 'input';
-    el.addEventListener(evt, () => {
-      state.wilp[i][field] = el.type === 'checkbox' ? el.checked : el.value;
-      clearTimeout(el._t);
-      el._t = setTimeout(persistState, 500);
-    });
-  });
-  document.querySelectorAll('[data-del]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      state.wilp.splice(Number(btn.dataset.del), 1);
-      if (!state.wilp.length) state.wilp.push({ need: '', activities: '', done: false, reflection: '' });
-      persistState();
-      renderWilp();
-    });
-  });
+function onWilpEdit(e) {
+  const el = e.target;
+  if (!el.matches('[data-wilp]')) return;
+  const row = state.wilp[Number(el.dataset.i)];
+  if (!row) return;
+  if (el.type === 'checkbox') { row.done = el.checked; persistState(); }
+  else { row[el.dataset.wilp] = el.value; schedulePersist(); } // FIX B3
+}
+
+function onWilpClick(e) {
+  const del = e.target.closest('[data-del]');
+  if (!del) return;
+  state.wilp.splice(Number(del.dataset.del), 1);
+  if (!state.wilp.length) state.wilp.push(emptyWilpRow());
+  persistState();
+  renderWilp();
+  focusEl(document.getElementById('btn-add-wilp')); // FIX A3: the removed button had focus
 }
 
 /* ================================================================
@@ -1689,24 +1857,47 @@ function renderWilp() {
 function goToTree() {
   treeIndex = 0;
   renderTree();
-  show('tree');
+  show('tree', '#tree-question');
 }
+
+/* FIX P2: containers whose contents are re-rendered are wired once, here, by delegation. */
+const panels = document.getElementById('domain-panels');
+panels.addEventListener('change', onPanelChange);
+panels.addEventListener('click', onPanelClick);
+panels.addEventListener('input', onPanelInput);
+
+const tabs = document.getElementById('domain-tabs');
+tabs.addEventListener('click', e => {
+  const tab = e.target.closest('.domain-tab');
+  if (tab) openDomain(tab.dataset.domain, false);
+});
+tabs.addEventListener('keydown', onTabKeydown); // FIX A2
+
+document.getElementById('tree-actions').addEventListener('click', e => {
+  const btn = e.target.closest('[data-tree]');
+  if (btn) answerTree(btn.dataset.tree);
+});
+
+document.getElementById('stage-grid').addEventListener('click', e => {
+  const card = e.target.closest('.stage-card');
+  if (card) startAssessment(card.dataset.stage);
+});
+
+const wilpBody = document.getElementById('wilp-body');
+wilpBody.addEventListener('input', onWilpEdit);
+wilpBody.addEventListener('change', onWilpEdit);
+wilpBody.addEventListener('click', onWilpClick);
 
 document.getElementById('btn-start').addEventListener('click', goToTree);
 
 document.getElementById('btn-skip-tree').addEventListener('click', () => {
-  const picker = document.getElementById('stage-picker');
-  picker.hidden = false;
-  document.getElementById('stage-picker-title').textContent = 'Choose your stage';
-  document.getElementById('stage-picker-lead').textContent =
-    'Select the stage that best describes where you are working now.';
-  renderStageGrid(state.stage);
-  picker.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  showStagePicker('Choose your stage', // FIX M3
+    'Select the stage that best describes where you are working now.', state.stage);
 });
 
 document.getElementById('btn-resume').addEventListener('click', () => {
   renderAssessment();
-  show('assess');
+  show('assess', '#domain-panels .domain-panel:not([hidden]) h2');
 });
 
 document.getElementById('btn-clear-saved').addEventListener('click', () => {
@@ -1719,30 +1910,64 @@ document.getElementById('btn-clear-saved').addEventListener('click', () => {
 document.getElementById('btn-change-stage').addEventListener('click', goToTree);
 
 document.getElementById('btn-home').addEventListener('click', () => {
+  flushPersist();
   renderResumeNote();
-  show('intro');
+  show('intro', '#view-intro h2');
 });
 
 document.getElementById('btn-edit-answers').addEventListener('click', () => {
+  flushPersist();
   renderAssessment();
-  show('assess');
+  show('assess', '#domain-panels .domain-panel:not([hidden]) h2');
 });
 
-document.getElementById('btn-print').addEventListener('click', () => window.print());
+document.getElementById('btn-print').addEventListener('click', () => { flushPersist(); window.print(); });
 
 document.getElementById('btn-start-over').addEventListener('click', () => {
   if (!confirm('Start over? This clears all of your answers, notes and learning plan.')) return;
   clearSaved();
   renderResumeNote();
-  show('intro');
+  show('intro', '#view-intro h2');
   toast('Assessment cleared.');
 });
 
 document.getElementById('btn-add-wilp').addEventListener('click', () => {
-  state.wilp.push({ need: '', activities: '', done: false, reflection: '' });
+  state.wilp.push(emptyWilpRow()); // FIX M2
   persistState();
   renderWilp();
+  const added = wilpBody.querySelector('tr:last-child textarea');
+  if (added) added.focus(); // FIX A3: land in the new row
 });
+
+/* FIX X4: textareas do not grow to fit their text when printed, so long plan entries
+   were clipped. Expand them for the print pass and restore afterwards. */
+window.addEventListener('beforeprint', () => {
+  document.querySelectorAll('#view-report textarea').forEach(t => {
+    t.dataset.prevHeight = t.style.height;
+    t.style.height = 'auto';
+    t.style.height = t.scrollHeight + 'px';
+  });
+});
+window.addEventListener('afterprint', () => {
+  document.querySelectorAll('#view-report textarea').forEach(t => {
+    t.style.height = t.dataset.prevHeight || '';
+    delete t.dataset.prevHeight;
+  });
+});
+
+/* FIX B3: write any pending debounced edit before the page is hidden or closed. */
+window.addEventListener('pagehide', flushPersist);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushPersist(); });
+
+/* FIX M7: logo fallback lives with the rest of the script instead of an inline handler. */
+const logo = document.getElementById('gov-logo');
+logo.addEventListener('error', () => {
+  const span = document.createElement('span');
+  span.className = 'gov-agency';
+  span.textContent = 'Queensland Government';
+  logo.replaceWith(span);
+});
+if (logo.complete && logo.naturalWidth === 0) logo.dispatchEvent(new Event('error')); // already failed before wiring
 
 /* ================================================================
    BOOT
