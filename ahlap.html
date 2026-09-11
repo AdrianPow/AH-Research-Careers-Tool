@@ -163,7 +163,12 @@ table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
 th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { background: #eef0fb; color: var(--navy); font-weight: 700; }
 td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.table-wrap { overflow-x: auto; }
+/* FIX R19: a positioned ancestor so absolutely positioned descendants (the
+   visually-hidden "Remove" label in the plan header) are clipped by this
+   wrapper. Without it that label escapes the scroll container and widens the
+   page — visible as a horizontal scrollbar on phones once R07 gave the plan
+   table a 720px min-width. */
+.table-wrap { overflow-x: auto; position: relative; }
 
 /* ============================================================
    6. DECISION TREE (stage selector)
