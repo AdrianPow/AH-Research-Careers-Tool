@@ -34,6 +34,13 @@
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   /* FIX R16: fluid gutters let widescreen layouts use the available viewport width. */
   --page-gutter: clamp(24px, 3vw, 96px);
+  /* FIX D1: cap the content. R16's multi-column layouts are how wide screens earn
+     their space; unbounded lines are not. Measured before this: 212 characters per
+     line at 1920px and 296 at 2560px, against a comfortable 45-75. */
+  --page-max: 1400px;
+  /* FIX D3: reading measure for prose blocks. `ch` is the width of "0", which runs
+     wider than average lowercase, so 68ch lands near 80 rendered characters. */
+  --measure: 68ch;
 }
 
 * { box-sizing: border-box; }
@@ -81,7 +88,7 @@ button { font-family: inherit; }
 .site-header { background: #fff; border-bottom: 1px solid var(--line); }
 .site-header-inner {
   /* FIX R16: align branding with the fluid banner and content instead of a 1100px cap. */
-  max-width: none; margin: 0 auto; padding: 14px var(--page-gutter);
+  max-width: var(--page-max); margin: 0 auto; padding: 14px var(--page-gutter); /* FIX D1 */
   display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
 }
 .gov-mark { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; min-width: 0; }
@@ -108,7 +115,7 @@ button { font-family: inherit; }
 }
 .title-banner { background: var(--navy); color: #fff; }
 /* FIX R16: use the same responsive gutters as the header and main content. */
-.title-banner-inner { max-width: none; margin: 0 auto; padding: 22px var(--page-gutter); }
+.title-banner-inner { max-width: var(--page-max); margin: 0 auto; padding: 22px var(--page-gutter); } /* FIX D1 */
 .title-banner h1 {
   color: #fff; font-size: clamp(1.15rem, 2.6vw, 1.6rem); margin: 0; font-weight: 700;
 }
@@ -120,7 +127,7 @@ button { font-family: inherit; }
    3. LAYOUT
    ============================================================ */
 /* FIX R16: fill the screen width while retaining gutters and the existing mobile overrides. */
-main { max-width: none; margin: 0 auto; padding: 28px var(--page-gutter) 80px; }
+main { max-width: var(--page-max); margin: 0 auto; padding: 28px var(--page-gutter) 80px; } /* FIX D1 */
 @media (max-width: 560px) {
   main { padding: 20px 16px 60px; }
   /* FIX R07: match the card rule specificity without losing to its later declaration. */
@@ -305,6 +312,13 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 .report-date { color: var(--ink-soft); font-size: .93rem; margin-top: 0; }
 
 .domain-dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 8px; vertical-align: baseline; }
+/* FIX R21: keep the dot beside its label. As plain inline content a long
+   single-word domain ("Management") wrapped entirely to the next line and left
+   the dot stranded on its own. As a flex pair the dot stays on the first line
+   and only the text wraps. */
+.domain-label { display: flex; align-items: baseline; gap: 8px; }
+.domain-label > .domain-dot { margin-right: 0; flex-shrink: 0; }
+.domain-label > span { min-width: 0; }
 .tier-badge { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: .82rem; font-weight: 700; white-space: nowrap; }
 .tier-low  { background: #fdecea; color: #b3261e; }
 .tier-mid  { background: #fff4e0; color: #8a5a00; }
@@ -410,11 +424,53 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+/* FIX D3: hold long prose to a readable measure. Harmless where the container is
+   already narrower than the measure, so no breakpoint is needed. */
+.domain-head p, #supervisor-lead, #progression-note,
+.feedback-card > .lead, .card > .lead, .ref-card p { max-width: var(--measure); }
+
+/* FIX D4: the rating scale's longest cell is 55 characters, so a full-bleed table
+   left it sitting in a box mostly full of air. */
+.scale-table { max-width: 900px; }
+
 /* FIX R17: keep step titles and descriptions distinct, with predictable list indentation. */
 .intro-steps { padding-left: 1.5em; }
 .intro-steps li { padding-left: .15em; margin-bottom: .7em; }
 .intro-steps strong, .intro-steps .step-description { display: block; }
 .intro-steps li:last-child { margin-bottom: 0; }
+/* FIX D2: the six domains and four stages are reference content, not data to scan
+   down a column. As cards each description sits near 60 characters instead of the
+   212 a full-width table cell produced, and wide screens gain columns rather than
+   longer lines. */
+/* FIX D2: both counts are fixed (6 domains, 4 stages), so explicit column counts
+   beat auto-fit — they keep every row full instead of leaving a 4+2 orphan row. */
+.ref-grid {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 14px;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 660px)  { .ref-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) {
+  .ref-grid-domains { grid-template-columns: repeat(3, minmax(0, 1fr)); } /* 6 = 3 + 3 */
+  .ref-grid-stages  { grid-template-columns: repeat(4, minmax(0, 1fr)); } /* 4 = one row */
+}
+.ref-card {
+  border: 1px solid var(--line); border-left: 4px solid var(--accent, var(--navy));
+  border-radius: var(--radius); padding: 14px 16px; background: #fff;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.ref-card h3 { margin: 0; font-size: 1.02rem; color: var(--accent-ink, var(--navy)); }
+.ref-card p { margin: 0; font-size: .9rem; color: var(--ink-soft); }
+.ref-card .ref-meta {
+  font-size: .8rem; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--ink-soft); font-weight: 700;
+}
+.ref-card .ref-num {
+  width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: #fff;
+  display: grid; place-items: center; font-weight: 700; font-size: .82rem; flex-shrink: 0;
+}
+.ref-head { display: flex; align-items: center; gap: 10px; }
+
 /* FIX R18: choose columns from the space in each component, including nested report cards.
    min(100%, ...) lets each grid fall back to a single column without horizontal overflow. */
 @media screen {
@@ -428,8 +484,8 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
 /* FIX R16: use wider screens for useful content rather than oversized text lines.
    Screen-only rules leave the A4 print layout and smaller-screen stacking intact. */
 @media screen and (min-width: 1100px) {
-  /* FIX R17: constrain reading length inside the column, not the grid item itself. */
-  .intro-copy > p, .intro-copy > ol { max-width: 85ch; }
+  /* FIX R17/D3: constrain reading length inside the column, not the grid item itself. */
+  .intro-copy > p, .intro-copy > ol { max-width: var(--measure); }
   /* Override the SVG's inline screen-size cap, while preserving its aspect ratio. */
   #compass-intro-holder svg { max-width: clamp(420px, 30vw, 600px) !important; }
   #compass-report-holder svg { max-width: clamp(460px, 28vw, 600px) !important; }
@@ -600,33 +656,21 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   <div class="card">
     <h2>The six domains</h2>
     <p class="lead">Leadership, research and communication are embedded within each of the six domains.</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th scope="col" style="width:210px">Domain</th><th scope="col">What it covers</th></tr></thead>
-        <tbody id="domain-table-body"></tbody>
-      </table>
-    </div>
+    <ul class="ref-grid ref-grid-domains" id="domain-grid"></ul> <!-- FIX D2 -->
   </div>
 
   <div class="card">
     <h2>The four stages</h2>
     <p class="lead">Each stage builds on the previous one. The stages are <strong>not</strong> aligned to health
     practitioner (HP) levels — you do not need to be in a high-level role to progress through the framework.</p>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th scope="col" style="width:150px">Stage</th><th scope="col" style="width:120px">Role</th><th scope="col">Development focus</th></tr>
-        </thead>
-        <tbody id="stage-table-body"></tbody>
-      </table>
-    </div>
+    <ul class="ref-grid ref-grid-stages" id="stage-grid-intro"></ul> <!-- FIX D2 -->
   </div>
 
   <div class="card">
     <h2>The rating scale</h2>
     <p class="lead">Each statement is rated from 1 to 5.</p>
     <div class="table-wrap">
-      <table>
+      <table class="scale-table">
         <thead><tr><th scope="col" style="width:70px">Rating</th><th scope="col" style="width:200px">Description</th><th scope="col">Choose this rating if&hellip;</th></tr></thead>
         <tbody id="scale-table-body"></tbody>
       </table>
@@ -704,7 +748,7 @@ td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-n
   <details class="scale-key" id="scale-key" open>
     <summary>Rating guide <span class="footnote">&mdash; what each score means</span></summary>
     <div class="table-wrap">
-      <table>
+      <table class="scale-table">
         <thead><tr><th scope="col" style="width:60px">Score</th><th scope="col" class="sk-label" style="width:180px">Description</th><th scope="col">Choose this score if&hellip;</th></tr></thead>
         <tbody id="scale-key-body"></tbody>
       </table>
@@ -1613,18 +1657,25 @@ function renderIntro() {
                'person-centred and clinical governance — arranged around four nested stages: self, others, innovations and systems.'
   });
 
-  document.getElementById('domain-table-body').innerHTML = DOMAINS.map(d => `
-    <tr>
-      <td><span class="domain-dot" style="background:${d.color}"></span><strong style="color:${d.ink}">${esc(d.title)}</strong></td>
-      <td>${esc(d.description)}</td>
-    </tr>`).join('');
+  // FIX D2: reference cards rather than wide tables
+  document.getElementById('domain-grid').innerHTML = DOMAINS.map(d => `
+    <li class="ref-card" style="--accent:${d.color};--accent-ink:${d.ink}">
+      <div class="ref-head">
+        <span class="domain-dot" style="background:${d.color};margin-right:0"></span>
+        <h3>${esc(d.title)}</h3>
+      </div>
+      <p>${esc(d.description)}</p>
+    </li>`).join('');
 
-  document.getElementById('stage-table-body').innerHTML = STAGES.map(s => `
-    <tr>
-      <td><strong>${esc(s.title)}</strong></td>
-      <td>${esc(s.role)}</td>
-      <td>${esc(s.focus)}. <span class="lead">${esc(s.sphere)}</span></td>
-    </tr>`).join('');
+  document.getElementById('stage-grid-intro').innerHTML = STAGES.map(s => `
+    <li class="ref-card">
+      <div class="ref-head">
+        <span class="ref-num" aria-hidden="true">${s.num}</span>
+        <h3>${esc(s.title)}</h3>
+      </div>
+      <p class="ref-meta">${esc(s.role)} &middot; ${esc(s.focus)}</p>
+      <p>${esc(s.sphere)}</p>
+    </li>`).join('');
 
   document.getElementById('scale-table-body').innerHTML = scaleRows('');
   // FIX U1: the same rows feed the rating guide above the statements; its cells carry ids
@@ -1958,7 +2009,7 @@ function renderReport() {
     const partial = n > 0 && n < len
       ? ` <small style="color:var(--ink-soft)">(${n}/${len} answered)</small>` : '';
     return `<tr>
-      <td><span class="domain-dot" style="background:${d.color}"></span>${esc(d.title)}${partial}</td>
+      <td><span class="domain-label"><span class="domain-dot" style="background:${d.color}"></span><span>${esc(d.title)}${partial}</span></span></td>
       <td class="num">${avg === null ? '&mdash;' : avg.toFixed(1) + ' / 5'}</td>
       <td><span class="tier-badge ${band.css}">${band.label}</span></td>
     </tr>`;
