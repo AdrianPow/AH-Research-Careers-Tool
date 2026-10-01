@@ -207,6 +207,9 @@ html { scroll-behavior: smooth; }
 .intro-figure { margin: 0; }
 .intro-figure figcaption { margin-top: .75rem; text-align: center; }
 .start-block .resume-note { margin-top: 2rem; }
+/* The introduction's callout spans the full width under the text and the compass. */
+#content .intro-callout { max-width: none; margin-top: 2rem; }
+#content .ahl-section .intro-callout p { max-width: none; }
 #content .qld__page-alerts .btn-row { margin-top: 1rem; }
 
 /* Reference cards (six domains, four stages), drawn as the site's cards with the
@@ -841,8 +844,6 @@ main.content-page #content.ahl-content > * { padding-left: 0; padding-right: 0; 
      ========================================================== -->
 <section id="view-intro" class="view" aria-label="Introduction and instructions">
 
-  <p class="qld__abstract">Self-assessment tool: find your stage in the framework, reflect on your capabilities
-  and plan your development with your supervisor.</p>
 
   <div class="ahl-section">
     <div class="split">
@@ -855,7 +856,7 @@ main.content-page #content.ahl-content > * { padding-left: 0; padding-right: 0; 
         It describes how allied health professionals progressively expand their <em>sphere of influence</em> —
         from leading themselves, to leading others, to leading innovations, to leading systems.</p>
 
-        <p>This tool walks you through the framework's assessment process:</p>
+        <p>This self-assessment tool walks you through the framework's assessment process:</p>
         <!-- FIX R17: separate titles from descriptions instead of wrapping a long combined line. -->
         <ol class="intro-steps">
           <li><strong>Framework Assessment Tree</strong><span class="step-description">A few short questions to identify which stage you are working within.</span></li>
@@ -865,13 +866,6 @@ main.content-page #content.ahl-content > * { padding-left: 0; padding-right: 0; 
           <li><strong>Work-Integrated Learning Plan</strong><span class="step-description">Record the development activities you will pursue.</span></li>
         </ol>
 
-        <!-- Health design system callout -->
-        <div class="qld__callout">
-          <h3 class="qld__callout__heading">Scores are not performance indicators</h3>
-          <p>This is a reflective tool to help you and your supervisor identify strengths and target areas for
-          development.</p>
-          <p class="hint">Your answers stay in this browser — the app does not transmit your answers, notes or learning plan.</p>
-        </div>
       </div>
       <figure class="intro-figure">
         <div id="compass-intro-holder"></div>
@@ -879,6 +873,13 @@ main.content-page #content.ahl-content > * { padding-left: 0; padding-right: 0; 
           The Capability Compass: six domains (outer ring) across four stages of expanding influence (inner circles).
         </figcaption>
       </figure>
+    </div>
+    <!-- Health design system callout, spanning both columns -->
+    <div class="qld__callout intro-callout">
+      <h3 class="qld__callout__heading">Scores are not performance indicators</h3>
+      <p>This is a reflective tool to help you and your supervisor identify strengths and target areas for
+      development.</p>
+      <p class="hint">Your answers stay in this browser — the app does not transmit your answers, notes or learning plan.</p>
     </div>
   </div>
 
