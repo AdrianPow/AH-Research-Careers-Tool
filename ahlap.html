@@ -380,7 +380,7 @@ td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: t
 .report-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin: 0 0 3rem; }
 #content .report-actions .qld__btn { margin: 0; }
 #content .report-date { color: var(--QLD-color-light-text__muted); margin-top: .5rem; }
-.domain-dot { display: inline-block; width: .75rem; height: .75rem; border-radius: 50%; margin-right: .5rem; vertical-align: baseline; }
+.domain-dot { display: inline-block; width: .75rem; height: .75rem; border-radius: 50%; margin-right: .5rem; vertical-align: baseline; background: var(--domain-color); }
 .domain-label { display: flex; align-items: baseline; gap: .5rem; } /* FIX R21 */
 .domain-label > .domain-dot { margin-right: 0; flex-shrink: 0; }
 .domain-label > span { min-width: 0; }
@@ -388,6 +388,8 @@ td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: t
 .compass-legend { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; font-size: .875rem; color: var(--QLD-color-light-text__muted); margin-top: .75rem; }
 .compass-legend span { display: inline-flex; align-items: center; gap: .5rem; }
 .legend-swatch { width: 1.5rem; height: .625rem; border-radius: 2px; display: inline-block; flex-shrink: 0; }
+.legend-you { background: rgba(5,17,128,.35); border: 1.5px solid #051180; }
+.legend-max { background: transparent; border: 1.5px dashed #8a93b8; }
 #progression-note { margin-top: 1rem; }
 
 /* Domain feedback: the site's card, with the domain colour as the left rule */
@@ -498,6 +500,22 @@ main.content-page #content.ahl-content > * { padding-left: 0; padding-right: 0; 
 /* ------------------------------------------------------------------- print */
 @page { size: A4; margin: 14mm 12mm; }
 @media print {
+  /* The website's print rules turn every colour black (.qld__body * { color: #000 !important;
+     background-color: transparent !important; border-color: #000 !important }). The report
+     brings back the colours that carry meaning: the six domain colours, the score bands, the
+     focus-area tag and the compass legend. */
+  #content .domain-dot { background-color: var(--domain-color) !important; }
+  #content .feedback-card { border-color: #bbb !important; border-left-color: var(--domain-color) !important; }
+  #content .feedback-card h3 > span:first-child { color: var(--QLD-color-light-heading) !important; }
+  #content .qld__tag.tier-low  { background-color: var(--ahl-error-bg) !important;   border-color: var(--ahl-error) !important; }
+  #content .qld__tag.tier-mid  { background-color: var(--ahl-caution-bg) !important; border-color: var(--ahl-caution) !important; }
+  #content .qld__tag.tier-high { background-color: var(--ahl-success-bg) !important; border-color: var(--ahl-success) !important; }
+  #content .qld__tag.tag-focus { background-color: var(--ahl-info-strong) !important; border-color: var(--ahl-info-strong) !important; color: #fff !important; }
+  #content .legend-you { background-color: rgba(5,17,128,.35) !important; border-color: #051180 !important; }
+  #content .legend-max { border-color: #8a93b8 !important; }
+  #content .fb-next { background-color: var(--QLD-color-light-background__shade) !important; border-left-color: var(--QLD-color-light-designAccent) !important; }
+  #content .qld__callout { background-color: var(--QLD-color-light-background__shade) !important; border-color: var(--QLD-color-light-background__shade) !important; border-left-color: var(--QLD-color-light-designAccent) !important; }
+
   body { background: #fff; font-size: 10.5pt; line-height: 1.45; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .no-print, .qld__header, .qld__main-nav, .qld__body--breadcrumb, .qld__side-nav, .qld__footer, .qld__widgets,
   .last-updated, .domain-tabs, .progress, .progress-row, .toast, .save-flash, .scale-key { display: none !important; }
@@ -972,8 +990,8 @@ main.content-page #content.ahl-content > * { padding-left: 0; padding-right: 0; 
       <div>
         <div class="compass-wrap" id="compass-report-holder"></div>
         <div class="compass-legend">
-          <span><i class="legend-swatch" style="background:rgba(5,17,128,.35);border:1.5px solid #051180"></i> Your current capability</span>
-          <span><i class="legend-swatch" style="background:transparent;border:1.5px dashed #8a93b8"></i> A score of 5 in every domain</span>
+          <span><i class="legend-swatch legend-you"></i> Your current capability</span>
+          <span><i class="legend-swatch legend-max"></i> A score of 5 in every domain</span>
         </div>
       </div>
       <div>
@@ -2425,7 +2443,7 @@ function renderReport() {
     const partial = n > 0 && n < len
       ? ` <small class="hint">(${n}/${len} answered)</small>` : '';
     return `<tr>
-      <td><span class="domain-label"><span class="domain-dot" style="background:${d.color}"></span><span>${esc(d.title)}${partial}</span></span></td>
+      <td><span class="domain-label"><span class="domain-dot" style="--domain-color:${d.color}"></span><span>${esc(d.title)}${partial}</span></span></td>
       <td class="num">${avg === null ? '&mdash;' : avg.toFixed(1) + ' / 5'}</td>
       <td><span class="qld__tag tier-badge ${band.css}">${band.label}</span></td>
     </tr>`;
@@ -2503,7 +2521,7 @@ function renderSupervisorSection(averages, stage, priority) {
       const key = qKey(d.id, i);
       if (!state.notes[key]) return;
       rows.push(`<tr>
-        <td style="white-space:nowrap"><span class="domain-dot" style="background:${d.color}"></span><strong>${d.num}.${i + 1}</strong></td>
+        <td style="white-space:nowrap"><span class="domain-dot" style="--domain-color:${d.color}"></span><strong>${d.num}.${i + 1}</strong></td>
         <td>${esc(text)}</td>
         <!-- FIX R12: render escaped notes with their original line breaks. -->
         <td class="note-summary-text">${esc(state.notes[key])}</td>
