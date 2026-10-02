@@ -126,12 +126,12 @@ html { scroll-behavior: smooth; scroll-padding-top: 1.5rem; }
 /* The framework diagram */
 .wheel { display: block; width: 100%; height: auto; max-width: 600px; margin: 0 auto; }
 .wheel text { font-family: inherit; pointer-events: none; }
-.wheel-label { font-size: 18px; font-weight: 700; fill: #1b2547; }
+.wheel-label { font-size: 18px; font-weight: 700; fill: #fff; }
 .wheel-num { font-size: 22px; font-weight: 700; fill: #1b2547; }
-.wheel-prog { font-size: 15px; fill: #2b3557; }
-.wheel-centre { font-size: 19px; font-weight: 700; fill: #fff; }
+.wheel-prog { font-size: 14px; fill: #fff; }
+.wheel-centre { font-size: 20px; font-weight: 700; fill: #fff; }
 .wheel-sub { font-size: 14px; fill: #fff; }
-.wheel-label--light, .wheel-num--light, .wheel-prog--light { fill: #fff; }
+.wheel-text--light { fill: #fff; }
 /* The website underlines every link in #content; the diagram's links are shapes. */
 #content .wheel .wheel-link { cursor: pointer; outline: none; text-decoration: none !important; }
 #content .wheel .wheel-link:hover .wheel-label { text-decoration: underline !important; }
@@ -442,6 +442,18 @@ fieldset.ws-card > legend + * { clear: both; }
 #content .qa-list dd { margin: .25rem 0 0; }
 
 .brief-head { border-left: 4px solid var(--QLD-color-light-designAccent); padding: .25rem 0 .25rem 1rem; margin: 1.5rem 0; }
+/* Report heading: the project beside the framework diagram (plan and brief) */
+.report-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem 2.5rem; align-items: center;
+  border: 1px solid var(--QLD-color-light-alt-border); border-left: 6px solid var(--QLD-color-light-designAccent); border-radius: 0 12px 12px 0;
+  padding: 1.25rem 1.5rem; margin: 1.5rem 0 2rem; }
+.report-visual { width: 19rem; }
+.wheel--report { max-width: none; }
+#content .rh-kicker { margin: 0; font-size: .875rem; font-weight: 600; color: var(--QLD-color-light-text__muted); text-transform: uppercase; letter-spacing: .04em; }
+#content .rh-project { margin: .25rem 0 0; font-size: 1.75rem; line-height: 1.3; font-weight: 600; color: var(--QLD-color-light-heading); }
+#content .rh-meta { margin: .5rem 0 0; color: var(--QLD-color-light-text__muted); }
+#content .rh-meta:empty { display: none; }
+#content .rh-progress, #content .rh-frame { margin: 1rem 0 0; }
+#content .rh-frame { font-size: .9375rem; color: var(--QLD-color-light-text__muted); }
 #content .brief-project { font-size: 1.5rem; font-weight: 600; color: var(--QLD-color-light-heading); margin: 0; }
 #content .brief-meta { margin: .25rem 0 0; color: var(--QLD-color-light-text__muted); }
 .brief-grid { display: grid; gap: 1.5rem 2.5rem; grid-template-columns: minmax(0, 1fr); }
@@ -489,6 +501,8 @@ main.content-page #content.ahl-content > * { padding-left: 0; padding-right: 0; 
 }
 @media screen and (max-width: 698.98px) {
   .domain-head { grid-template-columns: minmax(0, 1fr); }
+  .report-head { grid-template-columns: minmax(0, 1fr); padding: 1rem; }
+  .report-visual { width: min(100%, 16rem); justify-self: center; }
   .dh-visual { width: 11rem; order: -1; justify-self: center; }
   #content .btn-row > .qld__btn, #content .report-actions > .qld__btn, #content .panel-nav > .qld__btn { flex: 1 1 100%; text-align: center; }
   .planner-bar { padding: .75rem 1rem; }
@@ -583,6 +597,10 @@ main.content-page #content.ahl-content > * { padding-left: 0; padding-right: 0; 
   #content .sum-table th[scope=row] { width: 34%; }
   .brief-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8pt 16pt; }
   .brief-head { margin: 6pt 0 10pt; }
+  .report-head { padding: 8pt 12pt; margin: 6pt 0 10pt; gap: 8pt 16pt; border-color: #bbb !important; border-left-color: var(--QLD-color-light-designAccent) !important; break-inside: avoid; }
+  .report-visual { width: 52mm; }
+  #content .rh-project { font-size: 15pt; }
+  #content .rh-kicker, #content .rh-frame { font-size: 8.5pt; }
   #content .brief-project { font-size: 14pt; }
   .brief-ask { padding: 8pt 10pt; margin-top: 10pt; }
   .hint { font-size: 8.5pt; }
@@ -1910,54 +1928,67 @@ const statusOf = id => state.status[id] || 'none';
 // ---------------------------------------------------------------- framework wheel
 // The framework's diagram: four domains around "People and communities" on a gear,
 // with "Where do I start?" on a smaller gear. Each domain is a link to its page.
-function gearPath(cx, cy, r1, r2, teeth) {
-  const pts = [], step = Math.PI * 2 / teeth;
-  for (let i = 0; i < teeth; i++) {
-    const a = i * step - Math.PI / 2;
-    const seq = [[a - step * .28, r1], [a - step * .17, r2], [a + step * .17, r2], [a + step * .28, r1]];
-    seq.forEach(([t, r]) => pts.push([cx + r * Math.cos(t), cy + r * Math.sin(t)]));
+// The framework diagram's geometry, traced from the original artwork (quadrant radius
+// 487 px there, 226 here): a 12-tooth gear carrying the four domains and a 10-tooth
+// gear for "Where do I start?", placed so their teeth interlock without touching.
+const GEO = { w: 800, h: 600, cx: 503, cy: 300, R: 226, ring: 230, sx: 124.1, sy: 188.3 };
+function gearPath(cx, cy, n, root, tip, base, top, rot = 0) {
+  const p = (r, deg) => { const t = deg * Math.PI / 180; return `${(cx + r * Math.cos(t)).toFixed(1)},${(cy + r * Math.sin(t)).toFixed(1)}`; };
+  const step = 360 / n;
+  let d = `M${p(root, -90 + rot - base)}`;
+  for (let i = 0; i < n; i++) {
+    const a = -90 + rot + i * step;
+    d += `L${p(tip, a - top)}A${tip},${tip} 0 0 1 ${p(tip, a + top)}L${p(root, a + base)}A${root},${root} 0 0 1 ${p(root, a + step - base)}`;
   }
-  return 'M' + pts.map(p => p.map(n => n.toFixed(1)).join(',')).join('L') + 'Z';
+  return d + 'Z';
 }
+const BIG_GEAR = () => gearPath(GEO.cx, GEO.cy, 12, 255.2, 293.3, 8.9, 5.0);
+const SMALL_GEAR = () => gearPath(GEO.sx, GEO.sy, 10, 105.8, 119.7, 12.0, 6.7, 22.5);
 function sectorPath(cx, cy, r, a1, a2) {
   const p = a => [cx + r * Math.cos(a * Math.PI / 180), cy + r * Math.sin(a * Math.PI / 180)].map(n => n.toFixed(1)).join(',');
   return `M${cx},${cy}L${p(a1)}A${r},${r} 0 0 1 ${p(a2)}Z`;
 }
-function wheelSVG() {
-  const cx = 368, cy = 318, R = 226;
+// Drawn to match the framework's own diagram: navy gears, the four domains in their
+// full colours with white text and icons, around "People and communities".
+// links: each domain is a link (the overview); otherwise the diagram is a picture
+// (the plan and brief). progress: show "x of y done" in each domain.
+function wheelSVG({ links = true, progress: showProgress = true, id = 'wheel', cls = 'wheel', label: imgLabel = '' } = {}) {
+  const { cx, cy, R, sx, sy } = GEO, NAVY = '#2d4e73';
   const progress = d => `${domainDone(d)} of ${d.elements.length} done`;
   const label = d => `${d.num}. ${d.title}: ${progress(d)}`;
   const quads = [
-    { d: DOMAINS[1], a1: -135, a2: -45, x: cx, y: cy - 150, lines: ['Understand the care', 'pathway and', 'shared needs'] },
-    { d: DOMAINS[4], a1: -45, a2: 45, x: cx + 146, y: cy - 12, lines: ['Design for', 'outcomes'] },
-    { d: DOMAINS[3], a1: 45, a2: 135, x: cx, y: cy + 128, lines: ['Measure', 'what matters'] },
-    { d: DOMAINS[2], a1: 135, a2: 225, x: cx - 150, y: cy - 12, lines: ['Support an', 'outcome-driven', 'workforce culture'] }
+    { d: DOMAINS[1], a1: -135, a2: -45, icon: 'network', ix: cx, iy: cy - 106, is: 1.05, x: cx, y: cy - 184, lines: ['Understand the care', 'pathway and shared needs'], py: cy - 142 },
+    { d: DOMAINS[4], a1: -45, a2: 45, icon: 'design', ix: cx + 150, iy: cy - 42, is: 1.35, x: cx + 150, y: cy + 22, lines: ['Design for', 'outcomes'], py: cy + 70 },
+    { d: DOMAINS[3], a1: 45, a2: 135, icon: 'measure', ix: cx, iy: cy + 112, is: 1.3, x: cx, y: cy + 164, lines: ['Measure what', 'matters'], py: cy + 210 },
+    { d: DOMAINS[2], a1: 135, a2: 225, icon: 'team', ix: cx - 152, iy: cy - 74, is: 1.3, x: cx - 154, y: cy - 18, lines: ['Support an', 'outcome-driven', 'workforce', 'culture'], py: cy + 76 }
   ];
   const text = (x, y, lines, cls, lh) => lines.map((l, i) => `<text x="${x}" y="${y + i * lh}" class="${cls}" text-anchor="middle">${esc(l)}</text>`).join('');
-  const quad = q => `
-    <a href="#/domain/${q.d.num}" class="wheel-link" aria-label="${esc(label(q.d))}">
-      <path class="wheel-shape" d="${sectorPath(cx, cy, R, q.a1, q.a2)}" fill="${q.d.tint}"/>
-      <text x="${q.x}" y="${q.y - 30}" class="wheel-num" text-anchor="middle">${q.d.num}</text>
-      ${text(q.x, q.y, q.lines, 'wheel-label', 20)}
-      <text x="${q.x}" y="${q.y + q.lines.length * 20 + 6}" class="wheel-prog" text-anchor="middle">${progress(q.d)}</text>
-    </a>`;
+  const wrap = (d, inner) => links
+    ? `<a href="#/domain/${d.num}" class="wheel-link" aria-label="${esc(label(d))}">${inner}</a>`
+    : `<g>${inner}</g>`;
+  const quad = q => wrap(q.d, `
+      <path class="wheel-shape" d="${sectorPath(cx, cy, R, q.a1, q.a2)}" fill="${q.d.color}"/>
+      <g fill="#fff">${ICONS[q.icon](q.ix, q.iy, q.is)}</g>
+      ${text(q.x, q.y, q.lines, 'wheel-label', 22)}
+      ${showProgress ? `<text x="${q.x}" y="${q.py}" class="wheel-prog" text-anchor="middle">${progress(q.d)}</text>` : ''}`);
   const d1 = DOMAINS[0];
-  return `<svg class="wheel" role="group" viewBox="0 0 670 620" width="670" height="620" aria-labelledby="wheel-title" focusable="false">
-    <title id="wheel-title">The framework’s five domains, around people and communities</title>
-    <path d="${gearPath(cx, cy, 262, 292, 16)}" fill="#c3ccd6"/>
-    <circle cx="${cx}" cy="${cy}" r="${R + 6}" fill="#fff"/>
+  const a11y = links ? `role="group" aria-labelledby="${id}-title"` : `role="img" aria-label="${esc(imgLabel)}"`;
+  return `<svg class="${cls}" ${a11y} viewBox="0 0 ${GEO.w} ${GEO.h}" width="${GEO.w}" height="${GEO.h}" focusable="false">
+    ${links ? `<title id="${id}-title">The framework’s five domains, around people and communities</title>` : ''}
+    <path d="${BIG_GEAR()}" fill="${NAVY}"/>
+    <circle cx="${cx}" cy="${cy}" r="${GEO.ring}" fill="#fff"/>
     ${quads.map(quad).join('')}
-    <circle cx="${cx}" cy="${cy}" r="78" fill="#fff"/>
-    <circle cx="${cx}" cy="${cy}" r="72" fill="#2d4e73"/>
-    ${text(cx, cy - 14, ['People', 'and', 'communities'], 'wheel-centre', 22)}
-    <a href="#/domain/1" class="wheel-link" aria-label="${esc(label(d1))}">
-      <path class="wheel-shape" d="${gearPath(122, 128, 100, 120, 10)}" fill="#2d4e73"/>
-      <circle cx="122" cy="128" r="90" fill="${d1.color}"/>
-      <text x="122" y="86" class="wheel-num wheel-num--light" text-anchor="middle">1</text>
-      <text x="122" y="112" class="wheel-label wheel-label--light" text-anchor="middle">Where do I start?</text>
-      ${text(122, 136, ['Partner with consumers', 'Population segment', 'Sphere of influence'], 'wheel-sub', 17)}
-      <text x="122" y="196" class="wheel-prog wheel-prog--light" text-anchor="middle">${progress(d1)}</text>
-    </a>
+    <circle cx="${cx}" cy="${cy}" r="80" fill="#fff"/>
+    <circle cx="${cx}" cy="${cy}" r="74" fill="${NAVY}"/>
+    ${text(cx, cy - 16, ['People', 'and', 'communities'], 'wheel-centre', 24)}
+    ${wrap(d1, `
+      <path class="wheel-shape" d="${SMALL_GEAR()}" fill="${NAVY}"/>
+      <circle cx="${sx}" cy="${sy}" r="91.5" fill="#fff"/>
+      <circle cx="${sx}" cy="${sy}" r="88" fill="${d1.color}"/>
+      ${ICONS.power(sx, sy - (showProgress ? 56 : 50), .9)}
+      <text x="${sx}" y="${sy - (showProgress ? 16 : 8)}" class="wheel-label" text-anchor="middle">Where do I start?</text>
+      ${text(sx, sy + (showProgress ? 6 : 16), ['Partner with consumers', 'Population segment', 'Sphere of influence'], 'wheel-sub', 17)}
+      ${showProgress ? `<text x="${sx}" y="${sy + 64}" class="wheel-prog" text-anchor="middle">${progress(d1)}</text>` : ''}`)}
   </svg>`;
 }
 
@@ -2613,7 +2644,7 @@ const ICONS = {
   design: (x, y, s) => `<g transform="translate(${x},${y}) scale(${s})" fill="#fff"><circle cx="0" cy="-17" r="6.5"/><rect x="-3.5" y="-11" width="7" height="5" rx="1"/><g stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M0,-30V-27M-11,-25L-9,-23M11,-25L9,-23M-14,-17H-11M14,-17H11"/></g>${ICONS.bust(-15, 12, .85)}${ICONS.bust(15, 12, .85)}${ICONS.bust(0, 15, 1)}</g>`
 };
 function miniWheelSVG(active, { labels = true, cls = 'mini-wheel' } = {}) {
-  const cx = 368, cy = 318, R = 226;
+  const { cx, cy, R, sx, sy } = GEO;
   const quads = [
     { d: DOMAINS[1], a1: -135, a2: -45, icon: 'network', ix: cx, iy: cy - 100, lx: cx, ly: cy - 214 },
     { d: DOMAINS[4], a1: -45, a2: 45, icon: 'design', ix: cx + 150, iy: cy - 34, lx: cx + 150, ly: cy + 24 },
@@ -2626,17 +2657,18 @@ function miniWheelSVG(active, { labels = true, cls = 'mini-wheel' } = {}) {
     ${on && labels ? LABELS[q.d.num].map((l, i) => `<text x="${q.lx}" y="${q.ly + i * 28}" text-anchor="middle" class="mw-label">${esc(l)}</text>`).join('') : ''}`;
   const others = quads.filter(q => q.d.num !== active), cur = quads.find(q => q.d.num === active);
   const one = active === 1, d1 = DOMAINS[0];
-  return `<svg class="${cls}" viewBox="0 0 670 620" width="670" height="620" aria-hidden="true" focusable="false">
-    <path d="${gearPath(cx, cy, 262, 292, 16)}" fill="#c3ccd6"/>
-    <circle cx="${cx}" cy="${cy}" r="${R + 6}" fill="#fff"/>
+  return `<svg class="${cls}" viewBox="0 0 ${GEO.w} ${GEO.h}" width="${GEO.w}" height="${GEO.h}" aria-hidden="true" focusable="false">
+    <path d="${BIG_GEAR()}" fill="#c3ccd6"/>
+    <circle cx="${cx}" cy="${cy}" r="${GEO.ring}" fill="#fff"/>
     <g fill="#fff">${others.map(q => quad(q, false)).join('')}${cur ? quad(cur, true) : ''}</g>
     <circle cx="${cx}" cy="${cy}" r="78" fill="#fff"/>
     <circle cx="${cx}" cy="${cy}" r="72" fill="#2d4e73"/>
     ${labels ? ['People', 'and', 'communities'].map((l, i) => `<text x="${cx}" y="${cy - 14 + i * 22}" text-anchor="middle" class="mw-centre">${l}</text>`).join('') : ''}
-    <path d="${gearPath(122, 128, 100, 120, 10)}" fill="${one ? '#2d4e73' : '#c3ccd6'}" stroke="#fff" stroke-width="${one ? 0 : 4}"/>
-    <circle cx="122" cy="128" r="${one ? 92 : 88}" fill="${one ? d1.color : '#dccbe1'}"/>
-    ${ICONS.power(122, one && labels ? 92 : 128, one && labels ? 1.15 : 1.7)}
-    ${one && labels ? `<text x="122" y="140" text-anchor="middle" class="mw-label mw-label-sm">Where do I start?</text>` : ''}
+    <path d="${SMALL_GEAR()}" fill="${one ? '#2d4e73' : '#c3ccd6'}"/>
+    <circle cx="${sx}" cy="${sy}" r="91.5" fill="#fff"/>
+    <circle cx="${sx}" cy="${sy}" r="88" fill="${one ? d1.color : '#dccbe1'}"/>
+    ${ICONS.power(sx, sy - (one && labels ? 30 : 0), one && labels ? 1.15 : 1.7)}
+    ${one && labels ? `<text x="${sx}" y="${sy + 18}" text-anchor="middle" class="mw-label mw-label-sm">Where do I start?</text>` : ''}
   </svg>`;
 }
 
@@ -2846,7 +2878,17 @@ function renderPlan() {
         return sphere + `<div class="plan-el"><h4>${e.num} ${esc(e.title)} ${statusTag(id)}</h4><dl class="qa-list">${qa}</dl>${e.worksheet ? WS[e.worksheet].summary() : ''}</div>`;
       }).join('')}
     </section>`).join('');
-  $('#plan-body').innerHTML = `<h3 class="plan-h">Project details</h3>${projectTable()}<h3 class="plan-h">Progress</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Progress by element">${overview}</div>${domains}`;
+  const done = totalDone();
+  const head = `<div class="report-head">
+      <div class="rh-text">
+        <p class="rh-kicker">Value-based health care project</p>
+        <p class="rh-project">${esc(state.project.name) || 'Untitled project'}</p>
+        <p class="rh-meta">${[state.project.lead && `Project lead: ${esc(state.project.lead)}`, state.project.service && esc(state.project.service)].filter(Boolean).join(' &middot; ')}</p>
+        <p class="rh-progress"><strong>${done} of ${ALL_ELEMENTS.length}</strong> framework elements done or not applicable</p>
+      </div>
+      <div class="report-visual">${wheelSVG({ links: false, progress: true, cls: 'wheel wheel--report', label: 'The framework’s five domains, with progress: ' + DOMAINS.map(d => `${d.num}. ${d.title}, ${domainDone(d)} of ${d.elements.length} done`).join('; ') })}</div>
+    </div>`;
+  $('#plan-body').innerHTML = `${head}<h3 class="plan-h">Project details</h3>${projectTable()}<h3 class="plan-h">Progress</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Progress by element">${overview}</div>${domains}`;
 }
 
 // ---------------------------------------------------------------- executive brief
@@ -2860,9 +2902,14 @@ function renderBrief() {
   const sec = (title, html) => `<section class="brief-sec"><h3>${title}</h3>${html}</section>`;
   const list = items => items.length ? `<ul>${items.join('')}</ul>` : `<p>${emptyText}</p>`;
   $('#brief-body').innerHTML = `
-    <div class="brief-head">
-      <p class="brief-project">${esc(p.name) || 'Untitled project'}</p>
-      <p class="brief-meta">${[p.lead && `Project lead: ${esc(p.lead)}`, p.service && esc(p.service), s.sixp.sponsor && `Executive sponsor: ${esc(s.sixp.sponsor)}`].filter(Boolean).join(' &middot; ') || emptyText}</p>
+    <div class="report-head brief-top">
+      <div class="rh-text">
+        <p class="rh-kicker">Value-based health care project</p>
+        <p class="rh-project">${esc(p.name) || 'Untitled project'}</p>
+        <p class="rh-meta">${[p.lead && `Project lead: ${esc(p.lead)}`, p.service && esc(p.service), s.sixp.sponsor && `Executive sponsor: ${esc(s.sixp.sponsor)}`].filter(Boolean).join(' &middot; ') || emptyText}</p>
+        <p class="rh-frame">Planned with the Queensland Health Allied Health Framework for Value-Based Health Care: five domains around people and communities.</p>
+      </div>
+      <div class="report-visual">${wheelSVG({ links: false, progress: false, cls: 'wheel wheel--report', label: 'The Allied Health Framework for Value-Based Health Care: five domains around people and communities' })}</div>
     </div>
     ${WS.change.pitch() ? `<section class="brief-pitch"><h3>In 30 seconds</h3><p>${WS.change.pitch()}</p></section>` : ''}
     <div class="brief-grid">
