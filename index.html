@@ -46,6 +46,9 @@
   .actions { margin-top: auto; padding-top: .5rem; display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; }
   .tool-link { display: inline-block; background: var(--blue); color: #fff; text-decoration: none; font-weight: 600; padding: .625rem 1.25rem; border-radius: 4px; }
   .tool-link:hover { background: #004a92; text-decoration: none; }
+  .tool-link .ext { margin-left: .5rem; vertical-align: -1px; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; clip: rect(0 0 0 0); overflow: hidden; white-space: nowrap; }
+  .tabs-hint { margin: 0 0 1.25rem; font-size: .9375rem; color: var(--muted); }
 
   .note { margin-top: 2.5rem; background: var(--shade); border-left: 4px solid var(--accent); padding: 1.25rem 1.5rem; }
   .note h2 { margin: 0 0 .5rem; font-size: 1.125rem; color: var(--navy); }
@@ -71,6 +74,7 @@
 
 <main>
   <div class="wrap">
+    <p class="tabs-hint">Each tool opens in a new tab, so this page stays open for you to come back to.</p>
     <ul class="tools">
       <li class="tool" style="--c:#0f284e">
         <span class="tag tag-live">Published version</span>
@@ -79,8 +83,8 @@
         <p>Rate your research capability against 61 statements across five domains, see your results on a chart and plan your development.</p>
         <p class="meta">About 10–15 minutes. This copy matches the tool published by Queensland Health.</p>
         <div class="actions">
-          <a class="tool-link" href="research-careers.html">Open the research careers tool</a>
-          <a href="https://www.health.qld.gov.au/hpresearch/html/careers-development-framework">About the framework</a>
+          <a class="tool-link" href="research-careers.html" target="_blank" rel="noopener">Open the research careers tool<span class="visually-hidden"> (opens in a new tab)</span><svg class="ext" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M9 2h5v5M14 2 7 9M12 9.5V14H2V4h4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="https://www.health.qld.gov.au/hpresearch/html/careers-development-framework" target="_blank" rel="noopener">About the framework<span class="visually-hidden"> (opens in a new tab)</span></a>
         </div>
       </li>
       <li class="tool" style="--c:#8b52fe">
@@ -90,8 +94,8 @@
         <p>Identify the stage you are working within, rate yourself across six domains, see your Capability Compass and build a Work-Integrated Learning Plan with your supervisor.</p>
         <p class="meta">About 10–15 minutes.</p>
         <div class="actions">
-          <a class="tool-link" href="ahlap.html">Open the leadership tool</a>
-          <a href="https://www.health.qld.gov.au/ahwac/html/allied-health-workforce/leadership">About the framework</a>
+          <a class="tool-link" href="ahlap.html" target="_blank" rel="noopener">Open the leadership tool<span class="visually-hidden"> (opens in a new tab)</span><svg class="ext" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M9 2h5v5M14 2 7 9M12 9.5V14H2V4h4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="https://www.health.qld.gov.au/ahwac/html/allied-health-workforce/leadership" target="_blank" rel="noopener">About the framework<span class="visually-hidden"> (opens in a new tab)</span></a>
         </div>
       </li>
       <li class="tool" style="--c:#80438e">
@@ -101,8 +105,8 @@
         <p>Plan a VBHC project across the framework’s five domains, with worksheets, guidance and case studies, then print a project plan and an executive brief.</p>
         <p class="meta">Work through it over time; your plan is saved as you go.</p>
         <div class="actions">
-          <a class="tool-link" href="vbhc.html">Open the project planner</a>
-          <a href="https://www.health.qld.gov.au/ahwac/html/allied-health-workforce/VBHC">About the framework</a>
+          <a class="tool-link" href="vbhc.html" target="_blank" rel="noopener">Open the project planner<span class="visually-hidden"> (opens in a new tab)</span><svg class="ext" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M9 2h5v5M14 2 7 9M12 9.5V14H2V4h4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="https://www.health.qld.gov.au/ahwac/html/allied-health-workforce/VBHC" target="_blank" rel="noopener">About the framework<span class="visually-hidden"> (opens in a new tab)</span></a>
         </div>
       </li>
     </ul>
