@@ -313,7 +313,9 @@ fieldset.ws-card > legend + * { clear: both; }
 
 /* Sphere of influence options as cards (the site's radio drawn inside each) */
 .sphere-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); margin-top: 1rem; }
-#content .sphere-option { margin: 0; }
+/* The hidden input must sit inside its card: choosing an option focuses the input, and
+   an input positioned against the page would scroll the page to the top. */
+#content .sphere-option, #content .check-card { margin: 0; position: relative; }
 .sphere-option .qld__control-input__text {
   display: flex !important; flex-direction: column; gap: .25rem; height: 100%;
   border: 1px solid var(--QLD-color-light-alt-border); border-radius: 12px; padding: 1rem 1rem 1rem 3rem !important; cursor: pointer;
@@ -363,7 +365,6 @@ fieldset.ws-card > legend + * { clear: both; }
 
 /* Option cards with a description (engagement methods, communication principles) */
 .check-cards { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); margin-top: .75rem; }
-#content .check-card { margin: 0; }
 .check-card .qld__control-input__text { display: flex !important; flex-direction: column; gap: .125rem; height: 100%; border: 1px solid var(--QLD-color-light-alt-border); border-radius: 8px; padding: .75rem .75rem .75rem 3rem !important; cursor: pointer; }
 .check-card input[type=checkbox] + label::before, .check-card input[type=checkbox] + label::after { top: .75rem !important; left: .625rem !important; }
 .check-card input[type=checkbox] { top: 1.6rem; left: 1.6rem; }
@@ -376,6 +377,8 @@ fieldset.ws-card > legend + * { clear: both; }
 #content .va-done .qld__control-input { margin: 0; }
 .two-col { display: grid; gap: 0 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
 .three-cs .c-card { border-top: 4px solid var(--domain-color); }
+#content .c-card .c-add { margin: auto 0 0; padding-top: .75rem; }
+#content .c-card .c-add .qld__btn { margin: 0; }
 #content .measure-count, #content .cost-total, #content .team-check { margin: 1rem 0 0; padding: .75rem 1rem; background: var(--QLD-color-light-background__shade); border-radius: 4px; max-width: none; }
 #content .team-check:empty { display: none; }
 
@@ -2442,7 +2445,8 @@ Object.assign(WS, {
       return `
         <h4 class="ws-title">Worksheet: outcome measures</h4>
         <p>Express outcomes in terms of the 3 Cs, ask ‘how are you doing?’, and keep the set to three to five measures.</p>
-        <div class="ws-grid ws-grid-3 three-cs">${THREE_CS.map(c => `<div class="ws-card c-card"><h5>${esc(c.title)}</h5><p class="hint">${esc(c.desc)}</p></div>`).join('')}</div>
+        <div class="ws-grid ws-grid-3 three-cs">${THREE_CS.map(c => `<div class="ws-card c-card"><h5>${esc(c.title)}</h5><p class="hint">${esc(c.desc)}</p>
+          <p class="c-add"><button type="button" class="qld__btn qld__btn--secondary" data-add-measure="${c.id}">+ Add a ${esc(c.title.toLowerCase())} measure</button></p></div>`).join('')}</div>
         <p class="measure-count" id="measure-count" role="status">${this.count()}</p>
         ${rowTableHTML('outcomes', 'Outcome measures', MEASURE_COLS)}
         ${addButton('outcomes', 'Add a measure')}
@@ -3013,6 +3017,16 @@ document.addEventListener('click', e => {
     markProgress(add, true);
     persist();
     rerenderWorksheet(name, 'tbody tr:last-child [data-bind]');
+    return;
+  }
+  const addMeasure = e.target.closest('[data-add-measure]');
+  if (addMeasure) {
+    // A 3 Cs card adds a measure already set to that category.
+    state.ws.outcomes.rows.push({ measure: '', cat: addMeasure.dataset.addMeasure, type: '', tool: '', when: '', codesign: '' });
+    markProgress(addMeasure, true);
+    persist();
+    rerenderWorksheet('outcomes', 'tbody tr:last-child [data-bind]');
+    toast(`Added a ${labelOf(MEASURE_CATS, addMeasure.dataset.addMeasure).toLowerCase()} measure.`);
     return;
   }
   const del = e.target.closest('[data-del]');
